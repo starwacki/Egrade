@@ -1,4 +1,6 @@
-package com.github.starwacki.entity;
+package com.github.starwacki.model;
+import com.github.starwacki.model.account.Student;
+import com.github.starwacki.model.account.Teacher;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +21,10 @@ public class SchoolClass {
 
     @NonNull
     private String name;
+
+    @NonNull
+    private int classYear;
+
 
     @OneToMany(mappedBy = "schoolClass")
     private Set<Student> students;

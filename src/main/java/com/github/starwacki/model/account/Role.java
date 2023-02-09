@@ -1,4 +1,4 @@
-package com.github.starwacki.entity;
+package com.github.starwacki.model.account;
 
 public enum Role {
     ADMIN,
