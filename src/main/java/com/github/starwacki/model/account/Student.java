@@ -2,7 +2,6 @@ package com.github.starwacki.model.account;
 
 
 import com.github.starwacki.model.SchoolClass;
-import com.github.starwacki.service.student_service.StudentDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +16,7 @@ public class Student extends Account {
     @JoinColumn(name = "classes_id")
     private SchoolClass schoolClass;
 
-    @OneToOne
+    @OneToOne()
     private Parent parent;
 
     protected Student() {
@@ -34,13 +33,43 @@ public class Student extends Account {
         return new Builder();
     }
 
-    public static class Builder extends  Account.Builder<Student> {
+    public static class Builder extends  Account.Builder {
 
         private int diaryNumber;
 
         private SchoolClass schoolClass;
 
         private Parent parent;
+
+        @Override
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        @Override
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        @Override
+        public Builder firstname(String firstname) {
+            this.firstname = firstname;
+            return this;
+        }
+
+        @Override
+        public Builder lastname(String lastname) {
+            this.lastname = lastname;
+            return this;
+        }
+
+        @Override
+        public Builder role(Role role) {
+            this.role = role;
+            return this;
+        }
 
         public Builder diaryNumber(int diaryNumber) {
             this.diaryNumber = diaryNumber;
@@ -59,8 +88,9 @@ public class Student extends Account {
 
         @Override
         public Student build() {
-            return null;
+            return new Student(username,password,firstname,lastname,role,diaryNumber,schoolClass,parent);
         }
+
     }
 
 }

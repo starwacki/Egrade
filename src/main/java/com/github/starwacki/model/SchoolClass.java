@@ -32,10 +32,4 @@ public class SchoolClass {
     @ManyToMany(mappedBy = "classes")
     private Set<Teacher> teachers;
 
-
-
-
-
-
-
 }

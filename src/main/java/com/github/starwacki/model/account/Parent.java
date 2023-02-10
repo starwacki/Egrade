@@ -5,9 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 
 @Data
@@ -15,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Table(name = "parents")
 public class Parent extends Account {
 
-    @NonNull
     private String phoneNumber;
 
     @OneToOne
@@ -38,9 +34,40 @@ public class Parent extends Account {
 
 
 
-    public static class  Builder extends Account.Builder<Parent> {
+    public static class  Builder extends Account.Builder {
         private String phoneNumber;
         private Student student;
+
+
+        @Override
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        @Override
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        @Override
+        public Builder firstname(String firstname) {
+            this.firstname = firstname;
+            return this;
+        }
+
+        @Override
+        public Builder lastname(String lastname) {
+            this.lastname = lastname;
+            return this;
+        }
+
+        @Override
+        public Builder role(Role role) {
+            this.role = role;
+            return this;
+        }
 
         public Builder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;

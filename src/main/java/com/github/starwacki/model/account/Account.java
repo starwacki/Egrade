@@ -34,7 +34,7 @@ public abstract class Account {
         this.role = role;
     }
 
-    public abstract static class Builder<T extends Account> {
+    public abstract static class Builder implements AccountBuilder{
 
         protected String username;
 
@@ -46,32 +46,8 @@ public abstract class Account {
 
         protected Role role;
 
-        public Builder<T> username(String username) {
-            this.username = username;
-            return this;
-        }
+        public abstract Account build();
 
-        public Builder<T> password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder<T> firstname(String firstname) {
-            this.firstname = firstname;
-            return this;
-        }
-
-        public Builder<T> lastname(String lastname) {
-            this.lastname = lastname;
-            return this;
-        }
-
-        public Builder<T> role(Role role) {
-            this.role = role;
-            return this;
-        }
-
-        public abstract  T build();
     }
 
 
