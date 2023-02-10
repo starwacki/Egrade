@@ -13,10 +13,13 @@ public class Student extends Account {
     private int diaryNumber;
 
     @ManyToOne
-    @JoinColumn(name = "classes_id")
+            (cascade = {CascadeType.ALL} )
+    @JoinColumn
+            (name = "classes_id")
     private SchoolClass schoolClass;
 
-    @OneToOne()
+    @OneToOne
+            (cascade ={CascadeType.ALL})
     private Parent parent;
 
     protected Student() {

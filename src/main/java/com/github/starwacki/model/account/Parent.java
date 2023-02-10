@@ -14,14 +14,12 @@ public class Parent extends Account {
 
     private String phoneNumber;
 
-    @OneToOne
-    private Student student;
 
 
-    private Parent(String username, String password, String firstname, String lastname, Role role,String phoneNumber, Student student) {
+
+    private Parent(String username, String password, String firstname, String lastname, Role role,String phoneNumber) {
         super(username, password, firstname, lastname, role);
         this.phoneNumber = phoneNumber;
-        this.student = student;
     }
 
     protected Parent() {
@@ -36,8 +34,6 @@ public class Parent extends Account {
 
     public static class  Builder extends Account.Builder {
         private String phoneNumber;
-        private Student student;
-
 
         @Override
         public Builder username(String username) {
@@ -74,14 +70,9 @@ public class Parent extends Account {
             return this;
         }
 
-        public Builder student(Student student) {
-            this.student = student;
-            return this;
-        }
-
         @Override
         public Parent build() {
-            return new Parent(username,password,firstname,lastname,role,phoneNumber,student);
+            return new Parent(username,password,firstname,lastname,role,phoneNumber);
         }
     }
 
