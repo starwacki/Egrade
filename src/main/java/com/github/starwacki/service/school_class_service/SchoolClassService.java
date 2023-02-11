@@ -1,10 +1,6 @@
 package com.github.starwacki.service.school_class_service;
 
 
-import com.github.starwacki.model.SchoolClass;
-import com.github.starwacki.model.account.Account;
-import com.github.starwacki.model.account.Parent;
-import com.github.starwacki.model.account.Student;
 import com.github.starwacki.repository.SchoolClassRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

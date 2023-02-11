@@ -21,7 +21,8 @@ public class AccountCSVGenerator extends AccountGenerator {
 
 
 
-    public List<Student> generateStudents(File file) throws WrongFileException, IOException {
+    public List<Student> generateStudents(StudentsCsvDTO studentsCsvDTO) throws WrongFileException, IOException {
+        File file  = new File(studentsCsvDTO.pathname());
         if (isCsvFile(file)) {
            List<Student> students = getStudentFromFile(file);
            studentRepository.saveAll(students);
