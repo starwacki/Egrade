@@ -1,32 +1,29 @@
-package com.github.starwacki.service.account_generator_service;
+package com.github.starwacki.service.account_generator_service.generator;
 
-import com.github.starwacki.model.account.Student;
 import com.github.starwacki.repository.SchoolClassRepository;
 import com.github.starwacki.repository.StudentRepository;
+import com.github.starwacki.service.account_generator_service.dto.AccountStudentDTO;
 import com.github.starwacki.service.account_generator_service.exception.WrongFileException;
 import org.springframework.stereotype.Service;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class AccountCSVGenerator extends AccountGenerator {
+public class StudentCSVGenerator extends AccountGenerator {
 
 
-    public AccountCSVGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository) {
+    public StudentCSVGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository) {
         super(studentRepository, schoolClassRepository);
     }
 
 
 
-    public List<Student> generateStudents(StudentsCsvDTO studentsCsvDTO) throws WrongFileException, IOException {
-        File file  = new File(studentsCsvDTO.pathname());
+    public List<AccountStudentDTO> generateStudents(String path) throws WrongFileException, IOException {
+        File file  = new File(path);
         if (isCsvFile(file)) {
-           List<Student> students = getStudentFromFile(file);
-           studentRepository.saveAll(students);
-           return students;
+           return  getStudentFromFile(file);
         } else
             throw new WrongFileException();
     }
@@ -35,8 +32,8 @@ public class AccountCSVGenerator extends AccountGenerator {
         return file.exists() && file.isFile() && file.getName().endsWith(".csv");
     }
 
-    private List<Student> getStudentFromFile(File file) throws IOException, WrongFileException {
-        List<Student>  students = new LinkedList<>();
+    private List<AccountStudentDTO> getStudentFromFile(File file) throws IOException, WrongFileException {
+        List<AccountStudentDTO>  students = new LinkedList<>();
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
         String line = fileReader.readLine();
         while (line!=null) {
@@ -44,7 +41,7 @@ public class AccountCSVGenerator extends AccountGenerator {
             if (line != null) {
                 String[] lineTable = line.split(",");
                 if (isLineProperty(lineTable)) {
-                    Student student = generateStudentAndParentAccount(map(lineTable));
+                    AccountStudentDTO student = map(lineTable);
                     students.add(student);
                 } else throw new WrongFileException();
             }
@@ -57,8 +54,8 @@ public class AccountCSVGenerator extends AccountGenerator {
                 .noneMatch(field -> field == null);
     }
 
-    private StudentDTO map(String[] line) {
-        return  StudentDTO.builder()
+    private AccountStudentDTO map(String[] line) {
+        return  AccountStudentDTO.builder()
                 .firstname(line[0])
                 .lastname(line[1])
                 .year(Integer.parseInt(line[2]))
