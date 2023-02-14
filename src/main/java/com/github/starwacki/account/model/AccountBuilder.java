@@ -1,6 +1,6 @@
-package com.github.starwacki.model.account;
+package com.github.starwacki.account.model;
 
-public interface AccountBuilder <T extends Account.Builder>  {
+interface AccountBuilder <T extends Account.Builder>  {
 
     T username(String username);
     T password(String password);

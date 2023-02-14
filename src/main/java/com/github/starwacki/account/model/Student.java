@@ -1,4 +1,4 @@
-package com.github.starwacki.model.account;
+package com.github.starwacki.account.model;
 
 
 import com.github.starwacki.model.SchoolClass;
@@ -13,7 +13,7 @@ public class Student extends Account {
     private int diaryNumber;
 
     @ManyToOne
-            (cascade = {CascadeType.ALL} )
+            (cascade = {CascadeType.PERSIST} )
     @JoinColumn
             (name = "classes_id")
     private SchoolClass schoolClass;

@@ -1,9 +1,9 @@
-package com.github.starwacki.service.account_generator_service.generator;
+package com.github.starwacki.account.service.generator;
 
 import com.github.starwacki.repository.SchoolClassRepository;
 import com.github.starwacki.repository.StudentRepository;
-import com.github.starwacki.service.account_generator_service.dto.AccountStudentDTO;
-import com.github.starwacki.service.account_generator_service.exception.WrongFileException;
+import com.github.starwacki.account.dto.AccountStudentDTO;
+import com.github.starwacki.account.exception.WrongFileException;
 import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import java.util.List;
 public class StudentCSVGenerator extends AccountGenerator {
 
 
-    public StudentCSVGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository) {
+    protected StudentCSVGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository) {
         super(studentRepository, schoolClassRepository);
     }
 

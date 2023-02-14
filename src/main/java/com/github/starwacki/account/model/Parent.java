@@ -1,8 +1,7 @@
-package com.github.starwacki.model.account;
+package com.github.starwacki.account.model;
 
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -13,9 +12,6 @@ import lombok.Data;
 public class Parent extends Account {
 
     private String phoneNumber;
-
-
-
 
     private Parent(String username, String password, String firstname, String lastname, Role role,String phoneNumber) {
         super(username, password, firstname, lastname, role);
@@ -29,8 +25,6 @@ public class Parent extends Account {
     public static Builder  builder() {
         return new Builder();
     }
-
-
 
     public static class  Builder extends Account.Builder {
         private String phoneNumber;

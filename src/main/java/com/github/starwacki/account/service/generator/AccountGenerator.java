@@ -1,11 +1,7 @@
-package com.github.starwacki.service.account_generator_service.generator;
+package com.github.starwacki.account.service.generator;
 
-import com.github.starwacki.model.account.Account;
-import com.github.starwacki.model.account.Role;
-import com.github.starwacki.model.account.Student;
 import com.github.starwacki.repository.SchoolClassRepository;
 import com.github.starwacki.repository.StudentRepository;
-import com.github.starwacki.service.account_generator_service.dto.AccountStudentDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

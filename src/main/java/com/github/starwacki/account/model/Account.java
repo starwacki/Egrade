@@ -1,4 +1,4 @@
-package com.github.starwacki.model.account;
+package com.github.starwacki.account.model;
 
 
 import jakarta.persistence.*;

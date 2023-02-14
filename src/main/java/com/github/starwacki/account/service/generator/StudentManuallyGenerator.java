@@ -1,18 +1,18 @@
-package com.github.starwacki.service.account_generator_service.generator;
+package com.github.starwacki.account.service.generator;
 
 import com.github.starwacki.model.SchoolClass;
-import com.github.starwacki.model.account.Role;
-import com.github.starwacki.model.account.Student;
+import com.github.starwacki.account.model.Role;
+import com.github.starwacki.account.model.Student;
 import com.github.starwacki.repository.SchoolClassRepository;
 import com.github.starwacki.repository.StudentRepository;
-import com.github.starwacki.service.account_generator_service.dto.AccountStudentDTO;
+import com.github.starwacki.account.dto.AccountStudentDTO;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentManuallyGenerator extends AccountGenerator {
 
 
-    public StudentManuallyGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository) {
+    protected StudentManuallyGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository) {
         super(studentRepository, schoolClassRepository);
     }
 

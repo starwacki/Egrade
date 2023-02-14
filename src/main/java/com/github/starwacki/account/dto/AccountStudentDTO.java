@@ -1,4 +1,4 @@
-package com.github.starwacki.service.account_generator_service.dto;
+package com.github.starwacki.account.dto;
 
 
 import jakarta.validation.constraints.NotBlank;
