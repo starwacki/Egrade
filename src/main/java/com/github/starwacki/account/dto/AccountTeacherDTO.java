@@ -1,11 +1,16 @@
 package com.github.starwacki.account.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.github.starwacki.model.grades.Subject;
+import jakarta.validation.constraints.*;
+import lombok.Builder;
 
+
+@Builder
 public record AccountTeacherDTO(
-     @NotBlank String firstname,
-     @NotBlank String lastname,
-     @NotBlank String workPhone,
-     @NotBlank String email
-) {
+        @Pattern(regexp = "^[A-Za-z]{3,40}$") String firstname,
+        @Pattern(regexp = "^[A-Za-z]{3,40}$") String lastname,
+        @NotBlank @Size(max = 10) String workPhone,
+        @Email String email,
+        @NotNull Subject subject
+        ) {
 }

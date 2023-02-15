@@ -4,6 +4,7 @@ import com.github.starwacki.repository.SchoolClassRepository;
 import com.github.starwacki.repository.StudentRepository;
 import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.exception.WrongFileException;
+import com.github.starwacki.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.Arrays;
@@ -11,14 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class StudentCSVGenerator extends AccountGenerator {
+public class StudentCSVGenerator extends StudentManuallyGenerator {
 
 
-    protected StudentCSVGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository) {
-        super(studentRepository, schoolClassRepository);
+    protected StudentCSVGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
+        super(studentRepository, schoolClassRepository, teacherRepository);
     }
-
-
 
     public List<AccountStudentDTO> generateStudents(String path) throws WrongFileException, IOException {
         File file  = new File(path);

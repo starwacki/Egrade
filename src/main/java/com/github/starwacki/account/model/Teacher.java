@@ -2,6 +2,7 @@ package com.github.starwacki.account.model;
 
 
 import com.github.starwacki.model.SchoolClass;
+import com.github.starwacki.model.grades.Subject;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Set;
@@ -15,14 +16,18 @@ public class Teacher extends Account {
 
     private String email;
 
+    @Enumerated(value = EnumType.STRING)
+    private Subject subject;
+
     protected Teacher() {
 
     }
 
-    private Teacher(String username, String password, String firstname, String lastname, Role role, String workPhone, String email) {
+    private Teacher(String username, String password, String firstname, String lastname, Role role, String workPhone, String email,Subject subject) {
         super(username, password, firstname, lastname, role);
         this.workPhone = workPhone;
         this.email = email;
+        this.subject = subject;
     }
 
     @ManyToMany
@@ -42,6 +47,8 @@ public class Teacher extends Account {
         private String workPhone;
 
         private String email;
+
+        private Subject subject;
 
 
         @Override
@@ -84,9 +91,14 @@ public class Teacher extends Account {
             return this;
         }
 
+        public Builder subject(Subject subject) {
+            this.subject = subject;
+            return this;
+        }
+
         @Override
         public Teacher build() {
-            return new Teacher(username,password,firstname,lastname,role,workPhone,email);
+            return new Teacher(username,password,firstname,lastname,role,workPhone,email,subject);
         }
 
     }

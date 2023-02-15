@@ -2,6 +2,7 @@ package com.github.starwacki.account.service.generator;
 
 import com.github.starwacki.repository.SchoolClassRepository;
 import com.github.starwacki.repository.StudentRepository;
+import com.github.starwacki.repository.TeacherRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,20 +17,16 @@ public abstract class AccountGenerator {
 
     protected final SchoolClassRepository schoolClassRepository;
 
-       /*
-          Method generate two account: generate account for student and account for student's parent,
-          parent account is assigned to specified student.
-          first password  is randomly generated.
-         */
+    protected final TeacherRepository teacherRepository;
+
+
+
+    protected abstract  String  generateAccountUsername(String firstname, String lastname, long id);
 
     protected String generateFirstPassword() {
         StringBuilder stringBuilder = new StringBuilder();
         addRandomNumber(stringBuilder);
         return stringBuilder.toString();
-    }
-
-    protected long getLastStudentId() {
-        return (studentRepository.count() + 1);
     }
 
     private void addRandomNumber(StringBuilder stringBuilder) {

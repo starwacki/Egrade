@@ -6,14 +6,15 @@ import com.github.starwacki.account.model.Student;
 import com.github.starwacki.repository.SchoolClassRepository;
 import com.github.starwacki.repository.StudentRepository;
 import com.github.starwacki.account.dto.AccountStudentDTO;
+import com.github.starwacki.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentManuallyGenerator extends AccountGenerator {
 
 
-    protected StudentManuallyGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository) {
-        super(studentRepository, schoolClassRepository);
+    protected StudentManuallyGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
+        super(studentRepository, schoolClassRepository, teacherRepository);
     }
 
     public Student generateStudentAccount(AccountStudentDTO studentDTO) {
@@ -22,7 +23,7 @@ public class StudentManuallyGenerator extends AccountGenerator {
                 .lastname(studentDTO.lastname())
                 .role(Role.STUDENT)
                 .schoolClass(getSchoolClass(studentDTO))
-                .username(generateUsername(studentDTO))
+                .username(generateAccountUsername(studentDTO.firstname(),studentDTO.lastname(),getLastStudentId()))
                 .password(generateFirstPassword())
                 .build();
     }
@@ -33,12 +34,20 @@ public class StudentManuallyGenerator extends AccountGenerator {
 
     }
 
+    private long getLastStudentId() {
+        return (studentRepository.count() + 1);
+    }
+
     private SchoolClass getNewSchoolClass(AccountStudentDTO studentDTO) {
         return new SchoolClass(studentDTO.className(), studentDTO.year());
     }
 
-    private String generateUsername(AccountStudentDTO studentDTO) {
-        return studentDTO.firstname() + "." + studentDTO.lastname() + getLastStudentId();
+    @Override
+    protected String generateAccountUsername(String firstname, String lastname, long id) {
+        return firstname + "." + lastname + id + getStudentAccountIdentity();
     }
 
+    private String getStudentAccountIdentity() {
+        return "STU";
+    }
 }
