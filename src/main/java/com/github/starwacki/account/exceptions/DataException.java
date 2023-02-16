@@ -1,4 +1,4 @@
-package com.github.starwacki.account.exception;
+package com.github.starwacki.account.exceptions;
 
 public class DataException extends RuntimeException{
 }

@@ -1,6 +1,6 @@
 package com.github.starwacki.account.dto;
 
-import com.github.starwacki.model.grades.Subject;
+import com.github.starwacki.student.model.Subject;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 

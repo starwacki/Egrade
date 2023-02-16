@@ -6,8 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class EgradeApplication {
 
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(EgradeApplication.class, args);
+
 	}
+
 
 }

@@ -5,7 +5,7 @@ import com.github.starwacki.account.model.Role;
 import com.github.starwacki.account.service.AccountService;
 import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.dto.AccountViewDTO;
-import com.github.starwacki.account.exception.WrongFileException;
+import com.github.starwacki.account.exceptions.WrongFileException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;

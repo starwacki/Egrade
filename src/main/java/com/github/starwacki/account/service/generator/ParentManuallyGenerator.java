@@ -2,10 +2,10 @@ package com.github.starwacki.account.service.generator;
 
 import com.github.starwacki.account.model.Parent;
 import com.github.starwacki.account.model.Role;
-import com.github.starwacki.repository.SchoolClassRepository;
-import com.github.starwacki.repository.StudentRepository;
+import com.github.starwacki.repositories.SchoolClassRepository;
+import com.github.starwacki.repositories.StudentRepository;
 import com.github.starwacki.account.dto.AccountStudentDTO;
-import com.github.starwacki.repository.TeacherRepository;
+import com.github.starwacki.repositories.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 @Service

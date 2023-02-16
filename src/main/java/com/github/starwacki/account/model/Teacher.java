@@ -1,8 +1,8 @@
 package com.github.starwacki.account.model;
 
 
-import com.github.starwacki.model.SchoolClass;
-import com.github.starwacki.model.grades.Subject;
+import com.github.starwacki.student.model.SchoolClass;
+import com.github.starwacki.student.model.Subject;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Set;

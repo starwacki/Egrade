@@ -1,6 +1,6 @@
-package com.github.starwacki.model;
-import com.github.starwacki.model.account.Student;
-import com.github.starwacki.model.account.Teacher;
+package com.github.starwacki.student.model;
+import com.github.starwacki.account.model.Student;
+import com.github.starwacki.account.model.Teacher;
 import jakarta.persistence.*;
 import lombok.*;
 
