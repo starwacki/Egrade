@@ -6,6 +6,7 @@ import com.github.starwacki.account.mapper.AccountMapper;
 import com.github.starwacki.account.model.*;
 import com.github.starwacki.account.service.generator.TeacherManuallyGenerator;
 import com.github.starwacki.model.SchoolClass;
+import com.github.starwacki.repository.ParentRepository;
 import com.github.starwacki.repository.SchoolClassRepository;
 import com.github.starwacki.repository.StudentRepository;
 import com.github.starwacki.account.dto.AccountStudentDTO;
@@ -19,7 +20,6 @@ import com.github.starwacki.account.exception.AccountNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -29,12 +29,12 @@ public class AccountService {
 
     private final StudentManuallyGenerator studentManuallyGenerator;
     private final ParentManuallyGenerator parentManuallyGenerator;
-
     private final TeacherManuallyGenerator teacherManuallyGenerator;
     private final StudentCSVGenerator studentCSVGenerator;
     private final StudentRepository studentRepository;
     private final SchoolClassRepository schoolClassRepository;
     private final TeacherRepository teacherRepository;
+    private final ParentRepository parentRepository;
 
 
        /*
@@ -58,20 +58,13 @@ public class AccountService {
         return AccountMapper.mapAccountToAccountViewDTO(student);
     }
 
-
-    public List<AccountViewDTO> getAllStudentsFromClass(String className, int classYear) {
-        return studentRepository.findAllBySchoolClassNameAndSchoolClassClassYear(className,classYear)
-                .stream()
-                .map(student ->AccountMapper.mapAccountToAccountViewDTO(student))
-                .toList();
-    }
-
     public AccountViewDTO changeAccountPassword(Role role,int id, String oldPassword,String newPassword) {
         AccountViewDTO accountViewDTO;
         switch (role) {
             case STUDENT -> accountViewDTO = changePassword(studentRepository,id,oldPassword,newPassword);
             case TEACHER -> accountViewDTO = changePassword(teacherRepository,id,oldPassword,newPassword);
-            default -> throw new IllegalStateException("Unexpected value: " + role);
+            case PARENT -> accountViewDTO = changePassword(parentRepository,id,oldPassword,newPassword);
+            default -> throw new AccountNotFoundException();
         }
         return accountViewDTO;
     }
@@ -81,49 +74,10 @@ public class AccountService {
         switch (role) {
             case STUDENT -> accountViewDTO = getAccount(studentRepository,id);
             case TEACHER -> accountViewDTO = getAccount(teacherRepository,id);
-            default -> throw new IllegalStateException("Unexpected value: " + role);
+            case PARENT -> accountViewDTO = getAccount(parentRepository,id);
+            default -> throw new AccountNotFoundException();
         }
         return accountViewDTO;
-    }
-
-    private <T extends Account> AccountViewDTO getAccount(JpaRepository<T,Integer> jpaRepository, int id) {
-        return jpaRepository.findById(id)
-                .map(t -> AccountMapper.mapAccountToAccountViewDTO(t))
-                .orElseThrow(() -> new AccountNotFoundException());
-    }
-
-    private  <T extends Account> AccountViewDTO changePassword(JpaRepository<T,Integer> jpaRepository, int id, String oldPassword, String newPassword) {
-        return jpaRepository.findById(id)
-                .map(account -> setNewPassword(jpaRepository,account,oldPassword,newPassword))
-                .map(account -> AccountMapper.mapAccountToAccountViewDTO(account))
-                .orElseThrow(()-> new AccountNotFoundException());
-    }
-
-    private  <T extends Account> T setNewPassword(JpaRepository<T,Integer> jpaRepository,T account,String oldPassword, String newPassword) {
-        if (arePasswordsSame(account,oldPassword)) {
-            account.setPassword(newPassword);
-            jpaRepository.save(account);
-        } else
-            throw new WrongPasswordException();
-        return account;
-    }
-
-    private boolean arePasswordsSame(Account account, String oldPassword) {
-        return account.getPassword().equals(oldPassword);
-    }
-
-    public AccountViewDTO deleteStudentAccountById(int id) {
-        if (isStudentExist(id))
-            return deleteStudentAccount(id);
-        else
-            throw new AccountNotFoundException();
-    }
-
-    public AccountViewDTO changeStudentClass(int id, String className, int year) {
-        return studentRepository.findById(id)
-                .map(student -> setSchoolClass(student,className,year))
-                .map(student -> AccountMapper.mapAccountToAccountViewDTO(student))
-                .orElseThrow(() -> new AccountNotFoundException());
     }
 
     public AccountViewDTO saveTeacherAccount(AccountTeacherDTO accountTeacherDTO) {
@@ -131,30 +85,59 @@ public class AccountService {
         return AccountMapper.mapAccountToAccountViewDTO(teacher);
     }
 
-    private AccountViewDTO deleteStudentAccount(int id) {
-        Student student = studentRepository.findStudentById(id);
-        studentRepository.delete(student);
-        return AccountMapper.mapAccountToAccountViewDTO(student);
+
+    private <T extends Account> AccountViewDTO getAccount(JpaRepository<T,Integer> jpaRepository, int id) {
+        return jpaRepository
+                .findById(id)
+                .map(t -> AccountMapper.mapAccountToAccountViewDTO(t))
+                .orElseThrow(() -> new AccountNotFoundException());
     }
 
-    private boolean isStudentExist(int id) {
-        return studentRepository.findById(id).isPresent();
+    private  <T extends Account> AccountViewDTO changePassword(JpaRepository<T,Integer> jpaRepository, int id, String oldPassword, String newPassword) {
+        return jpaRepository
+                .findById(id)
+                .map(account -> setNewPassword(jpaRepository,account,oldPassword,newPassword))
+                .map(account -> AccountMapper.mapAccountToAccountViewDTO(account))
+                .orElseThrow(()-> new AccountNotFoundException());
     }
 
-    private Student setSchoolClass(Student student, String className, int year) {
-        student.setSchoolClass(getSchoolClass(className,year));
-        studentRepository.save(student);
-        return student;
+    private  <T extends Account> T setNewPassword(JpaRepository<T,Integer> jpaRepository,T account,String oldPassword, String newPassword) {
+        if (arePasswordsSame(account,oldPassword))
+            return setPassword(jpaRepository,account,newPassword);
+        else
+            throw new WrongPasswordException();
     }
 
-    private SchoolClass getSchoolClass(String className, int year) {
-        return schoolClassRepository
-                .findByNameAndClassYear(className,year)
-                .orElse(createNewSchoolClass(className,year));
+    private <T extends  Account> T setPassword(JpaRepository<T,Integer> repository, T account, String newPassword) {
+        account.setPassword(newPassword);
+        return  repository.save(account);
     }
 
-    private SchoolClass createNewSchoolClass(String className,int year) {
-        return new SchoolClass(className,year);
+    private boolean arePasswordsSame(Account account, String oldPassword) {
+        return account.getPassword().equals(oldPassword);
     }
 
+    public AccountViewDTO deleteAccountById(Role role,int id) {
+        AccountViewDTO accountViewDTO;
+        switch (role) {
+            case STUDENT -> accountViewDTO = deleteAccount(studentRepository,id);
+            case TEACHER -> accountViewDTO = deleteAccount(teacherRepository,id);
+            default -> throw new AccountNotFoundException();
+        }
+        return accountViewDTO;
+    }
+
+    private <T extends Account> AccountViewDTO deleteAccount(JpaRepository<T,Integer> repository,int id) {
+        if (isAccountExist(repository,id)) {
+            T account = repository.findById(id).get();
+            repository.delete(account);
+            return AccountMapper.mapAccountToAccountViewDTO(account);
+        }
+        else throw new AccountNotFoundException();
+
+    }
+
+    private <T extends Account> boolean isAccountExist(JpaRepository<T,Integer> repository, int id) {
+        return repository.existsById(id);
+    }
 }

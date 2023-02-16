@@ -1,6 +1,5 @@
 package com.github.starwacki.account.controller;
 
-
 import com.github.starwacki.account.dto.AccountTeacherDTO;
 import com.github.starwacki.account.model.Role;
 import com.github.starwacki.account.service.AccountService;
@@ -23,7 +22,6 @@ import java.util.List;
 @Validated
 public class AccountController {
 
-
     private final AccountService accountService;
 
 
@@ -33,49 +31,11 @@ public class AccountController {
         return ResponseEntity.created(URI.create("http://localhost:8080/account/student=" + student.id())).body(student);
     }
 
-    @GetMapping("/account/student={id}")
-    ResponseEntity<AccountViewDTO> getStudentAccountById(@PathVariable int id) {
-        AccountViewDTO accountViewDTO = accountService.getAccountById(Role.STUDENT,id);
-        return ResponseEntity.ok(accountViewDTO);
-    }
-
-    @DeleteMapping("/account/student={id}")
-    ResponseEntity<AccountViewDTO> deleteStudentById(@PathVariable int id) {
-        AccountViewDTO accountViewDTO = accountService.deleteStudentAccountById(id);
-        return ResponseEntity.ok(accountViewDTO);
-    }
-
-    @PutMapping("/account/student={id}/password")
-    ResponseEntity<AccountViewDTO> changeStudentPassword(
-            @PathVariable int id,
-            @RequestParam String oldPassword,
-            @RequestParam @Pattern(regexp = "^[a-zA-Z0-9]{6,12}$") String newPassword) {
-        AccountViewDTO accountViewDTO = accountService.changeAccountPassword(Role.STUDENT,id,oldPassword,newPassword);
-        return ResponseEntity.ok(accountViewDTO);
-    }
-
-    @PutMapping("/account/student={id}/class")
-    ResponseEntity<AccountViewDTO> changeStudentClass(
-            @PathVariable int id,
-            @RequestParam @Pattern(regexp = "^[1-9][A-Z]$") String className,
-            @RequestParam @Min(2020) @Max(2040) int year) {
-        AccountViewDTO accountViewDTO = accountService.changeStudentClass(id,className,year);
-        return ResponseEntity.ok(accountViewDTO);
-    }
-
     @PostMapping("/account/students")
     ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(
             @RequestParam @NotBlank String pathname) throws WrongFileException, IOException {
       List<AccountViewDTO> list = accountService.saveStudentsAndParentsFromFile(pathname);
       return ResponseEntity.ok(list);
-    }
-
-    @GetMapping("/accounts/students/{className}/{classYear}")
-    ResponseEntity<List<AccountViewDTO>> getAllStudentsFromClass(
-            @PathVariable  String className,
-            @PathVariable  int classYear) {
-        List<AccountViewDTO> accounts = accountService.getAllStudentsFromClass(className,classYear);
-        return ResponseEntity.ok(accounts);
     }
 
     @PostMapping("/account/teacher")
@@ -84,18 +44,29 @@ public class AccountController {
         return ResponseEntity.created(URI.create("http://localhost:8080/account/teacher=" + teacher.id())).body(teacher);
     }
 
-    @GetMapping("/account/teacher={id}")
-    ResponseEntity<AccountViewDTO> getTeacherAccountById(@PathVariable int id) {
-        AccountViewDTO teacher = accountService.getAccountById(Role.TEACHER,id);
-        return ResponseEntity.ok(teacher);
+    @GetMapping("/account/{role}={id}")
+    ResponseEntity<AccountViewDTO> getAccountById(
+            @PathVariable Role role,
+            @PathVariable int id) {
+        AccountViewDTO accountViewDTO = accountService.getAccountById(role,id);
+        return ResponseEntity.ok(accountViewDTO);
     }
 
-    @PutMapping("/account/teacher={id}")
-    ResponseEntity<AccountViewDTO> changeTeacherPassword(
+    @DeleteMapping("/account/{role}={id}")
+    ResponseEntity<AccountViewDTO> deleteAccountById(
+            @PathVariable Role role,
+            @PathVariable int id) {
+        AccountViewDTO accountViewDTO = accountService.deleteAccountById(role,id);
+        return ResponseEntity.ok(accountViewDTO);
+    }
+
+    @PutMapping("/account/{role}={id}")
+    ResponseEntity<AccountViewDTO> changeAccountPassword(
+            @PathVariable Role role,
             @PathVariable int id,
             @RequestParam String oldPassword,
             @RequestParam @Pattern(regexp = "^[a-zA-Z0-9]{6,12}$") String newPassword) {
-        AccountViewDTO accountViewDTO = accountService.changeAccountPassword(Role.TEACHER,id,oldPassword,newPassword);
+        AccountViewDTO accountViewDTO = accountService.changeAccountPassword(role,id,oldPassword,newPassword);
         return ResponseEntity.ok(accountViewDTO);
     }
 
