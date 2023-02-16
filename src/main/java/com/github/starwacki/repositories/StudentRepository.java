@@ -1,6 +1,6 @@
-package com.github.starwacki.repository;
+package com.github.starwacki.repositories;
 
-import com.github.starwacki.model.account.Student;
+import com.github.starwacki.account.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +12,8 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
 
 
     List<Student> getAllBySchoolClassId(int id);
+
+    Student findStudentById(int id);
+
+    List<Student> findAllBySchoolClassNameAndSchoolClassClassYear(String name, int year);
 }
