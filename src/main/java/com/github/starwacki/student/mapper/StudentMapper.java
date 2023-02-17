@@ -1,13 +1,11 @@
 package com.github.starwacki.student.mapper;
 
 import com.github.starwacki.account.model.Student;
-import com.github.starwacki.student.dto.GradeDTO;
 import com.github.starwacki.student.dto.StudentDTO;
 import com.github.starwacki.student.dto.StudentGradesDTO;
-import com.github.starwacki.student.model.Subject;
-
+import com.github.starwacki.student.dto.SubjectDTO;
 import java.util.List;
-import java.util.Map;
+
 
 public class StudentMapper {
 
@@ -22,13 +20,13 @@ public class StudentMapper {
                 .build();
     }
 
-    public static StudentGradesDTO mapStudentToStudentGradeDTO(Student student, Map<Subject, List<GradeDTO>> grades) {
+    public static StudentGradesDTO mapStudentToStudentGradeDTO(Student student, List<SubjectDTO> grades) {
         return StudentGradesDTO.builder()
                 .firstname(student.getFirstname())
                 .lastname(student.getLastname())
                 .className(student.getSchoolClass().getName())
                 .year(student.getSchoolClass().getClassYear())
-                .grades(grades)
+                .subjectGrades(grades)
                 .build();
     }
 }

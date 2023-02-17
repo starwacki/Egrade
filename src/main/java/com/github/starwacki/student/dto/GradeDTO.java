@@ -9,11 +9,14 @@ import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDate;
 
+
+//TODO: add addedBy
 @Builder
 public record GradeDTO(
         String description,
-       @Range(min = 1, max = 100) int weight,
-       @NotNull Subject subject,
-       @ValidGrade double degree
+        @Range(min = 1, max = 100) int weight,
+        @NotNull Subject subject,
+        @ValidGrade double degree,
+        int addingTeacherId
 ) {
 }

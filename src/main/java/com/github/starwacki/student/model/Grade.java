@@ -1,6 +1,7 @@
 package com.github.starwacki.student.model;
 
 import com.github.starwacki.account.model.Student;
+import com.github.starwacki.account.model.Teacher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,5 +34,9 @@ public class Grade {
 
     @OneToOne
     private Student student;
+
+    @OneToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher addedBy;
 
 }

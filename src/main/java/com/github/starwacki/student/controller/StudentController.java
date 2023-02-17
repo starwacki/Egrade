@@ -1,6 +1,7 @@
 package com.github.starwacki.student.controller;
 
 import com.github.starwacki.student.dto.GradeDTO;
+import com.github.starwacki.student.dto.GradeViewDTO;
 import com.github.starwacki.student.dto.StudentDTO;
 import com.github.starwacki.student.dto.StudentGradesDTO;
 import com.github.starwacki.student.service.StudentGradeService;
@@ -46,14 +47,16 @@ public class StudentController {
     ResponseEntity<GradeDTO> addGradeToStudent(
             @PathVariable int id,
             @RequestBody @Valid GradeDTO gradeDTO) {
-        return ResponseEntity.ok(studentGradeService.addGradeToStudent(gradeDTO,id));
+        GradeDTO grade = studentGradeService.addGradeToStudent(gradeDTO,id);
+        return ResponseEntity.ok(grade);
     }
 
     @GetMapping("/student={id}/grade={gradeID}")
-    ResponseEntity<GradeDTO> getStudentGrade(
+    ResponseEntity<GradeViewDTO> getStudentGrade(
             @PathVariable int id,
             @PathVariable int gradeID) {
-        return ResponseEntity.ok(studentGradeService.getOneGrade(id,gradeID));
+        GradeViewDTO gradeViewDTO = studentGradeService.getOneGrade(id,gradeID);
+        return ResponseEntity.ok(gradeViewDTO);
     }
 
     @PutMapping("/student={id}/grade={gradeID}")
@@ -65,6 +68,14 @@ public class StudentController {
         return ResponseEntity.ok(grade);
     }
 
+    @DeleteMapping("/student={id}/grade={gradeID}")
+    ResponseEntity<GradeDTO> deleteStudentGrade(
+            @PathVariable int id,
+            @PathVariable int gradeID) {
+        GradeDTO grade = studentGradeService.deleteStudentGrade(id,gradeID);
+        return ResponseEntity.ok(grade);
+    }
+
 
     @GetMapping("/student={id}/grades")
     ResponseEntity<StudentGradesDTO> getStudentGrades(@PathVariable int id) {
@@ -73,7 +84,7 @@ public class StudentController {
     }
 
 
-    @GetMapping("/grade/student={id}/subject={subjectID}")
+    @GetMapping("/student={id}/grades/subject={subjectID}")
     ResponseEntity<StudentGradesDTO> getStudentSubjectGrades(
             @PathVariable int id,
             @PathVariable int subjectID) {

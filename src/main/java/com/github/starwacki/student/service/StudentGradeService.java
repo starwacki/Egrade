@@ -1,7 +1,12 @@
 package com.github.starwacki.student.service;
 
 import com.github.starwacki.account.model.Student;
+import com.github.starwacki.account.model.Teacher;
+import com.github.starwacki.repositories.TeacherRepository;
+import com.github.starwacki.student.dto.GradeViewDTO;
+import com.github.starwacki.student.dto.SubjectDTO;
 import com.github.starwacki.student.exceptions.StudentNotFoundException;
+import com.github.starwacki.student.exceptions.TeacherNotFoundException;
 import com.github.starwacki.student.mapper.GradeMapper;
 import com.github.starwacki.student.model.Grade;
 import com.github.starwacki.student.model.Subject;
@@ -11,11 +16,8 @@ import com.github.starwacki.student.dto.GradeDTO;
 import com.github.starwacki.student.dto.StudentGradesDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+import java.util.*;
 import static com.github.starwacki.student.mapper.StudentMapper.mapStudentToStudentGradeDTO;
 
 @Service
@@ -24,22 +26,24 @@ public class StudentGradeService {
 
     private final GradeRepository gradeRepository;
     private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
 
+    //TODO: map getSubjectDTOList to List with only one SubjectDTO
     public StudentGradesDTO getOneSubjectGrade(int studentId, int subjectId) {
         return studentRepository
                 .findById(studentId)
-                .map(student -> mapStudentToStudentGradeDTO(student,getGrades(studentId,subjectId)))
+                .map(student -> mapStudentToStudentGradeDTO(student,getOnlyOneSubjectDTOInList(studentId,subjectId)))
                 .orElseThrow(() -> new StudentNotFoundException());
     }
     public StudentGradesDTO getAllStudentsGrade(int studentId) {
         return studentRepository
                 .findById(studentId)
-                .map(student -> mapStudentToStudentGradeDTO(student,getGrades(studentId)))
+                .map(student -> mapStudentToStudentGradeDTO(student,getSubjectDTOList(studentId)))
                 .orElseThrow(() -> new StudentNotFoundException());
     }
 
-    public GradeDTO getOneGrade(int id, int gradeID) {
+    public GradeViewDTO getOneGrade(int id, int gradeID) {
         return gradeRepository
                 .findByStudentIdAndId(id,gradeID)
                 .map(grade -> GradeMapper.mapGradeToGradeViewDTO(grade))
@@ -47,8 +51,14 @@ public class StudentGradeService {
     }
 
     public GradeDTO  addGradeToStudent(GradeDTO gradeDTO, int studentID) {
-         gradeRepository.save(GradeMapper.mapGradeDTOToGrade(gradeDTO,getStudent(studentID)));
+         gradeRepository.save(GradeMapper.mapGradeDTOToGrade(gradeDTO,getStudent(studentID),getTeacher(gradeDTO.addingTeacherId())));
          return gradeDTO;
+    }
+
+    private Teacher getTeacher(int addingTeacherId) {
+        return teacherRepository
+                .findById(addingTeacherId)
+                .orElseThrow(() -> new TeacherNotFoundException());
     }
 
     private Student getStudent(int id) {
@@ -57,43 +67,65 @@ public class StudentGradeService {
                .orElseThrow(()-> new StudentNotFoundException());
     }
 
-    private Map<Subject, List<GradeDTO>> getGrades(int studentID) {
-        Map<Subject,List<GradeDTO>> grades = new HashMap<>();
-        addGradesToMap(grades,studentID);
-        return grades;
-    }
 
-    private Map<Subject, List<GradeDTO>> getGrades(int studentID, int subjectID) {
-        Map<Subject,List<GradeDTO>> grades = new HashMap<>();
-        addSubjectGradesToMap(grades,studentID,Subject.values()[subjectID]);
-        return grades;
-    }
-
-    private void addGradesToMap(Map<Subject,List<GradeDTO>> grades, int studentID) {
-        Arrays
+    private List<SubjectDTO> getSubjectDTOList(int studentID) {
+        return Arrays
                 .stream(Subject.values())
-                .toList()
-                .forEach(subject -> addSubjectGradesToMap(grades,studentID,subject));
+                .map(subject -> getSubjectDTOForStudent(studentID,subject))
+                .toList();
     }
 
-    private void addSubjectGradesToMap(Map<Subject,List<GradeDTO>> grades, int studentID, Subject subject) {
-        grades.put(subject,mapToGradeViewDtoList(getGradeList(studentID,subject)));
+    private List<SubjectDTO> getOnlyOneSubjectDTOInList(int studentID, int subjectID) {
+        return  List.of(getSubjectDTOForStudent(studentID,Subject.values()[subjectID]));
     }
 
-    private List<Grade> getGradeList(int studentID, Subject subject) {
-        return gradeRepository.findAllByStudentIdAndSubject(studentID,subject);
+    private SubjectDTO getSubjectDTOForStudent(int studentID,Subject subject) {
+        return SubjectDTO
+                .builder()
+                .grades(getSubjectGrades(studentID,subject))
+                .subject(subject)
+                .gradeAverage(String.format("%.2f",getSubjectGradesAverage(studentID,subject)))
+                .build();
     }
 
-    private List<GradeDTO> mapToGradeViewDtoList(List<Grade> grades) {
-        return grades
+    private double getSubjectGradesAverage(int studentID,Subject subject) {
+        double values  = sumAllSubjectGradesValue(studentID,subject);
+        if (values==0)
+            return 0;
+        else
+            return  values/getWeighsGrades(studentID,subject);
+    }
+
+    private double sumAllSubjectGradesValue(int studentID,Subject subject) {
+        return gradeRepository.findAllByStudentIdAndSubject(studentID,subject)
                 .stream()
-                .map(grade -> GradeMapper.mapGradeToGradeViewDTO(grade))
-                .collect(Collectors.toList());
+                .map(grade -> calculateGradeValue(grade))
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
+
+    private double getWeighsGrades(int studentID,Subject subject) {
+        return gradeRepository.findAllByStudentIdAndSubject(studentID,subject)
+                .stream()
+                .map(grade -> grade.getWeight())
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    private double calculateGradeValue(Grade grade) {
+        return grade.getDegree()*grade.getWeight();
+    }
+
+    private List<GradeViewDTO> getSubjectGrades(int studentID, Subject subject) {
+        return gradeRepository.findAllByStudentIdAndSubject(studentID,subject)
+                .stream().map(grade -> GradeMapper.mapGradeToGradeViewDTO(grade))
+                .toList();
+    }
+
 
     public GradeDTO updateGrade(int studentID, int gradeID, GradeDTO gradeDTO) {
         return gradeRepository.findByStudentIdAndId(studentID,gradeID)
-                .map(grade -> GradeMapper.mapGradeToGradeViewDTO(changeGradeInformationAndSave(grade,gradeDTO)))
+                .map(grade -> GradeMapper.mapGradeToGradeDTO(changeGradeInformationAndSave(grade,gradeDTO)))
                 .orElseThrow(() -> new StudentNotFoundException());
     }
 
@@ -102,6 +134,18 @@ public class StudentGradeService {
             grade.setDescription(gradeDTO.description());
             grade.setWeight(gradeDTO.weight());
             return gradeRepository.save(grade);
+    }
+
+    public GradeDTO deleteStudentGrade(int studentId, int gradeID) {
+        return gradeRepository
+                .findByStudentIdAndId(studentId,gradeID)
+                .map(grade -> GradeMapper.mapGradeToGradeDTO(deleteGrade(grade)))
+                .orElseThrow(() -> new StudentNotFoundException());
+    }
+
+    private Grade deleteGrade(Grade grade) {
+        gradeRepository.delete(grade);
+        return grade;
     }
 
 }

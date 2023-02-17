@@ -28,7 +28,7 @@ public class AccountController {
     @PostMapping("/account/student")
     ResponseEntity<AccountViewDTO> addStudent(@RequestBody @Valid AccountStudentDTO studentDTO) {
         AccountViewDTO student = accountService.saveStudentAndParentAccount(studentDTO);
-        return ResponseEntity.created(URI.create("http://localhost:8080/account/student=" + student.id())).body(student);
+        return ResponseEntity.ok(student);
     }
 
     @PostMapping("/account/students")
@@ -69,15 +69,5 @@ public class AccountController {
         AccountViewDTO accountViewDTO = accountService.changeAccountPassword(role,id,oldPassword,newPassword);
         return ResponseEntity.ok(accountViewDTO);
     }
-
-
-
-
-
-
-
-
-
-
 
 }
