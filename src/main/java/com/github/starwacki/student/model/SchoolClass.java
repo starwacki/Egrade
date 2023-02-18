@@ -3,7 +3,6 @@ import com.github.starwacki.account.model.Student;
 import com.github.starwacki.account.model.Teacher;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.Set;
 
 

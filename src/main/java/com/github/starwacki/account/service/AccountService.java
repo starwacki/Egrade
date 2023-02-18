@@ -1,5 +1,6 @@
 package com.github.starwacki.account.service;
 
+import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.dto.AccountTeacherDTO;
 import com.github.starwacki.account.exceptions.WrongPasswordException;
 import com.github.starwacki.account.mapper.AccountMapper;
@@ -8,7 +9,6 @@ import com.github.starwacki.account.service.generator.TeacherManuallyGenerator;
 import com.github.starwacki.repositories.ParentRepository;
 import com.github.starwacki.repositories.SchoolClassRepository;
 import com.github.starwacki.repositories.StudentRepository;
-import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.dto.AccountViewDTO;
 import com.github.starwacki.account.exceptions.WrongFileException;
 import com.github.starwacki.account.service.generator.ParentManuallyGenerator;

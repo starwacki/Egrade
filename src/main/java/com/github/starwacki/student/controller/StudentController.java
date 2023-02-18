@@ -42,7 +42,6 @@ public class StudentController {
         return ResponseEntity.ok(accountViewDTO);
     }
 
-
     @PostMapping("/student={id}/grade")
     ResponseEntity<GradeDTO> addGradeToStudent(
             @PathVariable int id,
@@ -76,13 +75,11 @@ public class StudentController {
         return ResponseEntity.ok(grade);
     }
 
-
     @GetMapping("/student={id}/grades")
     ResponseEntity<StudentGradesDTO> getStudentGrades(@PathVariable int id) {
         StudentGradesDTO grades = studentGradeService.getAllStudentsGrade(id);
         return ResponseEntity.ok(grades);
     }
-
 
     @GetMapping("/student={id}/grades/subject={subjectID}")
     ResponseEntity<StudentGradesDTO> getStudentSubjectGrades(

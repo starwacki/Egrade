@@ -1,9 +1,9 @@
 package com.github.starwacki.account.controller;
 
+import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.dto.AccountTeacherDTO;
 import com.github.starwacki.account.model.Role;
 import com.github.starwacki.account.service.AccountService;
-import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.dto.AccountViewDTO;
 import com.github.starwacki.account.exceptions.WrongFileException;
 import jakarta.validation.Valid;

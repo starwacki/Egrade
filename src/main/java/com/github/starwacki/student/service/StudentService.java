@@ -10,7 +10,6 @@ import com.github.starwacki.student.mapper.StudentMapper;
 import com.github.starwacki.student.model.SchoolClass;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service

@@ -16,7 +16,6 @@ import com.github.starwacki.student.dto.GradeDTO;
 import com.github.starwacki.student.dto.StudentGradesDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 import static com.github.starwacki.student.mapper.StudentMapper.mapStudentToStudentGradeDTO;
 
@@ -28,8 +27,6 @@ public class StudentGradeService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
 
-
-    //TODO: map getSubjectDTOList to List with only one SubjectDTO
     public StudentGradesDTO getOneSubjectGrade(int studentId, int subjectId) {
         return studentRepository
                 .findById(studentId)

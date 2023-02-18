@@ -32,7 +32,7 @@ public class ParentManuallyGenerator extends AccountGenerator {
     }
     @Override
     protected String generateAccountUsername(String firstname, String lastname, long id) {
-        return firstname + "." + lastname + id + getParentAccountIdentity();
+        return firstname + "." + lastname + getParentAccountIdentity()+id;
     }
 
     private String getParentAccountIdentity() {

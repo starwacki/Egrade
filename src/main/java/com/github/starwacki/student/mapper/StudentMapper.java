@@ -6,8 +6,10 @@ import com.github.starwacki.student.dto.StudentGradesDTO;
 import com.github.starwacki.student.dto.SubjectDTO;
 import java.util.List;
 
-
 public class StudentMapper {
+
+    private StudentMapper() {
+    }
 
     public static StudentDTO mapStudentToStudentDTO(Student student) {
         return StudentDTO.builder()

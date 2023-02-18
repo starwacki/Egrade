@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountMapper {
 
+    private AccountMapper() {
+    }
+
    public static AccountViewDTO mapAccountToAccountViewDTO(Account account) {
        return AccountViewDTO
                .builder()

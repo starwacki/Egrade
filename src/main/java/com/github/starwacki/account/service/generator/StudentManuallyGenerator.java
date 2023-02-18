@@ -44,7 +44,7 @@ public class StudentManuallyGenerator extends AccountGenerator {
 
     @Override
     protected String generateAccountUsername(String firstname, String lastname, long id) {
-        return firstname + "." + lastname + id + getStudentAccountIdentity();
+        return firstname + "." + lastname + getStudentAccountIdentity()+id;
     }
 
     private String getStudentAccountIdentity() {

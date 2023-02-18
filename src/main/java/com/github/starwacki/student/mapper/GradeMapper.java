@@ -5,10 +5,12 @@ import com.github.starwacki.account.model.Teacher;
 import com.github.starwacki.student.dto.GradeDTO;
 import com.github.starwacki.student.dto.GradeViewDTO;
 import com.github.starwacki.student.model.Grade;
-
 import java.time.LocalDate;
 
 public class GradeMapper {
+
+    private GradeMapper() {
+    }
 
 
     public static GradeDTO mapGradeToGradeDTO(Grade grade) {

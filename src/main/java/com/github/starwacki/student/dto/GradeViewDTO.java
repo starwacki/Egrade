@@ -1,7 +1,6 @@
 package com.github.starwacki.student.dto;
 
 import lombok.Builder;
-
 import java.time.LocalDate;
 
 @Builder
