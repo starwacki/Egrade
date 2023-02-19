@@ -1,9 +1,7 @@
 package com.github.starwacki.account.service.generator;
 
 import com.github.starwacki.account.dto.AccountStudentDTO;
-import com.github.starwacki.account.dto.AccountTeacherDTO;
 import com.github.starwacki.account.model.Parent;
-import com.github.starwacki.account.model.Teacher;
 import com.github.starwacki.repositories.ParentRepository;
 import com.github.starwacki.repositories.StudentRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
