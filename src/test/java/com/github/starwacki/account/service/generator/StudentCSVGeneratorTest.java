@@ -2,6 +2,7 @@ package com.github.starwacki.account.service.generator;
 
 import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.exceptions.WrongFileException;
+import com.github.starwacki.account.service.generator.StudentCSVGenerator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

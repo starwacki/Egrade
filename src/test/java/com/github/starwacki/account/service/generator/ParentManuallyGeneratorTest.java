@@ -2,6 +2,7 @@ package com.github.starwacki.account.service.generator;
 
 import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.model.Parent;
+import com.github.starwacki.account.service.generator.ParentManuallyGenerator;
 import com.github.starwacki.repositories.ParentRepository;
 import com.github.starwacki.repositories.StudentRepository;
 import org.junit.jupiter.api.DisplayName;

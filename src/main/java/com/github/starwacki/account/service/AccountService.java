@@ -3,17 +3,16 @@ package com.github.starwacki.account.service;
 import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.dto.AccountTeacherDTO;
 import com.github.starwacki.account.exceptions.WrongPasswordException;
+import com.github.starwacki.account.service.generator.ParentManuallyGenerator;
+import com.github.starwacki.account.service.generator.StudentManuallyGenerator;
+import com.github.starwacki.account.service.generator.TeacherManuallyGenerator;
 import com.github.starwacki.account.mapper.AccountMapper;
 import com.github.starwacki.account.model.*;
-import com.github.starwacki.account.service.generator.TeacherManuallyGenerator;
 import com.github.starwacki.repositories.ParentRepository;
-import com.github.starwacki.repositories.SchoolClassRepository;
 import com.github.starwacki.repositories.StudentRepository;
 import com.github.starwacki.account.dto.AccountViewDTO;
 import com.github.starwacki.account.exceptions.WrongFileException;
-import com.github.starwacki.account.service.generator.ParentManuallyGenerator;
 import com.github.starwacki.account.service.generator.StudentCSVGenerator;
-import com.github.starwacki.account.service.generator.StudentManuallyGenerator;
 import com.github.starwacki.repositories.TeacherRepository;
 import com.github.starwacki.account.exceptions.AccountNotFoundException;
 import lombok.AllArgsConstructor;
@@ -31,7 +30,6 @@ public class AccountService {
     private final TeacherManuallyGenerator teacherManuallyGenerator;
     private final StudentCSVGenerator studentCSVGenerator;
     private final StudentRepository studentRepository;
-    private final SchoolClassRepository schoolClassRepository;
     private final TeacherRepository teacherRepository;
     private final ParentRepository parentRepository;
 
@@ -42,7 +40,7 @@ public class AccountService {
           first password  is randomly generated.
          */
 
-    public List<AccountViewDTO> saveStudentsAndParentsFromFile(String path) throws WrongFileException, IOException {
+    public List<AccountViewDTO> saveStudentsAndParentsFromFile(String path) throws WrongFileException {
       return   studentCSVGenerator
               .generateStudents(path)
               .stream()
@@ -63,7 +61,7 @@ public class AccountService {
             case STUDENT -> accountViewDTO = changePassword(studentRepository,id,oldPassword,newPassword);
             case TEACHER -> accountViewDTO = changePassword(teacherRepository,id,oldPassword,newPassword);
             case PARENT -> accountViewDTO = changePassword(parentRepository,id,oldPassword,newPassword);
-            default -> throw new AccountNotFoundException();
+            default -> throw new AccountNotFoundException("Illegal operation type: change password: " + role);
         }
         return accountViewDTO;
     }
@@ -74,7 +72,17 @@ public class AccountService {
             case STUDENT -> accountViewDTO = getAccount(studentRepository,id);
             case TEACHER -> accountViewDTO = getAccount(teacherRepository,id);
             case PARENT -> accountViewDTO = getAccount(parentRepository,id);
-            default -> throw new AccountNotFoundException();
+            default -> throw new AccountNotFoundException("Illegal operation type: get: " + role);
+        }
+        return accountViewDTO;
+    }
+
+    public AccountViewDTO deleteAccountById(Role role,int id) {
+        AccountViewDTO accountViewDTO;
+        switch (role) {
+            case STUDENT -> accountViewDTO = deleteAccount(studentRepository,id);
+            case TEACHER -> accountViewDTO = deleteAccount(teacherRepository,id);
+            default -> throw new AccountNotFoundException("Illegal operation type: delete: " + role);
         }
         return accountViewDTO;
     }
@@ -84,12 +92,11 @@ public class AccountService {
         return AccountMapper.mapAccountToAccountViewDTO(teacher);
     }
 
-
     private <T extends Account> AccountViewDTO getAccount(JpaRepository<T,Integer> jpaRepository, int id) {
         return jpaRepository
                 .findById(id)
                 .map(t -> AccountMapper.mapAccountToAccountViewDTO(t))
-                .orElseThrow(() -> new AccountNotFoundException());
+                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
     }
 
     private  <T extends Account> AccountViewDTO changePassword(JpaRepository<T,Integer> jpaRepository, int id, String oldPassword, String newPassword) {
@@ -97,7 +104,7 @@ public class AccountService {
                 .findById(id)
                 .map(account -> setNewPassword(jpaRepository,account,oldPassword,newPassword))
                 .map(account -> AccountMapper.mapAccountToAccountViewDTO(account))
-                .orElseThrow(()-> new AccountNotFoundException());
+                .orElseThrow(()-> new AccountNotFoundException("Account not found"));
     }
 
     private  <T extends Account> T setNewPassword(JpaRepository<T,Integer> jpaRepository,T account,String oldPassword, String newPassword) {
@@ -116,23 +123,13 @@ public class AccountService {
         return account.getPassword().equals(oldPassword);
     }
 
-    public AccountViewDTO deleteAccountById(Role role,int id) {
-        AccountViewDTO accountViewDTO;
-        switch (role) {
-            case STUDENT -> accountViewDTO = deleteAccount(studentRepository,id);
-            case TEACHER -> accountViewDTO = deleteAccount(teacherRepository,id);
-            default -> throw new AccountNotFoundException();
-        }
-        return accountViewDTO;
-    }
-
     private <T extends Account> AccountViewDTO deleteAccount(JpaRepository<T,Integer> repository,int id) {
         if (isAccountExist(repository,id)) {
             T account = repository.findById(id).get();
             repository.delete(account);
             return AccountMapper.mapAccountToAccountViewDTO(account);
         }
-        else throw new AccountNotFoundException();
+        else throw new AccountNotFoundException("Account not found");
 
     }
 
