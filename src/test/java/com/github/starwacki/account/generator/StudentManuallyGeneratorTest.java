@@ -1,7 +1,8 @@
-package com.github.starwacki.account.service.generator;
+package com.github.starwacki.account.generator;
 
 import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.model.Student;
+import com.github.starwacki.account.service.generator.StudentManuallyGenerator;
 import com.github.starwacki.repositories.SchoolClassRepository;
 import com.github.starwacki.repositories.StudentRepository;
 import com.github.starwacki.student.model.SchoolClass;

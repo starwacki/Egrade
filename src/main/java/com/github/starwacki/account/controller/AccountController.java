@@ -5,7 +5,7 @@ import com.github.starwacki.account.dto.AccountTeacherDTO;
 import com.github.starwacki.account.model.Role;
 import com.github.starwacki.account.service.AccountService;
 import com.github.starwacki.account.dto.AccountViewDTO;
-import com.github.starwacki.account.exceptions.WrongFileException;
+import com.github.starwacki.account.exceptions.exception.WrongFileException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class AccountController {
 
     @PostMapping("/account/students")
     ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(
-            @RequestParam @NotBlank String pathname) throws WrongFileException, IOException {
+            @RequestParam @NotBlank String pathname) throws WrongFileException {
       List<AccountViewDTO> list = accountService.saveStudentsAndParentsFromFile(pathname);
       return ResponseEntity.ok(list);
     }

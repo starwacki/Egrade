@@ -3,7 +3,7 @@ package com.github.starwacki.account.service.generator;
 import com.github.starwacki.repositories.SchoolClassRepository;
 import com.github.starwacki.repositories.StudentRepository;
 import com.github.starwacki.account.dto.AccountStudentDTO;
-import com.github.starwacki.account.exceptions.WrongFileException;
+import com.github.starwacki.account.exceptions.exception.WrongFileException;
 import com.github.starwacki.repositories.TeacherRepository;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -27,25 +27,28 @@ public class StudentCSVGenerator extends StudentManuallyGenerator {
 
     public List<AccountStudentDTO> generateStudents(String path)  {
         File file  = new File(path);
-        if (isCsvFile(file) && !isFileEmpty(file)) {
-            try {
-                return  getStudentFromFileTest(file);
-            } catch (IOException e) {
-                throw new WrongFileException(e.getMessage());
-            }
-        } else
-            throw new WrongFileException();
+        if (isCsvFile(file) && !isFileEmpty(file))
+            return generateStudentFormFile(file);
+         else
+            throw new WrongFileException(WrongFileException.Code.FILE);
+    }
+
+    private List<AccountStudentDTO> generateStudentFormFile(File file) {
+        try {
+            return getStudentFromFileTest(file);
+        } catch (IOException e) {
+            throw new WrongFileException(e.getMessage());
+        }
     }
 
     private boolean isFileEmpty(File file) {
-        if (file.length()==0)
-            throw new WrongFileException("File is empty");
-        else
-            return false;
+        return file.length()==0;
+
     }
 
     private boolean isCsvFile(File file) {
         return file.exists() && file.isFile() && file.getName().endsWith(".csv");
+
     }
 
     private List<AccountStudentDTO> getStudentFromFileTest(File file) throws IOException {
@@ -62,7 +65,11 @@ public class StudentCSVGenerator extends StudentManuallyGenerator {
         if (isLineProperty(line))
             return getValidatedAccountStudentDTO(line,lineIndex);
         else
-            throw new WrongFileException("Line is empty or not have call, line number; " + (lineIndex+1));
+            throw new WrongFileException(WrongFileException.Code.LINE, getLineIndexInFile(lineIndex));
+    }
+
+    private int getLineIndexInFile(int lineIndex) {
+        return lineIndex+1;
     }
 
     private AccountStudentDTO getValidatedAccountStudentDTO(String[] line, int lineIndex) {
@@ -71,13 +78,13 @@ public class StudentCSVGenerator extends StudentManuallyGenerator {
             validateLine(student,lineIndex);
             return student;
         } catch (NumberFormatException e) {
-            throw new WrongFileException("Wrong year format, line number: "+ (lineIndex+1));
+            throw new WrongFileException(WrongFileException.Code.YEAR_FORMAT,getLineIndexInFile(lineIndex));
         }
     }
 
     private void validateLine(AccountStudentDTO student, int lineIndex) {
         if (!validator.validate(student).isEmpty()) {
-            throw new WrongFileException("Incorrect data format, line number: " + (lineIndex + 1));
+            throw new WrongFileException(WrongFileException.Code.VALIDATION,getLineIndexInFile(lineIndex));
         }
     }
 

@@ -1,4 +1,4 @@
-package com.github.starwacki.account.service.generator;
+package com.github.starwacki.account.generator;
 
 import com.github.starwacki.account.dto.AccountStudentDTO;
 import com.github.starwacki.account.model.Parent;

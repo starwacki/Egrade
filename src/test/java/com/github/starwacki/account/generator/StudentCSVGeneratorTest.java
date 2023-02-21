@@ -1,7 +1,7 @@
-package com.github.starwacki.account.service.generator;
+package com.github.starwacki.account.generator;
 
 import com.github.starwacki.account.dto.AccountStudentDTO;
-import com.github.starwacki.account.exceptions.WrongFileException;
+import com.github.starwacki.account.exceptions.exception.WrongFileException;
 import com.github.starwacki.account.service.generator.StudentCSVGenerator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,8 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentCSVGeneratorTest {
@@ -110,8 +109,8 @@ class StudentCSVGeneratorTest {
         String actualMessage = exception.getMessage();
 
         //then
-        String expectedMessage = "File is empty";
-        assertTrue(actualMessage.contains(expectedMessage));
+        String expectedMessage = "File is empty or file can't be read";
+        assertEquals(actualMessage, expectedMessage);
 
     }
 
@@ -231,8 +230,8 @@ class StudentCSVGeneratorTest {
         String actualMessage = exception.getMessage();
 
         //then
-        String expectedMessage ="Line is empty or not have call, line number; 1";
-        assertTrue(actualMessage.contains(expectedMessage));
+        String expectedMessage ="Line is empty or not have call, line number: 1";
+        assertEquals(actualMessage, expectedMessage);
     }
 
     @Test
@@ -301,7 +300,7 @@ class StudentCSVGeneratorTest {
 
         //then
         String expectedMessage = "Wrong year format, line number: 1";
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
