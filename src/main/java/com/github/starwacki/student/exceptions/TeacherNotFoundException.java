@@ -1,8 +1,11 @@
 package com.github.starwacki.student.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class TeacherNotFoundException extends RuntimeException{
+
+    private static final String TEACHER_NOT_FOUND_EXCEPTION_MESSAGE = "Teacher not found id: ";
+
+    public TeacherNotFoundException(int id) {
+        super(TEACHER_NOT_FOUND_EXCEPTION_MESSAGE + id);
+    }
+
 }

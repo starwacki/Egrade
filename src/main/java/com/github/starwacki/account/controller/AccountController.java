@@ -23,7 +23,6 @@ public class AccountController {
 
     private final AccountService accountService;
 
-
     @PostMapping("/account/student")
     ResponseEntity<AccountViewDTO> addStudent(@RequestBody @Valid AccountStudentDTO studentDTO) {
         AccountViewDTO student = accountService.saveStudentAndParentAccount(studentDTO);
