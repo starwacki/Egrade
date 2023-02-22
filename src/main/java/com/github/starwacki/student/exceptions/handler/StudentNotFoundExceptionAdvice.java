@@ -1,7 +1,6 @@
 package com.github.starwacki.student.exceptions.handler;
 
-import com.github.starwacki.account.exceptions.exception.WrongFileException;
-import com.github.starwacki.student.exceptions.StudentNotFoundException;
+import com.github.starwacki.student.exceptions.exception.StudentNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

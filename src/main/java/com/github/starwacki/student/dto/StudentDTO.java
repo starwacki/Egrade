@@ -1,6 +1,7 @@
 package com.github.starwacki.student.dto;
 
 import lombok.Builder;
+import lombok.Data;
 
 @Builder
 public record StudentDTO(

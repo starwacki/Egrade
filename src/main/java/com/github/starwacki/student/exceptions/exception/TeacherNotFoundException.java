@@ -1,4 +1,4 @@
-package com.github.starwacki.student.exceptions;
+package com.github.starwacki.student.exceptions.exception;
 
 public class TeacherNotFoundException extends RuntimeException{
 

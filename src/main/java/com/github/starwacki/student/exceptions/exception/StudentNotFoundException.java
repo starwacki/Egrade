@@ -1,7 +1,4 @@
-package com.github.starwacki.student.exceptions;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+package com.github.starwacki.student.exceptions.exception;
 
 public class StudentNotFoundException extends RuntimeException{
 

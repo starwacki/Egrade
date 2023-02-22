@@ -9,6 +9,7 @@ import com.github.starwacki.account.exceptions.exception.WrongFileException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -26,20 +27,26 @@ public class AccountController {
     @PostMapping("/account/student")
     ResponseEntity<AccountViewDTO> addStudent(@RequestBody @Valid AccountStudentDTO studentDTO) {
         AccountViewDTO student = accountService.saveStudentAndParentAccount(studentDTO);
-        return ResponseEntity.ok(student);
+        return ResponseEntity
+                .created(URI.create("http://localhost:8080/account/STUDENT=" + student.id()))
+                .body(student);
     }
 
     @PostMapping("/account/students")
     ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(
             @RequestParam @NotBlank String pathname) throws WrongFileException {
       List<AccountViewDTO> list = accountService.saveStudentsAndParentsFromFile(pathname);
-      return ResponseEntity.ok(list);
+      return ResponseEntity
+              .status(HttpStatus.CREATED)
+              .body(list);
     }
 
     @PostMapping("/account/teacher")
     ResponseEntity<AccountViewDTO> addTeacher(@RequestBody @Valid AccountTeacherDTO accountTeacherDTO) {
         AccountViewDTO teacher = accountService.saveTeacherAccount(accountTeacherDTO);
-        return ResponseEntity.created(URI.create("http://localhost:8080/account/teacher=" + teacher.id())).body(teacher);
+        return ResponseEntity
+                .created(URI.create("http://localhost:8080/account/TEACHER=" + teacher.id()))
+                .body(teacher);
     }
 
     @GetMapping("/account/{role}={id}")

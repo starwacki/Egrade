@@ -5,7 +5,7 @@ import com.github.starwacki.account.model.Student;
 import com.github.starwacki.repositories.SchoolClassRepository;
 import com.github.starwacki.repositories.StudentRepository;
 import com.github.starwacki.student.dto.StudentDTO;
-import com.github.starwacki.student.exceptions.StudentNotFoundException;
+import com.github.starwacki.student.exceptions.exception.StudentNotFoundException;
 import com.github.starwacki.student.mapper.StudentMapper;
 import com.github.starwacki.student.model.SchoolClass;
 import lombok.AllArgsConstructor;
@@ -27,12 +27,11 @@ public class StudentService {
                 .toList();
     }
 
-    public StudentDTO changeStudentClass(int id, String className, int year) {
-        return studentRepository
+    public void changeStudentClass(int id, String className, int year) {
+       studentRepository
                 .findById(id)
                 .map(student -> setSchoolClass(student,className,year))
-                .map(student -> StudentMapper.mapStudentToStudentDTO(student))
-                .orElseThrow(() -> new StudentNotFoundException());
+                .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
     private Student setSchoolClass(Student student, String className, int year) {

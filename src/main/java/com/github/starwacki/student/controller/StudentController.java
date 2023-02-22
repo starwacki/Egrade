@@ -34,12 +34,12 @@ public class StudentController {
     }
 
     @PutMapping("/student={id}/class")
-    ResponseEntity<StudentDTO> changeStudentClass(
+    ResponseEntity<?> changeStudentClass(
             @PathVariable int id,
             @RequestParam @Pattern(regexp = "^[1-9][A-Z]$") String className,
             @RequestParam @Min(2020) @Max(2040) int year) {
-        StudentDTO accountViewDTO = studentService.changeStudentClass(id,className,year);
-        return ResponseEntity.ok(accountViewDTO);
+        studentService.changeStudentClass(id,className,year);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/student={id}/grade")

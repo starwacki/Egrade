@@ -1,6 +1,6 @@
 package com.github.starwacki.student.exceptions.handler;
 
-import com.github.starwacki.student.exceptions.TeacherNotFoundException;
+import com.github.starwacki.student.exceptions.exception.TeacherNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
