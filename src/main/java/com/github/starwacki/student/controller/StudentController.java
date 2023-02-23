@@ -77,7 +77,7 @@ public class StudentController {
 
     @GetMapping("/student={id}/grades")
     ResponseEntity<StudentGradesDTO> getStudentGrades(@PathVariable int id) {
-        StudentGradesDTO grades = studentGradeService.getAllStudentsGrade(id);
+        StudentGradesDTO grades = studentGradeService.getAllSubjectGradesByStudentID(id);
         return ResponseEntity.ok(grades);
     }
 
@@ -85,7 +85,7 @@ public class StudentController {
     ResponseEntity<StudentGradesDTO> getStudentSubjectGrades(
             @PathVariable int id,
             @PathVariable int subjectID) {
-        return ResponseEntity.ok(studentGradeService.getOneSubjectGrade(id,subjectID));
+        return ResponseEntity.ok(studentGradeService.getOneSubjectGrades(id,subjectID));
     }
 
 

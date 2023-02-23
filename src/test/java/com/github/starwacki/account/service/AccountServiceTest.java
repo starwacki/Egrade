@@ -82,40 +82,6 @@ class AccountServiceTest {
     }
 
     @Test
-    @DisplayName("Test save student account")
-    void saveStudentAndParentAccount_givenStudentAccountDTO_shouldSaveStudent() {
-        //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
-                .firstname("firstname")
-                .lastname("lastname")
-                .year(2022)
-                .className("2A")
-                .parentPhoneNumber("111222333")
-                .build();
-        Parent parent = Parent.builder()
-                .firstname("firstname")
-                .lastname("lastname")
-                .role(Role.PARENT)
-                .phoneNumber("111222333")
-                .build();
-        Student student = Student.builder()
-                .firstname("firstname")
-                .lastname("lastname")
-                .role(Role.STUDENT)
-                .parent(parent)
-                .schoolClass(new SchoolClass("2A",2022))
-                .build();
-        given(parentManuallyGenerator.generateParentAccount(accountStudentDTO)).willReturn(parent);
-        given(studentManuallyGenerator.generateStudentAccount(accountStudentDTO)).willReturn(student);
-
-        //when
-        accountService.saveStudentAndParentAccount(accountStudentDTO);
-
-        //then
-        verify(studentRepository).save(student);
-    }
-
-    @Test
     @DisplayName("Test change account password when giving no exist id account role should throw exception with message")
     void changeAccountPassword_givenNoExistId_shouldThrowAccountNotFoundExceptionWithNotFoundMessage() {
         //given

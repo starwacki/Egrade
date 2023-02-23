@@ -6,6 +6,7 @@ import com.github.starwacki.repositories.TeacherRepository;
 import com.github.starwacki.student.dto.GradeViewDTO;
 import com.github.starwacki.student.dto.SubjectDTO;
 import com.github.starwacki.student.exceptions.exception.StudentNotFoundException;
+import com.github.starwacki.student.exceptions.exception.SubjectNotFoundException;
 import com.github.starwacki.student.exceptions.exception.TeacherNotFoundException;
 import com.github.starwacki.student.mapper.GradeMapper;
 import com.github.starwacki.student.model.Grade;
@@ -27,13 +28,13 @@ public class StudentGradeService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
 
-    public StudentGradesDTO getOneSubjectGrade(int studentId, int subjectId) {
+    public StudentGradesDTO getOneSubjectGrades(int studentId, int subjectId) {
         return studentRepository
                 .findById(studentId)
                 .map(student -> mapStudentToStudentGradeDTO(student,getOnlyOneSubjectDTOInList(studentId,subjectId)))
                 .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
-    public StudentGradesDTO getAllStudentsGrade(int studentId) {
+    public StudentGradesDTO getAllSubjectGradesByStudentID(int studentId) {
         return studentRepository
                 .findById(studentId)
                 .map(student -> mapStudentToStudentGradeDTO(student,getSubjectDTOList(studentId)))
@@ -44,7 +45,7 @@ public class StudentGradeService {
         return gradeRepository
                 .findByStudentIdAndId(studentId,gradeID)
                 .map(grade -> GradeMapper.mapGradeToGradeViewDTO(grade))
-                .orElseThrow(() -> new StudentNotFoundException(studentId));
+                .orElseThrow(() -> new StudentNotFoundException(studentId,gradeID));
     }
 
     public GradeDTO  addGradeToStudent(GradeDTO gradeDTO, int studentID) {
@@ -56,6 +57,20 @@ public class StudentGradeService {
                       getTeacher(gradeDTO.addingTeacherId())));
          return gradeDTO;
     }
+
+    public GradeDTO updateGrade(int studentID, int gradeID, GradeDTO gradeDTO) {
+        return gradeRepository.findByStudentIdAndId(studentID,gradeID)
+                .map(grade -> GradeMapper.mapGradeToGradeDTO(changeGradeInformationAndSave(grade,gradeDTO)))
+                .orElseThrow(() -> new StudentNotFoundException(studentID));
+    }
+
+    public GradeDTO deleteStudentGrade(int studentId, int gradeID) {
+        return gradeRepository
+                .findByStudentIdAndId(studentId,gradeID)
+                .map(grade -> GradeMapper.mapGradeToGradeDTO(deleteGrade(grade)))
+                .orElseThrow(() -> new StudentNotFoundException(studentId));
+    }
+
 
     private Teacher getTeacher(int addingTeacherId) {
         return teacherRepository
@@ -78,7 +93,10 @@ public class StudentGradeService {
     }
 
     private List<SubjectDTO> getOnlyOneSubjectDTOInList(int studentID, int subjectID) {
-        return  List.of(getSubjectDTOForStudent(studentID,Subject.values()[subjectID]));
+        if (subjectID < Subject.values().length) {
+            return List.of(getSubjectDTOForStudent(studentID, Subject.values()[subjectID]));
+        } else
+            throw new SubjectNotFoundException(subjectID);
     }
 
     private SubjectDTO getSubjectDTOForStudent(int studentID,Subject subject) {
@@ -124,25 +142,11 @@ public class StudentGradeService {
                 .toList();
     }
 
-
-    public GradeDTO updateGrade(int studentID, int gradeID, GradeDTO gradeDTO) {
-        return gradeRepository.findByStudentIdAndId(studentID,gradeID)
-                .map(grade -> GradeMapper.mapGradeToGradeDTO(changeGradeInformationAndSave(grade,gradeDTO)))
-                .orElseThrow(() -> new StudentNotFoundException(studentID));
-    }
-
     private Grade changeGradeInformationAndSave(Grade grade, GradeDTO gradeDTO) {
             grade.setDegree(gradeDTO.degree());
             grade.setDescription(gradeDTO.description());
             grade.setWeight(gradeDTO.weight());
             return gradeRepository.save(grade);
-    }
-
-    public GradeDTO deleteStudentGrade(int studentId, int gradeID) {
-        return gradeRepository
-                .findByStudentIdAndId(studentId,gradeID)
-                .map(grade -> GradeMapper.mapGradeToGradeDTO(deleteGrade(grade)))
-                .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 
     private Grade deleteGrade(Grade grade) {
