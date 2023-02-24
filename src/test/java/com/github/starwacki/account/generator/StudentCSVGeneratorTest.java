@@ -1,8 +1,8 @@
 package com.github.starwacki.account.generator;
 
-import com.github.starwacki.account.dto.AccountStudentDTO;
-import com.github.starwacki.account.exceptions.exception.WrongFileException;
-import com.github.starwacki.account.service.generator.StudentCSVGenerator;
+import com.github.starwacki.components.account.dto.AccountStudentDTO;
+import com.github.starwacki.components.account.exceptions.exception.WrongFileException;
+import com.github.starwacki.components.account.service.generator.StudentCSVGenerator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

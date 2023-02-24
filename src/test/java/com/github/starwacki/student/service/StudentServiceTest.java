@@ -1,13 +1,14 @@
 package com.github.starwacki.student.service;
 
-import com.github.starwacki.account.model.Parent;
-import com.github.starwacki.account.model.Role;
-import com.github.starwacki.account.model.Student;
+import com.github.starwacki.components.account.model.Parent;
+import com.github.starwacki.components.account.model.Role;
+import com.github.starwacki.components.account.model.Student;
 import com.github.starwacki.repositories.SchoolClassRepository;
 import com.github.starwacki.repositories.StudentRepository;
-import com.github.starwacki.student.dto.StudentDTO;
-import com.github.starwacki.student.exceptions.exception.StudentNotFoundException;
-import com.github.starwacki.student.model.SchoolClass;
+import com.github.starwacki.components.student.dto.StudentDTO;
+import com.github.starwacki.components.student.exceptions.exception.StudentNotFoundException;
+import com.github.starwacki.components.student.model.SchoolClass;
+import com.github.starwacki.components.student.service.StudentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
