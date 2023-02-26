@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -37,8 +38,8 @@ public class StudentController {
     ResponseEntity<?> changeStudentClass(
             @PathVariable int id,
             @RequestParam @Pattern(regexp = "^[1-9][A-Z]$") String className,
-            @RequestParam @Min(2020) @Max(2040) int year) {
-        studentService.changeStudentClass(id,className,year);
+            @RequestParam @Min(2020) @Max(2040) int classYear) {
+        studentService.changeStudentClass(id,className,classYear);
         return ResponseEntity.noContent().build();
     }
 
@@ -47,7 +48,7 @@ public class StudentController {
             @PathVariable int id,
             @RequestBody @Valid GradeDTO gradeDTO) {
         GradeDTO grade = studentGradeService.addGradeToStudent(gradeDTO,id);
-        return ResponseEntity.ok(grade);
+        return ResponseEntity.status(HttpStatus.CREATED).body(grade);
     }
 
     @GetMapping("/student={id}/grade={gradeID}")

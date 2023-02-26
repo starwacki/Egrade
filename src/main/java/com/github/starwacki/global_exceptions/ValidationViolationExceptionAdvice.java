@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ValidationViolationExceptionAdvice extends ResponseEntityExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(SubjectNotFoundExceptionAdvice.class);
+    private static final Logger logger = LoggerFactory.getLogger(ValidationViolationExceptionAdvice.class);
 
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<Map<String,String>> handleInvalidArgument(ConstraintViolationException exception) {
