@@ -1,8 +1,8 @@
 package com.github.starwacki.components.account.service.generator;
 
-import com.github.starwacki.repositories.SchoolClassRepository;
-import com.github.starwacki.repositories.StudentRepository;
-import com.github.starwacki.repositories.TeacherRepository;
+import com.github.starwacki.global.repositories.SchoolClassRepository;
+import com.github.starwacki.global.repositories.StudentRepository;
+import com.github.starwacki.global.repositories.TeacherRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

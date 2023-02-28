@@ -1,6 +1,5 @@
-package com.github.starwacki.global_exceptions;
+package com.github.starwacki.global.handlers;
 
-import com.github.starwacki.components.student.exceptions.handler.SubjectNotFoundExceptionAdvice;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;

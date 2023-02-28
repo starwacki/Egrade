@@ -1,12 +1,12 @@
-package com.github.starwacki.student.service;
+package com.github.starwacki.components.student.service;
 
 import com.github.starwacki.components.account.model.Parent;
 import com.github.starwacki.components.account.model.Role;
 import com.github.starwacki.components.account.model.Student;
 import com.github.starwacki.components.account.model.Teacher;
-import com.github.starwacki.repositories.GradeRepository;
-import com.github.starwacki.repositories.StudentRepository;
-import com.github.starwacki.repositories.TeacherRepository;
+import com.github.starwacki.global.repositories.GradeRepository;
+import com.github.starwacki.global.repositories.StudentRepository;
+import com.github.starwacki.global.repositories.TeacherRepository;
 import com.github.starwacki.components.student.dto.GradeDTO;
 import com.github.starwacki.components.student.dto.GradeViewDTO;
 import com.github.starwacki.components.student.dto.StudentGradesDTO;

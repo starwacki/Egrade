@@ -1,4 +1,4 @@
-package com.github.starwacki.repositories;
+package com.github.starwacki.global.repositories;
 
 import com.github.starwacki.components.student.model.Grade;
 import com.github.starwacki.components.student.model.Subject;

@@ -1,4 +1,4 @@
-package com.github.starwacki.account.generator;
+package com.github.starwacki.components.account.service.generator;
 
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.components.account.exceptions.exception.WrongFileException;

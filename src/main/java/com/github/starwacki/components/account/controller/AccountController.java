@@ -28,13 +28,13 @@ public class AccountController {
     ResponseEntity<AccountViewDTO> addStudent(@RequestBody @Valid AccountStudentDTO studentDTO) {
         AccountViewDTO student = accountService.saveStudentAndParentAccount(studentDTO);
         return ResponseEntity
-                .created(URI.create("http://localhost:8080/account/STUDENT=" + student.id()))
+                .status(HttpStatus.CREATED)
                 .body(student);
     }
 
     @PostMapping("/account/students")
     ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(
-            @RequestParam @NotBlank String pathname) throws WrongFileException {
+            @RequestParam @NotBlank String pathname) {
       List<AccountViewDTO> list = accountService.saveStudentsAndParentsFromFile(pathname);
       return ResponseEntity
               .status(HttpStatus.CREATED)
@@ -45,7 +45,7 @@ public class AccountController {
     ResponseEntity<AccountViewDTO> addTeacher(@RequestBody @Valid AccountTeacherDTO accountTeacherDTO) {
         AccountViewDTO teacher = accountService.saveTeacherAccount(accountTeacherDTO);
         return ResponseEntity
-                .created(URI.create("http://localhost:8080/account/TEACHER=" + teacher.id()))
+                .status(HttpStatus.CREATED)
                 .body(teacher);
     }
 
@@ -70,7 +70,7 @@ public class AccountController {
             @PathVariable Role role,
             @PathVariable int id,
             @RequestParam String oldPassword,
-            @RequestParam @Pattern(regexp = "^[a-zA-Z0-9]{6,12}$") String newPassword) {
+            @RequestParam @Pattern(regexp = "^(?=.*\\d)(?=.*[A-Z])(?=.*\\W).{6,25}$") String newPassword) {
         AccountViewDTO accountViewDTO = accountService.changeAccountPassword(role,id,oldPassword,newPassword);
         return ResponseEntity.ok(accountViewDTO);
     }

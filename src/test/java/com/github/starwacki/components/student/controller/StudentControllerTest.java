@@ -1,7 +1,6 @@
-package com.github.starwacki.student.controller;
+package com.github.starwacki.components.student.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.starwacki.components.student.controller.StudentController;
 import com.github.starwacki.components.student.dto.*;
 import com.github.starwacki.components.student.exceptions.exception.StudentNotFoundException;
 import com.github.starwacki.components.student.exceptions.exception.SubjectNotFoundException;
@@ -79,11 +78,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedMessage = objectMapper.writeValueAsString(studentDTOS);
+        String expectedResponseBody = objectMapper.writeValueAsString(studentDTOS);
         response
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(result -> assertThat(response.andReturn().getResponse().getContentAsString(),
-                        is(equalTo(expectedMessage))));
+                        is(equalTo(expectedResponseBody))));
     }
 
     @ParameterizedTest
@@ -99,11 +98,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedMessage = "{\"className\":\"Invalid value: " + className + "\"}";
+        String expectedErrorMessage = "{\"className\":\"Invalid value: " + className + "\"}";
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result1 -> assertThat(result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedMessage))));
+                        is(equalTo(expectedErrorMessage))));
     }
 
     @ParameterizedTest
@@ -119,11 +118,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedMessage = "{\"classYear\":\"Invalid value: " + classYear + "\"}";
+        String expectedErrorMessage = "{\"classYear\":\"Invalid value: " + classYear + "\"}";
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result1 -> assertThat(result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedMessage))));
+                        is(equalTo(expectedErrorMessage))));
     }
 
     @Test
@@ -154,11 +153,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedMessage = "{\"className\":\"Invalid value: "+ className + "\",\"classYear\":\"Invalid value: " + classYear + "\"}";
+        String expectedErrorMessage = "{\"className\":\"Invalid value: "+ className + "\",\"classYear\":\"Invalid value: " + classYear + "\"}";
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result1 -> assertThat(result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedMessage))));
+                        is(equalTo(expectedErrorMessage))));
     }
 
     @Test
@@ -199,12 +198,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedMessage = "{\"className\":\"Invalid value: " + className + "\"}";
+        String expectedErrorMessage = "{\"className\":\"Invalid value: " + className + "\"}";
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedMessage))));
+                        is(equalTo(expectedErrorMessage))));
     }
 
     @Test
@@ -222,12 +221,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedMessage = "{\"classYear\":\"Invalid value: " + classYear + "\"}";
+        String expectedErrorMessage = "{\"classYear\":\"Invalid value: " + classYear + "\"}";
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedMessage))));
+                        is(equalTo(expectedErrorMessage))));
     }
 
     @Test
@@ -245,12 +244,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedMessage = "{\"className\":\"Invalid value: "+ className + "\",\"classYear\":\"Invalid value: " + classYear + "\"}";
+        String expectedErrorMessage = "{\"className\":\"Invalid value: "+ className + "\",\"classYear\":\"Invalid value: " + classYear + "\"}";
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedMessage))));
+                        is(equalTo(expectedErrorMessage))));
     }
 
     @Test
@@ -271,12 +270,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
         //then
-        String expectedMessage = "{\"className\":\"Invalid value: "+ className + "\",\"classYear\":\"Invalid value: " + classYear + "\"}";
+        String expectedErrorMessage = "{\"className\":\"Invalid value: "+ className + "\",\"classYear\":\"Invalid value: " + classYear + "\"}";
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedMessage))));
+                        is(equalTo(expectedErrorMessage))));
     }
 
     @Test
@@ -358,12 +357,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedBody = objectMapper.writeValueAsString(gradeDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(gradeDTO);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedBody))));
+                        is(equalTo(expectedResponseBody))));
     }
 
     @ParameterizedTest
@@ -540,12 +539,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBodyMessage = objectMapper.writeValueAsString(gradeDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(gradeDTO);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedResponseBodyMessage))));
+                        is(equalTo(expectedResponseBody))));
     }
 
     @Test
@@ -590,12 +589,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBodyMessage = objectMapper.writeValueAsString(gradeDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(gradeDTO);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedResponseBodyMessage))));
+                        is(equalTo(expectedResponseBody))));
     }
 
     ////
@@ -654,12 +653,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBodyMessage =objectMapper.writeValueAsString(studentGradesDTO);
+        String expectedResponseBody =objectMapper.writeValueAsString(studentGradesDTO);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedResponseBodyMessage))));
+                        is(equalTo(expectedResponseBody))));
     }
 
     /////
@@ -741,12 +740,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBodyMessage =objectMapper.writeValueAsString(studentGradesDTO);
+        String expectedResponseBody =objectMapper.writeValueAsString(studentGradesDTO);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
-                        is(equalTo(expectedResponseBodyMessage))));
+                        is(equalTo(expectedResponseBody))));
     }
 
 

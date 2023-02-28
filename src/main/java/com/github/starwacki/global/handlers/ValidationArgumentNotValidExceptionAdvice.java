@@ -1,6 +1,5 @@
-package com.github.starwacki.global_exceptions;
+package com.github.starwacki.global.handlers;
 
-import com.github.starwacki.components.student.exceptions.handler.SubjectNotFoundExceptionAdvice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -8,6 +7,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,9 @@ public class ValidationArgumentNotValidExceptionAdvice {
                         .stream()
                         .collect(Collectors.toMap(
                                 FieldError -> FieldError.getField(),
-                                fieldError -> "Invalid value: " + fieldError.getDefaultMessage()
+                                fieldError -> "Invalid value: " + fieldError.getDefaultMessage(),
+                                (value1, value2) -> value2,
+                                LinkedHashMap::new
                         ));
         logger.info(exception.getMessage());
         return ResponseEntity.badRequest().body(errorsMap);

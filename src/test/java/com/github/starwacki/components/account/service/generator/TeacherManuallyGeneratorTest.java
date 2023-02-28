@@ -1,9 +1,9 @@
-package com.github.starwacki.account.generator;
+package com.github.starwacki.components.account.service.generator;
 
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.components.account.model.Teacher;
 import com.github.starwacki.components.account.service.generator.TeacherManuallyGenerator;
-import com.github.starwacki.repositories.TeacherRepository;
+import com.github.starwacki.global.repositories.TeacherRepository;
 import com.github.starwacki.components.student.model.Subject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;

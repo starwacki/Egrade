@@ -9,8 +9,8 @@ import lombok.Builder;
 public record AccountTeacherDTO(
         @Pattern(regexp = "^[A-Za-z]{3,40}$") String firstname,
         @Pattern(regexp = "^[A-Za-z]{3,40}$") String lastname,
-        @NotBlank @Size(max = 10) String workPhone,
-        @Email String email,
+        @NotBlank @Size(min = 9, max = 9) @Pattern(regexp = "^\\d+$") String workPhone,
+        @NotBlank @Email String email,
         @NotNull Subject subject
         ) {
 }

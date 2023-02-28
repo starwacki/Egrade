@@ -13,9 +13,9 @@ import com.github.starwacki.components.account.dto.AccountViewDTO;
 import com.github.starwacki.components.account.exceptions.exception.AccountNotFoundException;
 import com.github.starwacki.components.account.exceptions.exception.WrongFileException;
 import com.github.starwacki.components.account.service.generator.StudentCSVGenerator;
-import com.github.starwacki.repositories.ParentRepository;
-import com.github.starwacki.repositories.StudentRepository;
-import com.github.starwacki.repositories.TeacherRepository;
+import com.github.starwacki.global.repositories.ParentRepository;
+import com.github.starwacki.global.repositories.StudentRepository;
+import com.github.starwacki.global.repositories.TeacherRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpMethod;
@@ -34,7 +34,7 @@ public class AccountService {
     private final TeacherRepository teacherRepository;
     private final ParentRepository parentRepository;
 
-    public List<AccountViewDTO> saveStudentsAndParentsFromFile(String path) throws WrongFileException {
+    public List<AccountViewDTO> saveStudentsAndParentsFromFile(String path) {
       return   studentCSVGenerator
               .generateStudents(path)
               .stream()

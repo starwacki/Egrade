@@ -1,4 +1,4 @@
-package com.github.starwacki.account.service;
+package com.github.starwacki.components.account.service;
 
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
@@ -14,9 +14,9 @@ import com.github.starwacki.components.account.service.generator.ParentManuallyG
 import com.github.starwacki.components.account.service.generator.StudentCSVGenerator;
 import com.github.starwacki.components.account.service.generator.StudentManuallyGenerator;
 import com.github.starwacki.components.account.service.generator.TeacherManuallyGenerator;
-import com.github.starwacki.repositories.ParentRepository;
-import com.github.starwacki.repositories.StudentRepository;
-import com.github.starwacki.repositories.TeacherRepository;
+import com.github.starwacki.global.repositories.ParentRepository;
+import com.github.starwacki.global.repositories.StudentRepository;
+import com.github.starwacki.global.repositories.TeacherRepository;
 import com.github.starwacki.components.student.model.Subject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

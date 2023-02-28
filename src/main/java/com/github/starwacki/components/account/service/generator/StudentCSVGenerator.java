@@ -1,10 +1,10 @@
 package com.github.starwacki.components.account.service.generator;
 
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.repositories.SchoolClassRepository;
-import com.github.starwacki.repositories.StudentRepository;
+import com.github.starwacki.global.repositories.SchoolClassRepository;
+import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.components.account.exceptions.exception.WrongFileException;
-import com.github.starwacki.repositories.TeacherRepository;
+import com.github.starwacki.global.repositories.TeacherRepository;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;

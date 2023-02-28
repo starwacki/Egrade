@@ -3,8 +3,8 @@ package com.github.starwacki.components.student.service;
 
 import com.github.starwacki.components.account.model.Student;
 import com.github.starwacki.components.student.exceptions.exception.StudentNotFoundException;
-import com.github.starwacki.repositories.SchoolClassRepository;
-import com.github.starwacki.repositories.StudentRepository;
+import com.github.starwacki.global.repositories.SchoolClassRepository;
+import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.components.student.dto.StudentDTO;
 import com.github.starwacki.components.student.mapper.StudentMapper;
 import com.github.starwacki.components.student.model.SchoolClass;
