@@ -2,6 +2,7 @@ package com.github.starwacki.components.account.service.generator;
 
 
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
+import com.github.starwacki.components.account.model.Account;
 import com.github.starwacki.components.account.model.Role;
 import com.github.starwacki.components.account.model.Teacher;
 import com.github.starwacki.global.repositories.SchoolClassRepository;
@@ -10,30 +11,31 @@ import com.github.starwacki.global.repositories.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TeacherManuallyGenerator extends AccountGenerator {
+public class TeacherManuallyGeneratorStrategy extends AccountGeneratorStrategy {
 
 
-    public TeacherManuallyGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
+    public TeacherManuallyGeneratorStrategy(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
         super(studentRepository, schoolClassRepository, teacherRepository);
     }
 
-    public Teacher generateTeacherAccount(AccountTeacherDTO accountTeacherDTO) {
+    @Override
+    public Teacher createAccount(Record dto) {
+        AccountTeacherDTO teacherDTO = (AccountTeacherDTO) dto;
         return Teacher.builder()
-                .firstname(accountTeacherDTO.firstname())
-                .lastname(accountTeacherDTO.lastname())
+                .firstname(teacherDTO.firstname())
+                .lastname(teacherDTO.lastname())
                 .role(Role.TEACHER)
-                .subject(accountTeacherDTO.subject())
-                .username(generateAccountUsername(accountTeacherDTO.firstname(),accountTeacherDTO.lastname(),getLastTeacherId()))
+                .subject(teacherDTO.subject())
+                .username(generateAccountUsername(teacherDTO.firstname(),teacherDTO.lastname(),getLastTeacherId()))
                 .password(generateFirstPassword())
-                .workPhone(accountTeacherDTO.workPhone())
-                .email(accountTeacherDTO.email())
+                .workPhone(teacherDTO.workPhone())
+                .email(teacherDTO.email())
                 .build();
     }
 
     private long getLastTeacherId() {
        return teacherRepository.count() +1;
     }
-
 
     @Override
     protected String generateAccountUsername(String firstname, String lastname, long id) {

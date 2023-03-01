@@ -9,14 +9,20 @@ import com.github.starwacki.global.repositories.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ParentManuallyGenerator extends AccountGenerator {
+public class ParentManuallyGeneratorStrategy extends AccountGeneratorStrategy {
 
 
-    protected ParentManuallyGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
+    protected ParentManuallyGeneratorStrategy(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
         super(studentRepository, schoolClassRepository, teacherRepository);
     }
 
-    public Parent generateParentAccount(AccountStudentDTO studentDTO) {
+    private long getLastStudentId() {
+        return (studentRepository.count() + 1);
+    }
+
+    @Override
+    public Parent createAccount(Record dto) {
+        AccountStudentDTO studentDTO = (AccountStudentDTO) dto;
         return Parent.builder()
                 .firstname(studentDTO.firstname())
                 .lastname(studentDTO.lastname())
@@ -27,16 +33,9 @@ public class ParentManuallyGenerator extends AccountGenerator {
                 .build();
     }
 
-    private long getLastStudentId() {
-        return (studentRepository.count() + 1);
-    }
     @Override
     protected String generateAccountUsername(String firstname, String lastname, long id) {
-        return firstname + "." + lastname + getParentAccountIdentity()+id;
-    }
-
-    private String getParentAccountIdentity() {
-        return "RO";
+        return firstname + "." + lastname + "RO"+id;
     }
 
 }

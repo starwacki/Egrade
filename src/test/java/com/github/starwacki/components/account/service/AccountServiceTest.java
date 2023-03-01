@@ -9,11 +9,10 @@ import com.github.starwacki.components.account.model.Parent;
 import com.github.starwacki.components.account.model.Role;
 import com.github.starwacki.components.account.model.Student;
 import com.github.starwacki.components.account.model.Teacher;
-import com.github.starwacki.components.account.service.AccountService;
-import com.github.starwacki.components.account.service.generator.ParentManuallyGenerator;
-import com.github.starwacki.components.account.service.generator.StudentCSVGenerator;
-import com.github.starwacki.components.account.service.generator.StudentManuallyGenerator;
-import com.github.starwacki.components.account.service.generator.TeacherManuallyGenerator;
+import com.github.starwacki.components.account.service.generator.ParentManuallyGeneratorStrategy;
+import com.github.starwacki.components.account.service.generator.StudentCSVGeneratorStrategy;
+import com.github.starwacki.components.account.service.generator.StudentManuallyGeneratorStrategy;
+import com.github.starwacki.components.account.service.generator.TeacherManuallyGeneratorStrategy;
 import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
@@ -37,13 +36,13 @@ class AccountServiceTest {
     @InjectMocks
     private AccountService accountService;
     @Mock
-    private StudentManuallyGenerator studentManuallyGenerator;
+    private StudentManuallyGeneratorStrategy studentManuallyGenerator;
     @Mock
-    private ParentManuallyGenerator parentManuallyGenerator;
+    private ParentManuallyGeneratorStrategy parentManuallyGenerator;
     @Mock
-    private TeacherManuallyGenerator teacherManuallyGenerator;
+    private TeacherManuallyGeneratorStrategy teacherManuallyGenerator;
     @Mock
-    private StudentCSVGenerator studentCSVGenerator;
+    private StudentCSVGeneratorStrategy studentCSVGenerator;
     @Mock
     private StudentRepository studentRepository;
     @Mock
@@ -442,7 +441,7 @@ class AccountServiceTest {
                 .role(Role.TEACHER)
                 .subject(Subject.PHYSICS)
                 .build();
-        given(teacherManuallyGenerator.generateTeacherAccount(accountTeacherDTO)).willReturn(teacher);
+        given(teacherManuallyGenerator.createAccount(accountTeacherDTO)).willReturn(teacher);
         given(teacherRepository.save(teacher)).willReturn(teacher);
 
         //when
@@ -471,8 +470,8 @@ class AccountServiceTest {
                 .role(Role.TEACHER)
                 .subject(Subject.PHYSICS)
                 .build();
-        given(teacherManuallyGenerator.generateTeacherAccount(accountTeacherDTO)).willReturn(teacher);
-        given(teacherRepository.save(teacherManuallyGenerator.generateTeacherAccount(accountTeacherDTO))).willReturn(teacher);
+        given(teacherManuallyGenerator.createAccount(accountTeacherDTO)).willReturn(teacher);
+        given(teacherRepository.save(teacherManuallyGenerator.createAccount(accountTeacherDTO))).willReturn(teacher);
 
         //when
         AccountViewDTO expected = accountService.saveTeacherAccount(accountTeacherDTO);

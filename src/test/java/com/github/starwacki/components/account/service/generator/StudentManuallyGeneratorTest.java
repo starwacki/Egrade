@@ -21,7 +21,7 @@ import static org.mockito.BDDMockito.given;
 class StudentManuallyGeneratorTest {
 
     @InjectMocks
-    private StudentManuallyGenerator studentManuallyGenerator;
+    private StudentManuallyGeneratorStrategy studentManuallyGenerator;
     @Mock
     private StudentRepository studentRepository;
     @Mock
@@ -40,7 +40,7 @@ class StudentManuallyGeneratorTest {
                 .build();
 
         //when
-        Student expected = studentManuallyGenerator.generateStudentAccount(accountStudentDTO);
+        Student expected = studentManuallyGenerator.createAccount(accountStudentDTO);
 
         //then
         assertThat(expected,
@@ -68,7 +68,7 @@ class StudentManuallyGeneratorTest {
                 .willReturn(Optional.of(new SchoolClass(className,year)));
 
         //when
-        Student generatedStudent = studentManuallyGenerator.generateStudentAccount(accountStudentDTO);
+        Student generatedStudent = studentManuallyGenerator.createAccount(accountStudentDTO);
         SchoolClass expected = schoolClassRepository.findByNameAndClassYear(className,year).get();
 
         //then
@@ -97,7 +97,7 @@ class StudentManuallyGeneratorTest {
                 .willReturn(Optional.empty());
 
         //when
-        Student generatedStudent = studentManuallyGenerator.generateStudentAccount(accountStudentDTO);
+        Student generatedStudent = studentManuallyGenerator.createAccount(accountStudentDTO);
         SchoolClass expected = new SchoolClass(className,year);
 
         //then
@@ -123,7 +123,7 @@ class StudentManuallyGeneratorTest {
         given(studentRepository.count()).willReturn(0l);
 
         //when
-        Student expected = studentManuallyGenerator.generateStudentAccount(accountStudentDTO);
+        Student expected = studentManuallyGenerator.createAccount(accountStudentDTO);
         long thisStudentId = studentRepository.count()+1;
         String studentUsernamePattern = accountStudentDTO.firstname()+ "."+ accountStudentDTO.lastname() + "STU"+thisStudentId;
 
@@ -144,7 +144,7 @@ class StudentManuallyGeneratorTest {
                 .build();
 
         //when
-        Student expected = studentManuallyGenerator.generateStudentAccount(accountStudentDTO);
+        Student expected = studentManuallyGenerator.createAccount(accountStudentDTO);
         int passwordLength = 10;
 
         //then
@@ -165,7 +165,7 @@ class StudentManuallyGeneratorTest {
 
 
         //when
-        Student expected = studentManuallyGenerator.generateStudentAccount(accountStudentDTO);
+        Student expected = studentManuallyGenerator.createAccount(accountStudentDTO);
 
         //then
         assertThat(expected.getPassword(), matchesPattern("^[A-Za-z]+$"));

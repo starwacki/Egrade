@@ -5,14 +5,13 @@ import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.components.account.exceptions.exception.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.exception.WrongPasswordException;
 import com.github.starwacki.components.account.model.*;
-import com.github.starwacki.components.account.service.generator.ParentManuallyGenerator;
-import com.github.starwacki.components.account.service.generator.StudentManuallyGenerator;
-import com.github.starwacki.components.account.service.generator.TeacherManuallyGenerator;
+import com.github.starwacki.components.account.service.generator.ParentManuallyGeneratorStrategy;
+import com.github.starwacki.components.account.service.generator.StudentManuallyGeneratorStrategy;
+import com.github.starwacki.components.account.service.generator.TeacherManuallyGeneratorStrategy;
 import com.github.starwacki.components.account.mapper.AccountMapper;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
 import com.github.starwacki.components.account.exceptions.exception.AccountNotFoundException;
-import com.github.starwacki.components.account.exceptions.exception.WrongFileException;
-import com.github.starwacki.components.account.service.generator.StudentCSVGenerator;
+import com.github.starwacki.components.account.service.generator.StudentCSVGeneratorStrategy;
 import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
@@ -26,24 +25,24 @@ import java.util.List;
 @Service
 public class AccountService {
 
-    private final StudentManuallyGenerator studentManuallyGenerator;
-    private final ParentManuallyGenerator parentManuallyGenerator;
-    private final TeacherManuallyGenerator teacherManuallyGenerator;
-    private final StudentCSVGenerator studentCSVGenerator;
+    private final StudentManuallyGeneratorStrategy studentManuallyGeneratorStrategy;
+    private final ParentManuallyGeneratorStrategy parentManuallyGeneratorStrategy;
+    private final TeacherManuallyGeneratorStrategy teacherManuallyGeneratorStrategy;
+    private final StudentCSVGeneratorStrategy studentCSVGeneratorStrategy;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final ParentRepository parentRepository;
 
     public List<AccountViewDTO> saveStudentsAndParentsFromFile(String path) {
-      return   studentCSVGenerator
+      return   studentCSVGeneratorStrategy
               .generateStudents(path)
               .stream()
               .map(accountStudentDTO -> saveStudentAndParentAccount(accountStudentDTO))
               .toList();
     }
     public AccountViewDTO saveStudentAndParentAccount(AccountStudentDTO studentDTO) {
-        Student student = studentManuallyGenerator.generateStudentAccount(studentDTO);
-        Parent parent = parentManuallyGenerator.generateParentAccount(studentDTO);
+        Student student = studentManuallyGeneratorStrategy.createAccount(studentDTO);
+        Parent parent = parentManuallyGeneratorStrategy.createAccount(studentDTO);
         student.setParent(parent);
         studentRepository.save(student);
         return AccountMapper.mapAccountToAccountViewDTO(student);
@@ -82,7 +81,7 @@ public class AccountService {
     }
 
     public AccountViewDTO saveTeacherAccount(AccountTeacherDTO accountTeacherDTO) {
-        Teacher teacher = teacherRepository.save(teacherManuallyGenerator.generateTeacherAccount(accountTeacherDTO));
+        Teacher teacher = teacherRepository.save(teacherManuallyGeneratorStrategy.createAccount(accountTeacherDTO));
         return AccountMapper.mapAccountToAccountViewDTO(teacher);
     }
 

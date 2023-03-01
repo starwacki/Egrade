@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class StudentCSVGenerator extends StudentManuallyGenerator {
+public class StudentCSVGeneratorStrategy extends StudentManuallyGeneratorStrategy {
 
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 
-    public StudentCSVGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
+    public StudentCSVGeneratorStrategy(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
         super(studentRepository, schoolClassRepository, teacherRepository);
     }
 

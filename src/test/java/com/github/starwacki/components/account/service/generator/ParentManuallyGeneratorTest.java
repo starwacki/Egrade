@@ -2,7 +2,6 @@ package com.github.starwacki.components.account.service.generator;
 
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.components.account.model.Parent;
-import com.github.starwacki.components.account.service.generator.ParentManuallyGenerator;
 import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +19,7 @@ import static org.mockito.BDDMockito.given;
 class ParentManuallyGeneratorTest {
 
     @InjectMocks
-    private ParentManuallyGenerator parentManuallyGenerator;
+    private ParentManuallyGeneratorStrategy parentManuallyGenerator;
     @Mock
     private ParentRepository parentRepository;
     @Mock
@@ -40,7 +39,7 @@ class ParentManuallyGeneratorTest {
 
 
         //when
-        Parent expected = parentManuallyGenerator.generateParentAccount(accountStudentDTO);
+        Parent expected = parentManuallyGenerator.createAccount(accountStudentDTO);
 
         //then
         assertThat(expected,
@@ -65,7 +64,7 @@ class ParentManuallyGeneratorTest {
         given(parentRepository.count()).willReturn(0l);
 
         //when
-        Parent expected = parentManuallyGenerator.generateParentAccount(accountStudentDTO);
+        Parent expected = parentManuallyGenerator.createAccount(accountStudentDTO);
         long thisParentId = parentRepository.count()+1;
         String parentUsernamePattern = accountStudentDTO.firstname()+ "."+ accountStudentDTO.lastname() + "RO"+thisParentId;
 
@@ -86,7 +85,7 @@ class ParentManuallyGeneratorTest {
                 .build();
 
         //when
-        Parent expected = parentManuallyGenerator.generateParentAccount(accountStudentDTO);
+        Parent expected = parentManuallyGenerator.createAccount(accountStudentDTO);
         int passwordLength = 10;
 
         //then
@@ -106,7 +105,7 @@ class ParentManuallyGeneratorTest {
                 .build();
 
         //when
-        Parent expected = parentManuallyGenerator.generateParentAccount(accountStudentDTO);
+        Parent expected = parentManuallyGenerator.createAccount(accountStudentDTO);
 
         //then
         assertThat(expected.getPassword(), matchesPattern("^[A-Za-z]+$"));

@@ -2,7 +2,6 @@ package com.github.starwacki.components.account.service.generator;
 
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.components.account.exceptions.exception.WrongFileException;
-import com.github.starwacki.components.account.service.generator.StudentCSVGenerator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StudentCSVGeneratorTest {
 
     @InjectMocks
-    private StudentCSVGenerator studentCSVGenerator;
+    private StudentCSVGeneratorStrategy studentCSVGenerator;
 
     private final static String NO_EXIST_FILE_PATH  = "no_exist_file.csv";
     private final static String FILE_WITHOUT_CSV_END_PATH = "src/test/resources/csv_generator_test/file_without_csv_end.txt";

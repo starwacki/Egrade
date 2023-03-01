@@ -2,7 +2,6 @@ package com.github.starwacki.components.account.service.generator;
 
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.components.account.model.Teacher;
-import com.github.starwacki.components.account.service.generator.TeacherManuallyGenerator;
 import com.github.starwacki.global.repositories.TeacherRepository;
 import com.github.starwacki.components.student.model.Subject;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +19,7 @@ import static org.mockito.BDDMockito.given;
 class TeacherManuallyGeneratorTest {
 
     @InjectMocks
-    private TeacherManuallyGenerator teacherManuallyGenerator;
+    private TeacherManuallyGeneratorStrategy teacherManuallyGenerator;
     @Mock
     private TeacherRepository teacherRepository;
 
@@ -37,7 +36,7 @@ class TeacherManuallyGeneratorTest {
                 .build();
 
         //when
-        Teacher expected = teacherManuallyGenerator.generateTeacherAccount(accountTeacherDTO);
+        Teacher expected = teacherManuallyGenerator.createAccount(accountTeacherDTO);
 
         //then
         assertThat(expected,
@@ -62,7 +61,7 @@ class TeacherManuallyGeneratorTest {
         given(teacherRepository.count()).willReturn(0l);
 
         //when
-        Teacher expected = teacherManuallyGenerator.generateTeacherAccount(accountTeacherDTO);
+        Teacher expected = teacherManuallyGenerator.createAccount(accountTeacherDTO);
         long thisTeacherId = teacherRepository.count()+1;
         String teacherUsernamePattern = accountTeacherDTO.firstname()+ "."+ accountTeacherDTO.lastname() + "NAU"+thisTeacherId;
 
@@ -78,7 +77,7 @@ class TeacherManuallyGeneratorTest {
                 .build();
 
         //when
-        Teacher expected = teacherManuallyGenerator.generateTeacherAccount(accountTeacherDTO);
+        Teacher expected = teacherManuallyGenerator.createAccount(accountTeacherDTO);
         int passwordLength = 10;
 
         //then
@@ -93,7 +92,7 @@ class TeacherManuallyGeneratorTest {
                 .build();
 
         //when
-        Teacher expected = teacherManuallyGenerator.generateTeacherAccount(accountTeacherDTO);
+        Teacher expected = teacherManuallyGenerator.createAccount(accountTeacherDTO);
 
         //then
         assertThat(expected.getPassword(), matchesPattern("^[A-Za-z]+$"));

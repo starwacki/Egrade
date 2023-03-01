@@ -1,5 +1,6 @@
 package com.github.starwacki.components.account.service.generator;
 
+import com.github.starwacki.components.account.model.Account;
 import com.github.starwacki.global.repositories.SchoolClassRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
@@ -11,13 +12,15 @@ import java.util.Random;
 
 @Service
 @AllArgsConstructor
-public abstract class AccountGenerator {
+public abstract class AccountGeneratorStrategy {
 
     protected final StudentRepository studentRepository;
 
     protected final SchoolClassRepository schoolClassRepository;
 
     protected final TeacherRepository teacherRepository;
+
+    public abstract Account createAccount(Record dto);
 
     protected abstract  String  generateAccountUsername(String firstname, String lastname, long id);
 

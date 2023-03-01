@@ -1,6 +1,7 @@
 package com.github.starwacki.components.account.service.generator;
 
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
+import com.github.starwacki.components.account.model.Account;
 import com.github.starwacki.components.account.model.Student;
 import com.github.starwacki.components.student.model.SchoolClass;
 import com.github.starwacki.components.account.model.Role;
@@ -10,14 +11,16 @@ import com.github.starwacki.global.repositories.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StudentManuallyGenerator extends AccountGenerator {
+public class StudentManuallyGeneratorStrategy extends AccountGeneratorStrategy {
 
 
-    public StudentManuallyGenerator(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
+    public StudentManuallyGeneratorStrategy(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
         super(studentRepository, schoolClassRepository, teacherRepository);
     }
 
-    public Student generateStudentAccount(AccountStudentDTO studentDTO) {
+    @Override
+    public Student createAccount(Record dto) {
+        AccountStudentDTO studentDTO = (AccountStudentDTO) dto;
         return Student.builder()
                 .firstname(studentDTO.firstname())
                 .lastname(studentDTO.lastname())
