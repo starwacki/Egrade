@@ -2,9 +2,8 @@ package com.github.starwacki.components.account.service.generator;
 
 
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.components.account.model.Account;
-import com.github.starwacki.components.account.model.Role;
-import com.github.starwacki.components.account.model.Teacher;
+import com.github.starwacki.global.model.account.Role;
+import com.github.starwacki.global.model.account.Teacher;
 import com.github.starwacki.global.repositories.SchoolClassRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;

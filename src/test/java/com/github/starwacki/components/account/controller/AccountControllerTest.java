@@ -9,9 +9,9 @@ import com.github.starwacki.components.account.exceptions.exception.AccountNotFo
 import com.github.starwacki.components.account.exceptions.exception.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.exception.WrongFileException;
 import com.github.starwacki.components.account.exceptions.exception.WrongPasswordException;
-import com.github.starwacki.components.account.model.Role;
+import com.github.starwacki.global.model.account.Role;
 import com.github.starwacki.components.account.service.AccountService;
-import com.github.starwacki.components.student.model.Subject;
+import com.github.starwacki.global.model.grades.Subject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

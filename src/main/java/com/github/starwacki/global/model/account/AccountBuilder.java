@@ -1,4 +1,4 @@
-package com.github.starwacki.components.account.model;
+package com.github.starwacki.global.model.account;
 
 interface AccountBuilder <T extends Account.Builder>  {
 

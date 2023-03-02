@@ -1,9 +1,10 @@
 package com.github.starwacki.components.student.service;
 
-import com.github.starwacki.components.account.model.Parent;
-import com.github.starwacki.components.account.model.Role;
-import com.github.starwacki.components.account.model.Student;
-import com.github.starwacki.components.account.model.Teacher;
+import com.github.starwacki.global.model.account.Parent;
+import com.github.starwacki.global.model.account.Role;
+import com.github.starwacki.global.model.account.Student;
+import com.github.starwacki.global.model.account.Teacher;
+import com.github.starwacki.global.model.grades.Degree;
 import com.github.starwacki.global.repositories.GradeRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
@@ -14,10 +15,9 @@ import com.github.starwacki.components.student.dto.SubjectDTO;
 import com.github.starwacki.components.student.exceptions.exception.StudentNotFoundException;
 import com.github.starwacki.components.student.exceptions.exception.SubjectNotFoundException;
 import com.github.starwacki.components.student.exceptions.exception.TeacherNotFoundException;
-import com.github.starwacki.components.student.model.Grade;
-import com.github.starwacki.components.student.model.SchoolClass;
-import com.github.starwacki.components.student.model.Subject;
-import com.github.starwacki.components.student.service.StudentGradeService;
+import com.github.starwacki.global.model.grades.Grade;
+import com.github.starwacki.global.model.school_class.SchoolClass;
+import com.github.starwacki.global.model.grades.Subject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,7 +58,7 @@ class StudentGradeServiceTest {
                 .build();
     }
 
-    private static Grade getGradeTest(int weight,double degree) {
+    private static Grade getGradeTest(int weight, Degree degree) {
         return Grade.builder()
                 .weight(weight)
                 .id(0)
@@ -76,7 +76,7 @@ class StudentGradeServiceTest {
     private static GradeDTO getGradeDto(int addingTeacherId) {
         return GradeDTO.builder()
                 .subject(Subject.PHYSICS)
-                .degree(5)
+                .degree(Degree.FIVE.getSymbol())
                 .description("Klasówka")
                 .weight(4)
                 .addingTeacherId(addingTeacherId)
@@ -193,7 +193,7 @@ class StudentGradeServiceTest {
 
     @Test
     @DisplayName("Test get subject grades when student have grades")
-    void getOneSubjectGrades_givenStudentWith3Grades_shouldReturnListOf3Grades() {
+    void getOneSubjectGrades_givenStudentWith4Grades_shouldReturnListOf4Grades() {
         //give
         int studentId = 0;
         int subjectId = Subject.PHYSICS.ordinal();
@@ -201,16 +201,17 @@ class StudentGradeServiceTest {
         given(studentRepository.findById(studentId)).willReturn(Optional.of(student));
         given(gradeRepository.findAllByStudentIdAndSubject(studentId,Subject.PHYSICS)).willReturn(
                 List.of(
-                        getGradeTest(1,5),
-                        getGradeTest(1,4),
-                        getGradeTest(1,3)
+                        getGradeTest(1,Degree.FIVE),
+                        getGradeTest(1,Degree.FOUR),
+                        getGradeTest(1,Degree.THREE),
+                        getGradeTest(2,Degree.NB)
         ));
 
         //when
         StudentGradesDTO studentGrades = studentGradeService.getOneSubjectGrades(studentId,subjectId);
 
         //then
-        int expectedSizeOfGrades = 3;
+        int expectedSizeOfGrades = 4;
         assertThat(studentGrades.subjectGrades().get(0).grades(),hasSize(expectedSizeOfGrades));
     }
 
@@ -223,7 +224,28 @@ class StudentGradeServiceTest {
         Student student = getStudentTestAccount();
         given(studentRepository.findById(studentId)).willReturn(Optional.of(student));
         given(gradeRepository.findAllByStudentIdAndSubject(studentId,Subject.PHYSICS)).willReturn(List.of(
-                getGradeTest(3,5),getGradeTest(5,1),getGradeTest(3,3)
+                getGradeTest(3,Degree.FIVE),getGradeTest(5,Degree.ONE),getGradeTest(3,Degree.THREE)
+        ));
+
+        //when
+        StudentGradesDTO studentGrades = studentGradeService.getOneSubjectGrades(studentId,subjectId);
+
+        //then
+        String expectedAverage = "2,64";
+        assertThat(studentGrades.subjectGrades().get(0).gradeAverage(),is(equalTo(expectedAverage)));
+    }
+
+    @Test
+    @DisplayName("Test get subject grades when student have grades return correct subject weighted average")
+    void getOneSubjectGrades_givenStudentWith3GradesWithValuesAnd3WithoutValue_shouldReturn_2_63_weightedAverage() {
+        //given
+        int studentId = 0;
+        int subjectId = Subject.PHYSICS.ordinal();
+        Student student = getStudentTestAccount();
+        given(studentRepository.findById(studentId)).willReturn(Optional.of(student));
+        given(gradeRepository.findAllByStudentIdAndSubject(studentId,Subject.PHYSICS)).willReturn(List.of(
+                getGradeTest(3,Degree.FIVE),getGradeTest(5,Degree.ONE),getGradeTest(3,Degree.THREE),
+                getGradeTest(1,Degree.NB),getGradeTest(2,Degree.PLUS),getGradeTest(5, Degree.MINUS)
         ));
 
         //when
@@ -275,9 +297,9 @@ class StudentGradeServiceTest {
         for(Subject subject : Subject.values()) {
             given(gradeRepository.findAllByStudentIdAndSubject(studentId,subject)).willReturn(
                     List.of(
-                            getGradeTest(3,5),
-                            getGradeTest(5,1),
-                            getGradeTest(3,3)
+                            getGradeTest(3,Degree.FIVE),
+                            getGradeTest(5,Degree.ONE),
+                            getGradeTest(3,Degree.THREE)
             ));
         }
 
@@ -301,9 +323,9 @@ class StudentGradeServiceTest {
         for(Subject subject : Subject.values()) {
             given(gradeRepository.findAllByStudentIdAndSubject(studentId,subject)).willReturn(
                     List.of(
-                            getGradeTest(3,5),
-                            getGradeTest(5,1),
-                            getGradeTest(3,3)
+                            getGradeTest(3,Degree.FIVE),
+                            getGradeTest(5,Degree.ONE),
+                            getGradeTest(3,Degree.THREE)
                     ));
         }
 
@@ -316,6 +338,7 @@ class StudentGradeServiceTest {
             assertThat(subjectGrades.gradeAverage(), is(equalTo(expectedAverage)));
         }
     }
+
 
     @Test
     @DisplayName("Test get one grade by no exist student id and grade id throw exception")
@@ -353,7 +376,7 @@ class StudentGradeServiceTest {
         //given
         int studentId = 0;
         int gradeId = 1;
-        Grade grade = getGradeTest(1,5);
+        Grade grade = getGradeTest(1,Degree.FIVE);
         given(gradeRepository.findByStudentIdAndId(studentId,gradeId)).willReturn(Optional.of(grade));
 
         //when
@@ -361,7 +384,7 @@ class StudentGradeServiceTest {
 
         //then
         assertEquals(grade.getWeight(),actualGradeDto.weight());
-        assertEquals(grade.getDegree(),actualGradeDto.degree());
+        assertEquals(grade.getDegree().getSymbol(),actualGradeDto.degree());
         assertEquals(grade.getDescription(),actualGradeDto.description());
         assertEquals(grade.getAddedDate(),actualGradeDto.addedDate());
     }
@@ -372,7 +395,7 @@ class StudentGradeServiceTest {
         //given
         int studentId = 0;
         int gradeId = 1;
-        Grade grade = getGradeTest(1,5);
+        Grade grade = getGradeTest(1,Degree.FIVE);
         given(gradeRepository.findByStudentIdAndId(studentId,gradeId)).willReturn(Optional.of(grade));
 
         //when
@@ -432,7 +455,7 @@ class StudentGradeServiceTest {
         Grade expectedGrade = Grade
                 .builder()
                 .addedBy(teacher)
-                .degree(5)
+                .degree(Degree.FIVE)
                 .weight(4)
                 .description("Klasówka")
                 .addedDate(LocalDate.now())
@@ -472,7 +495,8 @@ class StudentGradeServiceTest {
                 .lastname("Szopa")
                 .build();
         GradeDTO gradeDTO = getGradeDto(addingTeacherId);
-        Grade expectedGrade = getGradeTest(2,5);
+        Grade expectedGrade = getGradeTest(2,Degree.FIVE);
+        System.out.println(gradeDTO);
         expectedGrade.setStudent(student);
         expectedGrade.setAddedBy(teacher);
         given(gradeRepository.findByStudentIdAndId(studentId,gradeId)).willReturn(Optional.of(expectedGrade));
@@ -502,7 +526,7 @@ class StudentGradeServiceTest {
 
         int newWeight = 10;
         String newDescription = "new description";
-        double newDegree = 6;
+        String newDegree = "6";
         GradeDTO expectedUpdateGrade = GradeDTO.builder()
                 .weight(10)
                 .description(newDescription)
@@ -512,7 +536,7 @@ class StudentGradeServiceTest {
                 .degree(newDegree)
                 .build();
 
-        Grade expectedGrade = getGradeTest(2,5);
+        Grade expectedGrade = getGradeTest(2,Degree.FIVE);
         expectedGrade.setStudent(student);
         expectedGrade.setAddedBy(teacher);
         given(gradeRepository.findByStudentIdAndId(studentId,gradeId)).willReturn(Optional.of(expectedGrade));
@@ -542,7 +566,7 @@ class StudentGradeServiceTest {
 
         int newWeight = 10;
         String newDescription = "new description";
-        double newDegree = 6;
+        String newDegree = "6";
         GradeDTO expectedUpdateGrade = GradeDTO.builder()
                 .weight(10)
                 .description(newDescription)
@@ -552,7 +576,7 @@ class StudentGradeServiceTest {
                 .degree(newDegree)
                 .build();
 
-        Grade expectedGrade = getGradeTest(2,5);
+        Grade expectedGrade = getGradeTest(2,Degree.FIVE);
         expectedGrade.setStudent(student);
         expectedGrade.setAddedBy(teacher);
         given(gradeRepository.findByStudentIdAndId(studentId,gradeId)).willReturn(Optional.of(expectedGrade));
@@ -585,7 +609,7 @@ class StudentGradeServiceTest {
         //given
         int studentId = 0;
         int gradeId = 0;
-        Grade grade = getGradeTest(2,5);
+        Grade grade = getGradeTest(2,Degree.FIVE);
         given(gradeRepository.findByStudentIdAndId(studentId,gradeId)).willReturn(Optional.of(grade));
 
         //when

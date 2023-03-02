@@ -1,6 +1,6 @@
-package com.github.starwacki.components.student.model;
-import com.github.starwacki.components.account.model.Student;
-import com.github.starwacki.components.account.model.Teacher;
+package com.github.starwacki.global.model.school_class;
+import com.github.starwacki.global.model.account.Student;
+import com.github.starwacki.global.model.account.Teacher;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Set;

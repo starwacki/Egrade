@@ -1,7 +1,7 @@
-package com.github.starwacki.components.student.model;
+package com.github.starwacki.global.model.grades;
 
-import com.github.starwacki.components.account.model.Student;
-import com.github.starwacki.components.account.model.Teacher;
+import com.github.starwacki.global.model.account.Student;
+import com.github.starwacki.global.model.account.Teacher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,9 @@ public class Grade {
 
     private int weight;
 
-    private double degree;
+    private Degree degree;
+
+    private boolean haveValue;
 
     private LocalDate addedDate;
 

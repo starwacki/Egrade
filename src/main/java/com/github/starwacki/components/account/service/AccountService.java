@@ -4,7 +4,6 @@ import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.components.account.exceptions.exception.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.exception.WrongPasswordException;
-import com.github.starwacki.components.account.model.*;
 import com.github.starwacki.components.account.service.generator.ParentManuallyGeneratorStrategy;
 import com.github.starwacki.components.account.service.generator.StudentManuallyGeneratorStrategy;
 import com.github.starwacki.components.account.service.generator.TeacherManuallyGeneratorStrategy;
@@ -12,6 +11,7 @@ import com.github.starwacki.components.account.mapper.AccountMapper;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
 import com.github.starwacki.components.account.exceptions.exception.AccountNotFoundException;
 import com.github.starwacki.components.account.service.generator.StudentCSVGeneratorStrategy;
+import com.github.starwacki.global.model.account.*;
 import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
@@ -122,7 +122,5 @@ public class AccountService {
                     orElseThrow(() -> new AccountNotFoundException(id));
             repository.delete(account);
             return AccountMapper.mapAccountToAccountViewDTO(account);
-
-
     }
 }

@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = GradeValidator.class)
-public @interface ValidGrade {
+@Constraint(validatedBy = DegreeValidator.class)
+public @interface ValidDegree {
     String message() default "Invalid grade value";
 
     Class<?>[] groups() default {};

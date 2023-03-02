@@ -1,8 +1,7 @@
 package com.github.starwacki.components.student.dto;
 
-import com.github.starwacki.components.student.model.Subject;
+import com.github.starwacki.global.model.grades.Subject;
 import lombok.Builder;
-
 import java.util.List;
 
 @Builder

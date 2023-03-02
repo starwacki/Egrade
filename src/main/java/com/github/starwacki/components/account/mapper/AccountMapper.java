@@ -1,7 +1,7 @@
 package com.github.starwacki.components.account.mapper;
 
 import com.github.starwacki.components.account.dto.AccountViewDTO;
-import com.github.starwacki.components.account.model.Account;
+import com.github.starwacki.global.model.account.Account;
 import org.springframework.stereotype.Component;
 
 @Component

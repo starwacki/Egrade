@@ -1,10 +1,11 @@
 package com.github.starwacki.components.student.mapper;
 
-import com.github.starwacki.components.account.model.Student;
-import com.github.starwacki.components.account.model.Teacher;
+import com.github.starwacki.global.model.account.Student;
+import com.github.starwacki.global.model.account.Teacher;
 import com.github.starwacki.components.student.dto.GradeDTO;
 import com.github.starwacki.components.student.dto.GradeViewDTO;
-import com.github.starwacki.components.student.model.Grade;
+import com.github.starwacki.global.model.grades.Degree;
+import com.github.starwacki.global.model.grades.Grade;
 import java.time.LocalDate;
 
 public class GradeMapper {
@@ -16,18 +17,18 @@ public class GradeMapper {
     public static GradeDTO mapGradeToGradeDTO(Grade grade) {
         return GradeDTO
                 .builder()
-                .degree(grade.getDegree())
+                .degree(grade.getDegree().getSymbol())
                 .subject(grade.getSubject())
                 .weight(grade.getWeight())
                 .description(grade.getDescription())
                 .build();
     }
 
-    public static Grade mapGradeDTOToGrade(GradeDTO gradeDTO, Student student, Teacher teacher) {
+    public static Grade mapGradeDTOToGrade(GradeDTO gradeDTO,Degree degree, Student student, Teacher teacher) {
         return Grade
                 .builder()
                 .description(gradeDTO.description())
-                .degree(gradeDTO.degree())
+                .degree(degree)
                 .subject(gradeDTO.subject())
                 .weight(gradeDTO.weight())
                 .addedBy(teacher)
@@ -43,7 +44,7 @@ public class GradeMapper {
                 .weight(grade.getWeight())
                 .addedBy(grade.getAddedBy().getFirstname() + " " + grade.getAddedBy().getLastname())
                 .addedDate(grade.getAddedDate())
-                .degree(grade.getDegree())
+                .degree(grade.getDegree().getSymbol())
                 .build();
     }
 

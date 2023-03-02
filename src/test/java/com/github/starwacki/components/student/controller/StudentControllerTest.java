@@ -5,7 +5,8 @@ import com.github.starwacki.components.student.dto.*;
 import com.github.starwacki.components.student.exceptions.exception.StudentNotFoundException;
 import com.github.starwacki.components.student.exceptions.exception.SubjectNotFoundException;
 import com.github.starwacki.components.student.exceptions.exception.TeacherNotFoundException;
-import com.github.starwacki.components.student.model.Subject;
+import com.github.starwacki.global.model.grades.Degree;
+import com.github.starwacki.global.model.grades.Subject;
 import com.github.starwacki.components.student.service.StudentGradeService;
 import com.github.starwacki.components.student.service.StudentService;
 import org.junit.jupiter.api.DisplayName;
@@ -285,7 +286,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int studentID = 1;
         GradeDTO gradeDTO =  GradeDTO.builder()
                 .weight(1)
-                .degree(5)
+                .degree("5")
                 .description("description")
                 .subject(Subject.PHYSICS)
                 .addingTeacherId(1)
@@ -315,7 +316,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int teacherId = 2;
         GradeDTO gradeDTO =  GradeDTO.builder()
                 .weight(1)
-                .degree(5)
+                .degree("5")
                 .description("description")
                 .subject(Subject.PHYSICS)
                 .addingTeacherId(teacherId)
@@ -344,7 +345,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int studentID = 1;
         GradeDTO gradeDTO =  GradeDTO.builder()
                 .weight(1)
-                .degree(5)
+                .degree("5")
                 .description("description")
                 .subject(Subject.PHYSICS)
                 .addingTeacherId(1)
@@ -373,7 +374,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int studentID = 1;
         GradeDTO gradeDTO =  GradeDTO.builder()
                 .weight(weight)
-                .degree(5)
+                .degree("5")
                 .description("description")
                 .subject(Subject.PHYSICS)
                 .addingTeacherId(1)
@@ -395,9 +396,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
     }
 
     @ParameterizedTest
-    @ValueSource(doubles = {-5,-1,0,0.5,1.2,2.1,5.7,6.1,10,11})
+    @ValueSource(strings = {"-5","-1","0","0.5","1.2","2.1","5.7","6.1","10","11"})
     @DisplayName("Test  validation gradeDto degree is invalid return 400 HTTP status and error message")
-    void addGradeToStudent_givenInvalidDegree_shouldReturn_404_HTTPStatus_andResponseBodyWithErrorMessage(double degree) throws Exception {
+    void addGradeToStudent_givenInvalidDegree_shouldReturn_404_HTTPStatus_andResponseBodyWithErrorMessage(String degree) throws Exception {
         //given
         int studentID = 1;
         GradeDTO gradeDTO =  GradeDTO.builder()
@@ -468,7 +469,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int gradeID = 2;
         GradeViewDTO gradeViewDTO = GradeViewDTO
                 .builder()
-                .degree(5)
+                .degree("5")
                 .weight(10)
                 .addedDate(LocalDate.of(2022,10,12))
                 .addedBy("Jan Kowalski")
@@ -497,7 +498,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int gradeID = 2;
         GradeDTO gradeDTO = GradeDTO.builder()
                 .weight(1)
-                .degree(2)
+                .degree("2")
                 .description("description")
                 .subject(Subject.PHYSICS)
                 .addingTeacherId(1)
@@ -526,7 +527,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int gradeID = 2;
         GradeDTO gradeDTO = GradeDTO.builder()
                 .weight(1)
-                .degree(2)
+                .degree("2")
                 .description("description")
                 .subject(Subject.PHYSICS)
                 .addingTeacherId(1)
@@ -576,7 +577,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int gradeID = 2;
         GradeDTO gradeDTO = GradeDTO.builder()
                 .weight(1)
-                .degree(2)
+                .degree("2")
                 .description("description")
                 .subject(Subject.PHYSICS)
                 .addingTeacherId(1)
@@ -636,7 +637,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                                 .subject(Subject.PHYSICS)
                                 .gradeAverage("2,5")
                                 .grades(List.of(GradeViewDTO.builder()
-                                                .degree(5)
+                                                .degree("5")
                                                 .addedDate(LocalDate.now())
                                                 .addedBy("Janusz Musial")
                                                 .description("Opis")
@@ -723,7 +724,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                                 .subject(Subject.PHYSICS)
                                 .gradeAverage("2,5")
                                 .grades(List.of(GradeViewDTO.builder()
-                                        .degree(5)
+                                        .degree("5")
                                         .addedDate(LocalDate.now())
                                         .addedBy("Janusz Musial")
                                         .description("Opis")

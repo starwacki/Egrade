@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 @Builder
-public record AccountStudentDTO(
+public record AccountStudentDTO (
       @Pattern(regexp = "^[A-Za-z]{3,40}$") String firstname,
       @Pattern(regexp = "^[A-Za-z]{3,40}$")  String lastname,
       @Range(min = 2020, max = 2040) int year,

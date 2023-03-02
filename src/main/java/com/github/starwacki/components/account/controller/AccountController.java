@@ -2,10 +2,9 @@ package com.github.starwacki.components.account.controller;
 
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.components.account.model.Role;
+import com.github.starwacki.global.model.account.Role;
 import com.github.starwacki.components.account.service.AccountService;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
-import com.github.starwacki.components.account.exceptions.exception.WrongFileException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.net.URI;
 import java.util.List;
 
 @Controller

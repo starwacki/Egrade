@@ -1,4 +1,4 @@
-package com.github.starwacki.components.student.model;
+package com.github.starwacki.global.model.grades;
 
 public enum Subject {
 

@@ -1,7 +1,7 @@
 package com.github.starwacki.global.repositories;
 
-import com.github.starwacki.components.student.model.Grade;
-import com.github.starwacki.components.student.model.Subject;
+import com.github.starwacki.global.model.grades.Grade;
+import com.github.starwacki.global.model.grades.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,16 +1,17 @@
 package com.github.starwacki.components.student.service;
 
-import com.github.starwacki.components.account.model.Student;
-import com.github.starwacki.components.account.model.Teacher;
+import com.github.starwacki.global.model.account.Student;
+import com.github.starwacki.global.model.account.Teacher;
 import com.github.starwacki.components.student.exceptions.exception.StudentNotFoundException;
 import com.github.starwacki.components.student.exceptions.exception.TeacherNotFoundException;
+import com.github.starwacki.global.model.grades.Degree;
 import com.github.starwacki.global.repositories.TeacherRepository;
 import com.github.starwacki.components.student.dto.GradeViewDTO;
 import com.github.starwacki.components.student.dto.SubjectDTO;
 import com.github.starwacki.components.student.exceptions.exception.SubjectNotFoundException;
 import com.github.starwacki.components.student.mapper.GradeMapper;
-import com.github.starwacki.components.student.model.Grade;
-import com.github.starwacki.components.student.model.Subject;
+import com.github.starwacki.global.model.grades.Grade;
+import com.github.starwacki.global.model.grades.Subject;
 import com.github.starwacki.global.repositories.GradeRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.components.student.dto.GradeDTO;
@@ -53,6 +54,7 @@ public class StudentGradeService {
                  .save(GradeMapper
                    .mapGradeDTOToGrade(
                       gradeDTO,
+                      getDegreeBySymbol(gradeDTO.degree()),
                       getStudent(studentID),
                       getTeacher(gradeDTO.addingTeacherId())));
          return gradeDTO;
@@ -119,6 +121,7 @@ public class StudentGradeService {
     private double sumAllSubjectGradesValue(int studentID,Subject subject) {
         return gradeRepository.findAllByStudentIdAndSubject(studentID,subject)
                 .stream()
+                .filter(grade -> isDegreeHaveValue(grade))
                 .map(grade -> calculateGradeValue(grade))
                 .mapToDouble(Double::doubleValue)
                 .sum();
@@ -127,13 +130,21 @@ public class StudentGradeService {
     private double getWeighsGrades(int studentID,Subject subject) {
         return gradeRepository.findAllByStudentIdAndSubject(studentID,subject)
                 .stream()
+                .filter(grade -> isDegreeHaveValue(grade))
                 .map(grade -> grade.getWeight())
                 .mapToInt(Integer::intValue)
                 .sum();
     }
 
+    private boolean isDegreeHaveValue(Grade grade) {
+        if (grade.getDegree().getValue()!=0)
+            return true;
+        else
+            return false;
+    }
+
     private double calculateGradeValue(Grade grade) {
-        return grade.getDegree()*grade.getWeight();
+        return grade.getDegree().getValue()*grade.getWeight();
     }
 
     private List<GradeViewDTO> getSubjectGrades(int studentID, Subject subject) {
@@ -143,10 +154,19 @@ public class StudentGradeService {
     }
 
     private Grade changeGradeInformationAndSave(Grade grade, GradeDTO gradeDTO) {
-            grade.setDegree(gradeDTO.degree());
+            grade.setDegree(getDegreeBySymbol(gradeDTO.degree()));
             grade.setDescription(gradeDTO.description());
             grade.setWeight(gradeDTO.weight());
             return gradeRepository.save(grade);
+    }
+
+    private Degree getDegreeBySymbol(String symbol) {
+        return Arrays.stream(Degree.values()).filter(degree -> {
+            if (degree.getSymbol().equals(symbol)) {
+                return true;
+            }
+            else return false;
+        }).toList().get(0);
     }
 
     private Grade deleteGrade(Grade grade) {

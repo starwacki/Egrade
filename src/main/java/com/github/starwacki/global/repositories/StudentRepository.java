@@ -1,6 +1,6 @@
 package com.github.starwacki.global.repositories;
 
-import com.github.starwacki.components.account.model.Student;
+import com.github.starwacki.global.model.account.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
