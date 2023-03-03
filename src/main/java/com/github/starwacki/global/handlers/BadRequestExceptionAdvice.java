@@ -1,6 +1,9 @@
-package com.github.starwacki.components.student.exceptions.handler;
+package com.github.starwacki.global.handlers;
 
-import com.github.starwacki.components.student.exceptions.exception.SubjectNotFoundException;
+
+import com.github.starwacki.components.account.exceptions.IllegalOperationException;
+import com.github.starwacki.components.account.exceptions.WrongFileException;
+import com.github.starwacki.components.account.exceptions.WrongPasswordException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -12,11 +15,13 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class SubjectNotFoundExceptionAdvice extends ResponseEntityExceptionHandler {
+public class BadRequestExceptionAdvice extends ResponseEntityExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(SubjectNotFoundExceptionAdvice.class);
+    private static final Logger logger = LoggerFactory.getLogger(BadRequestExceptionAdvice.class);
 
-    @ExceptionHandler(SubjectNotFoundException.class)
+    @ExceptionHandler(value = {
+            IllegalOperationException.class, WrongFileException.class,WrongPasswordException.class
+    })
     public ResponseEntity<Object> handleWebException(RuntimeException e, WebRequest webRequest) {
 
         String response = e.getMessage();

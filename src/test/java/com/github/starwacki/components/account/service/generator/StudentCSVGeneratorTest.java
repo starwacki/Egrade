@@ -1,7 +1,7 @@
 package com.github.starwacki.components.account.service.generator;
 
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.components.account.exceptions.exception.WrongFileException;
+import com.github.starwacki.components.account.exceptions.WrongFileException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

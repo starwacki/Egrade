@@ -1,4 +1,4 @@
-package com.github.starwacki.components.account.exceptions.exception;
+package com.github.starwacki.components.account.exceptions;
 
 
 import com.github.starwacki.global.model.account.Role;
@@ -12,7 +12,4 @@ public class IllegalOperationException extends RuntimeException{
         super(ILLEGAL_OPERATION_EXCEPTION_MESSAGE + httpMethod.name() + " for role: " + role);
     }
 
-    public IllegalOperationException() {
-        super();
-    }
 }

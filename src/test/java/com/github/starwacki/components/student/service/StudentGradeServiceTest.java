@@ -12,9 +12,9 @@ import com.github.starwacki.components.student.dto.GradeDTO;
 import com.github.starwacki.components.student.dto.GradeViewDTO;
 import com.github.starwacki.components.student.dto.StudentGradesDTO;
 import com.github.starwacki.components.student.dto.SubjectDTO;
-import com.github.starwacki.components.student.exceptions.exception.StudentNotFoundException;
-import com.github.starwacki.components.student.exceptions.exception.SubjectNotFoundException;
-import com.github.starwacki.components.student.exceptions.exception.TeacherNotFoundException;
+import com.github.starwacki.components.student.exceptions.StudentNotFoundException;
+import com.github.starwacki.components.student.exceptions.SubjectNotFoundException;
+import com.github.starwacki.components.student.exceptions.TeacherAccountNotFoundException;
 import com.github.starwacki.global.model.grades.Grade;
 import com.github.starwacki.global.model.school_class.SchoolClass;
 import com.github.starwacki.global.model.grades.Subject;
@@ -431,7 +431,7 @@ class StudentGradeServiceTest {
         given(teacherRepository.findById(addingTeacherId)).willReturn(Optional.empty());
 
         //then
-        assertThrows(TeacherNotFoundException.class,() -> studentGradeService.addGradeToStudent(gradeDTO,studentId));
+        assertThrows(TeacherAccountNotFoundException.class,() -> studentGradeService.addGradeToStudent(gradeDTO,studentId));
     }
 
     @Test

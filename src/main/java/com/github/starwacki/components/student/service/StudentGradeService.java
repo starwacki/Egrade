@@ -2,13 +2,13 @@ package com.github.starwacki.components.student.service;
 
 import com.github.starwacki.global.model.account.Student;
 import com.github.starwacki.global.model.account.Teacher;
-import com.github.starwacki.components.student.exceptions.exception.StudentNotFoundException;
-import com.github.starwacki.components.student.exceptions.exception.TeacherNotFoundException;
+import com.github.starwacki.components.student.exceptions.StudentNotFoundException;
+import com.github.starwacki.components.student.exceptions.TeacherAccountNotFoundException;
 import com.github.starwacki.global.model.grades.Degree;
 import com.github.starwacki.global.repositories.TeacherRepository;
 import com.github.starwacki.components.student.dto.GradeViewDTO;
 import com.github.starwacki.components.student.dto.SubjectDTO;
-import com.github.starwacki.components.student.exceptions.exception.SubjectNotFoundException;
+import com.github.starwacki.components.student.exceptions.SubjectNotFoundException;
 import com.github.starwacki.components.student.mapper.GradeMapper;
 import com.github.starwacki.global.model.grades.Grade;
 import com.github.starwacki.global.model.grades.Subject;
@@ -55,8 +55,8 @@ public class StudentGradeService {
                    .mapGradeDTOToGrade(
                       gradeDTO,
                       getDegreeBySymbol(gradeDTO.degree()),
-                      getStudent(studentID),
-                      getTeacher(gradeDTO.addingTeacherId())));
+                      getStudentAccount(studentID),
+                      getTeacherAccount(gradeDTO.addingTeacherId())));
          return gradeDTO;
     }
 
@@ -74,13 +74,13 @@ public class StudentGradeService {
     }
 
 
-    private Teacher getTeacher(int addingTeacherId) {
+    private Teacher getTeacherAccount(int addingTeacherId) {
         return teacherRepository
                 .findById(addingTeacherId)
-                .orElseThrow(() -> new TeacherNotFoundException(addingTeacherId));
+                .orElseThrow(() -> new TeacherAccountNotFoundException(addingTeacherId));
     }
 
-    private Student getStudent(int id) {
+    private Student getStudentAccount(int id) {
        return studentRepository
                .findById(id)
                .orElseThrow(()-> new StudentNotFoundException(id));

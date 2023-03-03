@@ -1,4 +1,4 @@
-package com.github.starwacki.components.account.exceptions.exception;
+package com.github.starwacki.components.account.exceptions;
 
 public class WrongFileException extends RuntimeException{
 

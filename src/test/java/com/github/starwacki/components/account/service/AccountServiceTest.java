@@ -2,9 +2,9 @@ package com.github.starwacki.components.account.service;
 
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
-import com.github.starwacki.components.account.exceptions.exception.AccountNotFoundException;
-import com.github.starwacki.components.account.exceptions.exception.IllegalOperationException;
-import com.github.starwacki.components.account.exceptions.exception.WrongPasswordException;
+import com.github.starwacki.components.account.exceptions.AccountNotFoundException;
+import com.github.starwacki.components.account.exceptions.IllegalOperationException;
+import com.github.starwacki.components.account.exceptions.WrongPasswordException;
 import com.github.starwacki.global.model.account.Parent;
 import com.github.starwacki.global.model.account.Role;
 import com.github.starwacki.global.model.account.Student;

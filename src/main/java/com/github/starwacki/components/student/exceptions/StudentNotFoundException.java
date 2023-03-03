@@ -1,4 +1,4 @@
-package com.github.starwacki.components.student.exceptions.exception;
+package com.github.starwacki.components.student.exceptions;
 
 public class StudentNotFoundException extends RuntimeException{
 

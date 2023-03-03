@@ -2,10 +2,9 @@ package com.github.starwacki.components.student.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.starwacki.components.student.dto.*;
-import com.github.starwacki.components.student.exceptions.exception.StudentNotFoundException;
-import com.github.starwacki.components.student.exceptions.exception.SubjectNotFoundException;
-import com.github.starwacki.components.student.exceptions.exception.TeacherNotFoundException;
-import com.github.starwacki.global.model.grades.Degree;
+import com.github.starwacki.components.student.exceptions.StudentNotFoundException;
+import com.github.starwacki.components.student.exceptions.SubjectNotFoundException;
+import com.github.starwacki.components.student.exceptions.TeacherAccountNotFoundException;
 import com.github.starwacki.global.model.grades.Subject;
 import com.github.starwacki.components.student.service.StudentGradeService;
 import com.github.starwacki.components.student.service.StudentService;
@@ -321,7 +320,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .subject(Subject.PHYSICS)
                 .addingTeacherId(teacherId)
                 .build();
-        given(studentGradeService.addGradeToStudent(gradeDTO,studentID)).willThrow(new TeacherNotFoundException(teacherId));
+        given(studentGradeService.addGradeToStudent(gradeDTO,studentID)).willThrow(new TeacherAccountNotFoundException(teacherId));
 
 
         //when
@@ -686,8 +685,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
     }
 
     @Test
-    @DisplayName("Test get student subject grades when subject no exist return 400 HTTP status and error message")
-    void getStudentSubjectGrades_givenNoExistSubjectId_shouldReturn_400_HTTPStatus_andResponseBodyWithErrorMessage() throws Exception {
+    @DisplayName("Test get student subject grades when subject no exist return 404 HTTP status and error message")
+    void getStudentSubjectGrades_givenNoExistSubjectId_shouldReturn_404_HTTPStatus_andResponseBodyWithErrorMessage() throws Exception {
         //given
         int studentID = 1;
         int subjectID = 111;
@@ -700,7 +699,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         //then
         String expectedErrorMessage = "Subject not found, id: " + subjectID;
         result
-                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(result1 -> assertThat(
                         result1.getResponse().getContentAsString(),
                         is(equalTo(expectedErrorMessage))));
