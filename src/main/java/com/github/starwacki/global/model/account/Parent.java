@@ -4,6 +4,11 @@ package com.github.starwacki.global.model.account;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.List;
 
 
 @Data
@@ -25,6 +30,7 @@ public class Parent extends Account {
     public static Builder  builder() {
         return new Builder();
     }
+
 
     public static class  Builder extends Account.Builder {
         private String phoneNumber;

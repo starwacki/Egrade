@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EgradeApplication {
 
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(EgradeApplication.class, args);
 
