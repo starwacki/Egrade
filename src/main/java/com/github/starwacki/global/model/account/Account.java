@@ -71,7 +71,7 @@ public abstract class Account implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public abstract static class Builder implements AccountBuilder{

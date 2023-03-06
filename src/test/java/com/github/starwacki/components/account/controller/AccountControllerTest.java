@@ -12,6 +12,7 @@ import com.github.starwacki.components.account.exceptions.WrongPasswordException
 import com.github.starwacki.global.model.account.Role;
 import com.github.starwacki.components.account.service.AccountService;
 import com.github.starwacki.global.model.grades.Subject;
+import com.github.starwacki.security.JwtAuthenticationFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,6 +47,9 @@ class AccountControllerTest {
 
     @MockBean
     private AccountService accountService;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
     private ObjectMapper objectMapper;

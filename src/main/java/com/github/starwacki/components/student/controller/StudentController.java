@@ -6,6 +6,8 @@ import com.github.starwacki.components.student.dto.StudentDTO;
 import com.github.starwacki.components.student.dto.StudentGradesDTO;
 import com.github.starwacki.components.student.service.StudentGradeService;
 import com.github.starwacki.components.student.service.StudentService;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -13,6 +15,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,7 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 @Validated
+
 public class StudentController {
 
     private final StudentService studentService;
@@ -76,6 +80,7 @@ public class StudentController {
         return ResponseEntity.ok(grade);
     }
 
+    @PermitAll
     @GetMapping("/student={id}/grades")
     ResponseEntity<StudentGradesDTO> getStudentGrades(@PathVariable int id) {
         StudentGradesDTO grades = studentGradeService.getAllSubjectGradesByStudentID(id);

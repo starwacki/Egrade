@@ -11,6 +11,7 @@ import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ public class AccountController {
                 .status(HttpStatus.CREATED)
                 .body(student);
     }
+
 
     @PostMapping("/account/students")
     ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(

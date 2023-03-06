@@ -8,6 +8,7 @@ import com.github.starwacki.components.student.exceptions.TeacherAccountNotFound
 import com.github.starwacki.global.model.grades.Subject;
 import com.github.starwacki.components.student.service.StudentGradeService;
 import com.github.starwacki.components.student.service.StudentService;
+import com.github.starwacki.security.JwtAuthenticationFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
     @MockBean
     private StudentService studentService;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @MockBean
     private StudentGradeService studentGradeService;

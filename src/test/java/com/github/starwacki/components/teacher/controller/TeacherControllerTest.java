@@ -8,6 +8,7 @@ import com.github.starwacki.components.teacher.exceptions.SchoolClassNotFoundExc
 import com.github.starwacki.components.teacher.exceptions.TeacherNotFoundException;
 import com.github.starwacki.components.teacher.service.TeacherService;
 import com.github.starwacki.global.model.grades.Subject;
+import com.github.starwacki.security.JwtAuthenticationFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,9 @@ class TeacherControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @MockBean
     private TeacherService teacherService;

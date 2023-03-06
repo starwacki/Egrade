@@ -10,6 +10,7 @@ import com.github.starwacki.security.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,9 +24,10 @@ public class AuthenticationService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final ParentRepository parentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManage.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+        authenticationManage.authenticate(new UsernamePasswordAuthenticationToken(request.username(), passwordEncoder.encode(request.password())));
         Account user = (Account) findAccountByUsername(request.username())
                 .orElseThrow();
         String jwtToken  = jwtService.generateToken(user);
