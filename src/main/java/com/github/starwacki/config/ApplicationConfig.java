@@ -1,6 +1,7 @@
 package com.github.starwacki.config;
 
 
+import com.github.starwacki.components.auth.service.UserDetailServiceImpl;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.security.EgradePasswordEncoder;
 import lombok.RequiredArgsConstructor;
@@ -10,26 +11,20 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final StudentRepository studentRepository;
+    private final UserDetailServiceImpl userDetailsService;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> studentRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found " + username));
-    }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -44,5 +39,5 @@ public class ApplicationConfig {
         return configuration.getAuthenticationManager();
     }
 
-
+-
 }

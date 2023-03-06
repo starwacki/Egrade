@@ -6,9 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface TeacherRepository extends JpaRepository<Teacher,Integer> {
-
-    Optional<Teacher> findByUsername(String username);
+public interface TeacherRepository extends AccountAbstractRepository<Teacher,Integer> {
 
     Teacher findTeacherById(int id);
 
