@@ -6,6 +6,7 @@ import com.github.starwacki.global.model.account.Role;
 import com.github.starwacki.components.account.service.AccountService;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 @Controller
+@RequestMapping("/account")
 public class AccountController {
 
     private final AccountService accountService;
-    
-    @PostMapping("/account/student")
+
+    @RolesAllowed(value = {"ADMIN"})
+    @PostMapping("/student")
     ResponseEntity<AccountViewDTO> addStudent(
             @RequestBody @Valid AccountStudentDTO studentDTO) {
         AccountViewDTO student = accountService.saveStudentAndParentAccount(studentDTO);
@@ -34,8 +37,8 @@ public class AccountController {
                 .body(student);
     }
 
-
-    @PostMapping("/account/students")
+    @RolesAllowed(value = {"ADMIN"})
+    @PostMapping("/students")
     ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(
             @RequestParam @NotBlank String pathname) {
       List<AccountViewDTO> list = accountService.saveStudentsAndParentsFromFile(pathname);
@@ -44,7 +47,8 @@ public class AccountController {
               .body(list);
     }
 
-    @PostMapping("/account/teacher")
+    @RolesAllowed(value = {"ADMIN"})
+    @PostMapping("/teacher")
     ResponseEntity<AccountViewDTO> addTeacher(
             @RequestBody @Valid AccountTeacherDTO accountTeacherDTO) {
         AccountViewDTO teacher = accountService.saveTeacherAccount(accountTeacherDTO);
@@ -53,7 +57,8 @@ public class AccountController {
                 .body(teacher);
     }
 
-    @GetMapping("/account/{role}={id}")
+    @RolesAllowed(value = {"ADMIN"})
+    @GetMapping("/{role}={id}")
     ResponseEntity<AccountViewDTO> getAccountById(
             @PathVariable Role role,
             @PathVariable int id) {
@@ -61,7 +66,8 @@ public class AccountController {
         return ResponseEntity.ok(accountViewDTO);
     }
 
-    @DeleteMapping("/account/{role}={id}")
+    @RolesAllowed(value = {"ADMIN"})
+    @DeleteMapping("/{role}={id}")
     ResponseEntity<AccountViewDTO> deleteAccountById(
             @PathVariable Role role,
             @PathVariable int id) {
@@ -69,7 +75,8 @@ public class AccountController {
         return ResponseEntity.ok(accountViewDTO);
     }
 
-    @PutMapping("/account/{role}={id}")
+    @PermitAll
+    @PutMapping("/{role}={id}")
     ResponseEntity<AccountViewDTO> changeAccountPassword(
             @PathVariable Role role,
             @PathVariable int id,

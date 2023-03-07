@@ -1,4 +1,4 @@
-package com.github.starwacki.security;
+package com.github.starwacki.global.security;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;

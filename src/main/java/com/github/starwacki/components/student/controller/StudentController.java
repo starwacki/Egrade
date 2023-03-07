@@ -6,6 +6,7 @@ import com.github.starwacki.components.student.dto.StudentDTO;
 import com.github.starwacki.components.student.dto.StudentGradesDTO;
 import com.github.starwacki.components.student.service.StudentGradeService;
 import com.github.starwacki.components.student.service.StudentService;
+import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -21,16 +22,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@Controller
 @AllArgsConstructor
 @Validated
-
+@RequestMapping("/student")
+@Controller
 public class StudentController {
 
     private final StudentService studentService;
     private final StudentGradeService studentGradeService;
 
-    @GetMapping("/students/class={className}&year={classYear}")
+    @RolesAllowed(value = {"ADMIN","TEACHER"})
+    @GetMapping("/class={className}&year={classYear}")
     ResponseEntity<List<StudentDTO>> getAllStudentsFromClass(
             @PathVariable @Pattern(regexp = "^[1-9][A-Z]$")  String className,
             @PathVariable @Min(2020) @Max(2040)  int classYear) {
@@ -38,7 +40,9 @@ public class StudentController {
         return ResponseEntity.ok(accounts);
     }
 
-    @PutMapping("/student={id}/class")
+
+    @RolesAllowed(value = {"ADMIN","TEACHER"})
+    @PutMapping("/id={id}/class")
     ResponseEntity<?> changeStudentClass(
             @PathVariable int id,
             @RequestParam @Pattern(regexp = "^[1-9][A-Z]$") String className,
@@ -47,7 +51,8 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/student={id}/grade")
+    @RolesAllowed(value = {"ADMIN","TEACHER"})
+    @PostMapping("/id={id}/grade")
     ResponseEntity<GradeDTO> addGradeToStudent(
             @PathVariable int id,
             @RequestBody @Valid GradeDTO gradeDTO) {
@@ -55,7 +60,8 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(grade);
     }
 
-    @GetMapping("/student={id}/grade={gradeID}")
+    @PermitAll
+    @GetMapping("/id={id}/grade={gradeID}")
     ResponseEntity<GradeViewDTO> getStudentGrade(
             @PathVariable int id,
             @PathVariable int gradeID) {
@@ -63,7 +69,8 @@ public class StudentController {
         return ResponseEntity.ok(gradeViewDTO);
     }
 
-    @PutMapping("/student={id}/grade={gradeID}")
+    @RolesAllowed(value = {"ADMIN","TEACHER"})
+    @PutMapping("/id={id}/grade={gradeID}")
     ResponseEntity<GradeDTO> updateStudentGrade(
             @PathVariable int id,
             @PathVariable int gradeID,
@@ -72,7 +79,8 @@ public class StudentController {
         return ResponseEntity.ok(grade);
     }
 
-    @DeleteMapping("/student={id}/grade={gradeID}")
+    @RolesAllowed(value = {"ADMIN","TEACHER"})
+    @DeleteMapping("/id={id}/grade={gradeID}")
     ResponseEntity<GradeDTO> deleteStudentGrade(
             @PathVariable int id,
             @PathVariable int gradeID) {
@@ -80,14 +88,15 @@ public class StudentController {
         return ResponseEntity.ok(grade);
     }
 
-    @PermitAll
-    @GetMapping("/student={id}/grades")
+    @RolesAllowed(value = "ADMIN")
+    @GetMapping("/id={id}/grades")
     ResponseEntity<StudentGradesDTO> getStudentGrades(@PathVariable int id) {
         StudentGradesDTO grades = studentGradeService.getAllSubjectGradesByStudentID(id);
         return ResponseEntity.ok(grades);
     }
 
-    @GetMapping("/student={id}/grades/subject={subjectID}")
+    @PermitAll
+    @GetMapping("/id={id}/grades/subject={subjectID}")
     ResponseEntity<StudentGradesDTO> getStudentSubjectGrades(
             @PathVariable int id,
             @PathVariable int subjectID) {

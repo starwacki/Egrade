@@ -1,4 +1,4 @@
-package com.github.starwacki.security;
+package com.github.starwacki.global.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

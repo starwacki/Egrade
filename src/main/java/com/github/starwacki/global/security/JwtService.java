@@ -1,4 +1,4 @@
-package com.github.starwacki.security;
+package com.github.starwacki.global.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -28,17 +28,13 @@ public class JwtService {
         return claimResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(),userDetails);
-    }
-
     public String generateToken(Map<String,Object> extraClaims, UserDetails userDetails) {
        return Jwts
                .builder()
                .setClaims(extraClaims)
                .setSubject(userDetails.getUsername())
                .setIssuedAt(new Date(System.currentTimeMillis()))
-               .setExpiration(new Date(System.currentTimeMillis()+getOneDasInMilliSeconds()))
+               .setExpiration(new Date(System.currentTimeMillis()+getOneDayInMilliSeconds()))
                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                .compact();
     }
@@ -56,7 +52,7 @@ public class JwtService {
         return extractClaim(jwt,claims -> claims.getExpiration());
     }
 
-    private long getOneDasInMilliSeconds() {
+    private long getOneDayInMilliSeconds() {
         return 1000*60*24;
     }
 

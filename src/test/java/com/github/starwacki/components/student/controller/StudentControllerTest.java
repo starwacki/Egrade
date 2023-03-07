@@ -8,7 +8,7 @@ import com.github.starwacki.components.student.exceptions.TeacherAccountNotFound
 import com.github.starwacki.global.model.grades.Subject;
 import com.github.starwacki.components.student.service.StudentGradeService;
 import com.github.starwacki.components.student.service.StudentService;
-import com.github.starwacki.security.JwtAuthenticationFilter;
+import com.github.starwacki.global.security.JwtAuthenticationFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -78,7 +78,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentService.getAllStudentsFromClass(className,classYear)).willReturn(studentDTOS);
 
         //when
-        ResultActions response = mockMvc.perform(get("/students/class="+className+"&year="+classYear)
+        ResultActions response = mockMvc.perform(get("/student/class="+className+"&year="+classYear)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -98,7 +98,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         String className = input;
 
         //when
-        ResultActions result = mockMvc.perform(get("/students/class="+className+"&year="+classYear)
+        ResultActions result = mockMvc.perform(get("/student/class="+className+"&year="+classYear)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -118,7 +118,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         String className = "1A";
 
         //when
-        ResultActions result = mockMvc.perform(get("/students/class="+className+"&year="+classYear)
+        ResultActions result = mockMvc.perform(get("/student/class="+className+"&year="+classYear)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -137,7 +137,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         String className = "1A";
 
         //when
-        ResultActions result = mockMvc.perform(get("/students/class="+className+"&year="+classYear)
+        ResultActions result = mockMvc.perform(get("/student/class="+className+"&year="+classYear)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -153,7 +153,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         String className = "1AA";
 
         //when
-        ResultActions result = mockMvc.perform(get("/students/class="+className+"&year="+classYear)
+        ResultActions result = mockMvc.perform(get("/student/class="+className+"&year="+classYear)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -174,7 +174,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         doThrow(new StudentNotFoundException(studentID)).when(studentService).changeStudentClass(studentID,className,classYear);
 
         //when
-        ResultActions result = mockMvc.perform(put("/student="+studentID+"/class")
+        ResultActions result = mockMvc.perform(put("/student/id="+studentID+"/class")
                 .param("className",className)
                 .param("classYear",String.valueOf(classYear))
                 .contentType(MediaType.APPLICATION_JSON));
@@ -196,7 +196,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int classYear = 2023;
 
         //when
-        ResultActions result = mockMvc.perform(put("/student="+studentID+"/class")
+        ResultActions result = mockMvc.perform(put("/student/id="+studentID+"/class")
                 .param("className",className)
                 .param("classYear",String.valueOf(classYear))
                 .contentType(MediaType.APPLICATION_JSON));
@@ -219,7 +219,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int classYear = 20231;
 
         //when
-        ResultActions result = mockMvc.perform(put("/student="+studentID+"/class")
+        ResultActions result = mockMvc.perform(put("/student/id="+studentID+"/class")
                 .param("className",className)
                 .param("classYear",String.valueOf(classYear))
                 .contentType(MediaType.APPLICATION_JSON));
@@ -242,7 +242,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         int classYear = 20231;
 
         //when
-        ResultActions result = mockMvc.perform(put("/student="+studentID+"/class")
+        ResultActions result = mockMvc.perform(put("/student/id="+studentID+"/class")
                 .param("className",className)
                 .param("classYear",String.valueOf(classYear))
                 .contentType(MediaType.APPLICATION_JSON));
@@ -266,7 +266,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
         //when
-        ResultActions result = mockMvc.perform(put("/student="+studentID+"/class")
+        ResultActions result = mockMvc.perform(put("/student/id="+studentID+"/class")
                 .param("className",className)
                 .param("classYear",String.valueOf(classYear))
                 .contentType(MediaType.APPLICATION_JSON));
@@ -298,7 +298,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
         //when
-        ResultActions result = mockMvc.perform(post("/student="+studentID+"/grade")
+        ResultActions result = mockMvc.perform(post("/student/id="+studentID+"/grade")
                 .content(objectMapper.writeValueAsString(gradeDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -328,7 +328,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
         //when
-        ResultActions result = mockMvc.perform(post("/student="+studentID+"/grade")
+        ResultActions result = mockMvc.perform(post("/student/id="+studentID+"/grade")
                 .content(objectMapper.writeValueAsString(gradeDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -356,7 +356,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.addGradeToStudent(gradeDTO,studentID)).willReturn(gradeDTO);
 
         //when
-        ResultActions result = mockMvc.perform(post("/student="+studentID+"/grade")
+        ResultActions result = mockMvc.perform(post("/student/id="+studentID+"/grade")
                 .content(objectMapper.writeValueAsString(gradeDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -385,7 +385,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.addGradeToStudent(gradeDTO,studentID)).willReturn(gradeDTO);
 
         //when
-        ResultActions result = mockMvc.perform(post("/student="+studentID+"/grade")
+        ResultActions result = mockMvc.perform(post("/student/id="+studentID+"/grade")
                 .content(objectMapper.writeValueAsString(gradeDTO))
                 .contentType(MediaType.APPLICATION_JSON));
         System.out.println(result.andReturn().getResponse().getContentAsString());
@@ -413,7 +413,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .build();
 
         //when
-        ResultActions result = mockMvc.perform(post("/student="+studentID+"/grade")
+        ResultActions result = mockMvc.perform(post("/student/id="+studentID+"/grade")
                 .content(objectMapper.writeValueAsString(gradeDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -434,7 +434,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 .build();
 
         //when
-        ResultActions result = mockMvc.perform(post("/student="+studentID+"/grade")
+        ResultActions result = mockMvc.perform(post("/student/id="+studentID+"/grade")
                 .content(objectMapper.writeValueAsString(gradeDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -452,7 +452,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.getOneGrade(studentID,gradeID)).willThrow(new StudentNotFoundException(studentID));
 
         //when
-        ResultActions result = mockMvc.perform(get("/student="+studentID+"/grade="+gradeID)
+        ResultActions result = mockMvc.perform(get("/student/id="+studentID+"/grade="+gradeID)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -481,7 +481,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.getOneGrade(studentID,gradeID)).willReturn(gradeViewDTO);
 
         //when
-        ResultActions result = mockMvc.perform(get("/student="+studentID+"/grade="+gradeID)
+        ResultActions result = mockMvc.perform(get("/student/id="+studentID+"/grade="+gradeID)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -509,7 +509,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.updateGrade(studentID,gradeID,gradeDTO)).willThrow(new StudentNotFoundException(studentID));
 
         //when
-        ResultActions result = mockMvc.perform(put("/student="+studentID+"/grade="+gradeID)
+        ResultActions result = mockMvc.perform(put("/student/id="+studentID+"/grade="+gradeID)
                 .content(objectMapper.writeValueAsString(gradeDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -538,7 +538,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
          given(studentGradeService.updateGrade(studentID, gradeID, gradeDTO)).willReturn(gradeDTO);
 
         //when
-        ResultActions result = mockMvc.perform(put("/student="+studentID+"/grade="+gradeID)
+        ResultActions result = mockMvc.perform(put("/student/id="+studentID+"/grade="+gradeID)
                 .content(objectMapper.writeValueAsString(gradeDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -560,7 +560,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.deleteStudentGrade(studentID,gradeID)).willThrow(new StudentNotFoundException(studentID));
 
         //when
-        ResultActions result = mockMvc.perform(delete("/student="+studentID+"/grade="+gradeID)
+        ResultActions result = mockMvc.perform(delete("/student/id="+studentID+"/grade="+gradeID)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -589,7 +589,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
         //when
-        ResultActions result = mockMvc.perform(delete("/student="+studentID+"/grade="+gradeID)
+        ResultActions result = mockMvc.perform(delete("/student/id="+studentID+"/grade="+gradeID)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -611,7 +611,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.getAllSubjectGradesByStudentID(studentID)).willThrow(new StudentNotFoundException(studentID));
 
         //when
-        ResultActions result = mockMvc.perform(get("/student="+studentID+"/grades")
+        ResultActions result = mockMvc.perform(get("/student/id="+studentID+"/grades")
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -653,7 +653,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.getAllSubjectGradesByStudentID(studentID)).willReturn(studentGradesDTO);
 
         //when
-        ResultActions result = mockMvc.perform(get("/student="+studentID+"/grades")
+        ResultActions result = mockMvc.perform(get("/student/id="+studentID+"/grades")
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -676,7 +676,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.getOneSubjectGrades(studentID,subjectID)).willThrow(new StudentNotFoundException(studentID));
 
         //when
-        ResultActions result = mockMvc.perform(get("/student="+studentID+"/grades/subject="+subjectID)
+        ResultActions result = mockMvc.perform(get("/student/id="+studentID+"/grades/subject="+subjectID)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -697,7 +697,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.getOneSubjectGrades(studentID,subjectID)).willThrow(new SubjectNotFoundException(subjectID));
 
         //when
-        ResultActions result = mockMvc.perform(get("/student="+studentID+"/grades/subject="+subjectID)
+        ResultActions result = mockMvc.perform(get("/student/id="+studentID+"/grades/subject="+subjectID)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -740,7 +740,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         given(studentGradeService.getOneSubjectGrades(studentID,subjectID)).willReturn(studentGradesDTO);
 
         //when
-        ResultActions result = mockMvc.perform(get("/student="+studentID+"/grades/subject="+subjectID)
+        ResultActions result = mockMvc.perform(get("/student/id="+studentID+"/grades/subject="+subjectID)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then

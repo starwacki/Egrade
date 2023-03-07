@@ -1,9 +1,8 @@
-package com.github.starwacki.config;
+package com.github.starwacki.global.config;
 
 
 import com.github.starwacki.components.auth.service.UserDetailServiceImpl;
-import com.github.starwacki.global.repositories.StudentRepository;
-import com.github.starwacki.security.EgradePasswordEncoder;
+import com.github.starwacki.global.security.EgradePasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,5 +38,5 @@ public class ApplicationConfig {
         return configuration.getAuthenticationManager();
     }
 
--
+
 }

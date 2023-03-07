@@ -1,4 +1,4 @@
-package com.github.starwacki.security;
+package com.github.starwacki.global.security;
 import lombok.SneakyThrows;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
