@@ -18,19 +18,20 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 @Validated
+@RequestMapping("/teacher")
 public class TeacherController {
 
     private final TeacherService teacherService;
 
-    @PermitAll
-    @GetMapping("/teacher={id}/classes")
+    @RolesAllowed(value = "STUDENT")
+    @GetMapping("/id={id}/classes")
     public ResponseEntity<List<SchoolClassDTO>> getTeacherClasses(@PathVariable int id) {
         List<SchoolClassDTO> teacherClasses = teacherService.getTeacherClasses(id);
         return ResponseEntity.ok(teacherClasses);
     }
 
     @RolesAllowed(value = {"ADMIN"})
-    @PutMapping("/teacher={id}/classes")
+    @PutMapping("/id={id}/classes")
     public ResponseEntity<?> addSchoolClassToTeacher(
             @PathVariable int id,
             @RequestBody @Valid SchoolClassDTO schoolClassDTO) {

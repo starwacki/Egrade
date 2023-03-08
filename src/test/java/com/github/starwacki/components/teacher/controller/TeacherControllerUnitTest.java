@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 @WebMvcTest(controllers = TeacherController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
-class TeacherControllerTest {
+class TeacherControllerUnitTest {
 
     @Autowired
     private MockMvc mockMvc;

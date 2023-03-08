@@ -18,8 +18,6 @@ public class ApplicationConfig {
 
     private final UserDetailServiceImpl userDetailsService;
 
-
-
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
