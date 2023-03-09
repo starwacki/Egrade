@@ -88,7 +88,7 @@ public class StudentController {
         return ResponseEntity.ok(grade);
     }
 
-    @RolesAllowed(value = "ADMIN")
+    @PermitAll
     @GetMapping("/id={id}/grades")
     ResponseEntity<StudentGradesDTO> getStudentGrades(@PathVariable int id) {
         StudentGradesDTO grades = studentGradeService.getAllSubjectGradesByStudentID(id);

@@ -35,7 +35,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class StudentGradeServiceTest {
+class StudentGradeServiceUnitTest {
 
     @InjectMocks
     private StudentGradeService studentGradeService;

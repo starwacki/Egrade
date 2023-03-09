@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class StudentServiceTest {
+class StudentServiceUnitTest {
 
     @InjectMocks
     private StudentService studentService;

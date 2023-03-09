@@ -3,7 +3,6 @@ package com.github.starwacki.global.repositories;
 import com.github.starwacki.global.model.account.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
-
 import java.util.Optional;
 
 @NoRepositoryBean
