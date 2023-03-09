@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 
 public class DegreeValidator implements ConstraintValidator<ValidDegree,String> {
 
-    private static final List<String> ALLOWED_GRADES = Arrays.stream(Degree.values()).map(degree -> degree.getSymbol()).collect(Collectors.toList());
+    private static final List<String> ALLOWED_GRADES = Arrays.stream(Degree.values()).map(degree -> degree.getSymbol())
+            .collect(Collectors
+                    .toList());
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {

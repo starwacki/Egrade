@@ -31,7 +31,7 @@ public class StudentManuallyGeneratorStrategy extends AccountGeneratorStrategy {
     }
 
     private SchoolClass getSchoolClass(AccountStudentDTO studentDTO) {
-        return schoolClassRepository.findByNameAndClassYear(studentDTO.className(), studentDTO.year())
+        return schoolClassRepository.findSchoolClassByNameAndAndClassYear(studentDTO.className(), studentDTO.year())
                 .orElse(getNewSchoolClass(studentDTO));
 
     }

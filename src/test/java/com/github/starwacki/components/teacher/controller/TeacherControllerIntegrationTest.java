@@ -2,13 +2,12 @@ package com.github.starwacki.components.teacher.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.starwacki.components.teacher.dto.SchoolClassDTO;
+import com.github.starwacki.components.teacher.dto.TeacherDTO;
 import com.github.starwacki.global.model.account.Role;
 import com.github.starwacki.global.model.account.Teacher;
 import com.github.starwacki.global.model.grades.Subject;
 import com.github.starwacki.global.model.school_class.SchoolClass;
-import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.SchoolClassRepository;
-import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +22,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
@@ -34,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-public class TeacherControllerIntegrationTest {
+class TeacherControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -133,7 +134,35 @@ public class TeacherControllerIntegrationTest {
         //then
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()));
+        Set<SchoolClass> actualTeacherClasses = teacherRepository.findTeacherById(teacherId).getClasses();
+        assertTrue(actualTeacherClasses.contains(schoolClass));
+    }
 
+    @Test
+    @DisplayName("Test get all teachers information with any role return 200 HTTP status informations in response body")
+    @WithMockUser(roles = {"STUDENT","PARENT","TEACHER","ADMIN"})
+    void   getAllTeachersInformation_shouldReturn_200_HTTPStatus_InformationAboutTeacher() throws Exception {
+
+        //when
+        ResultActions resultActions  = mockMvc.perform(get("/teacher/teachers")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        List<TeacherDTO> expectedTeachersDTO = List.of(
+                TeacherDTO
+                        .builder()
+                        .firstname("firstname")
+                        .lastname("lastname")
+                        .subject(Subject.PHYSICS.toString())
+                        .email("email@wp.pl")
+                        .phone("111222333")
+                        .build()
+        );
+
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
+                .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
+                        is(equalTo(objectMapper.writeValueAsString(expectedTeachersDTO)))));
     }
 
 

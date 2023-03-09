@@ -24,8 +24,8 @@ import java.util.List;
 
 @AllArgsConstructor
 @Validated
-@RequestMapping("/student")
 @Controller
+@RequestMapping("/student")
 public class StudentController {
 
     private final StudentService studentService;

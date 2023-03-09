@@ -140,7 +140,7 @@ class TeacherServiceTest {
                 .className("3A")
                 .build();
         given(teacherRepository.findById(1)).willReturn(Optional.of(mock(Teacher.class)));
-        given(schoolClassRepository.findByNameAndClassYear(className,year)).willReturn(Optional.empty());
+        given(schoolClassRepository.findSchoolClassByNameAndAndClassYear(className,year)).willReturn(Optional.empty());
 
         //then
         assertThrows(SchoolClassNotFoundException.class,() -> teacherService.addSchoolClassToTeacher(teacherId,classDTO));

@@ -41,6 +41,7 @@ public class AccountService {
               .toList();
     }
     public AccountViewDTO saveStudentAndParentAccount(AccountStudentDTO studentDTO) {
+        System.out.println(studentDTO);
         Student student = studentManuallyGeneratorStrategy.createAccount(studentDTO);
         Parent parent = parentManuallyGeneratorStrategy.createAccount(studentDTO);
         student.setParent(parent);

@@ -31,6 +31,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @WebMvcTest(controllers = TeacherController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -70,7 +72,7 @@ class TeacherControllerUnitTest {
         given(teacherService.getTeacherClasses(teacherId)).willReturn(listOfTeacherClasses);
 
         //when
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.get("/teacher="+teacherId+"/classes")
+        ResultActions response = mockMvc.perform(get("/teacher/id="+teacherId+"/classes")
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -94,7 +96,7 @@ class TeacherControllerUnitTest {
                 .build();
 
         //when
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.put("/teacher="+teacherId+"/classes")
+        ResultActions response = mockMvc.perform(put("/teacher/id="+teacherId+"/classes")
                         .content(objectMapper.writeValueAsString(schoolClassDTO))
                         .contentType(MediaType.APPLICATION_JSON));
 
@@ -118,7 +120,7 @@ class TeacherControllerUnitTest {
 
 
         //when
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.put("/teacher="+teacherId+"/classes")
+        ResultActions response = mockMvc.perform(put("/teacher/id="+teacherId+"/classes")
                 .content(objectMapper.writeValueAsString(schoolClassDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -147,7 +149,7 @@ class TeacherControllerUnitTest {
 
 
         //when
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.put("/teacher="+teacherId+"/classes")
+        ResultActions response = mockMvc.perform(put("/teacher/id="+teacherId+"/classes")
                 .content(objectMapper.writeValueAsString(schoolClassDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -173,7 +175,7 @@ class TeacherControllerUnitTest {
                 .build();
 
         //when
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.put("/teacher="+teacherId+"/classes")
+        ResultActions response = mockMvc.perform(put("/teacher/id="+teacherId+"/classes")
                 .content(objectMapper.writeValueAsString(schoolClassDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -195,7 +197,7 @@ class TeacherControllerUnitTest {
                 .build();
 
         //when
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.put("/teacher="+teacherId+"/classes")
+        ResultActions response = mockMvc.perform(put("/teacher/id="+teacherId+"/classes")
                 .content(objectMapper.writeValueAsString(schoolClassDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -220,7 +222,7 @@ class TeacherControllerUnitTest {
         given(teacherService.getAllTeachers()).willReturn(listOfAllTeachers);
 
         //when
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.get("/teachers")
+        ResultActions response = mockMvc.perform(get("/teacher/teachers")
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then

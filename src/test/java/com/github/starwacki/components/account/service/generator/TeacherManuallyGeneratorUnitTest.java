@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class TeacherManuallyGeneratorTest {
+class TeacherManuallyGeneratorUnitTest {
 
     @InjectMocks
     private TeacherManuallyGeneratorStrategy teacherManuallyGenerator;

@@ -40,17 +40,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @WebMvcTest(controllers = AccountController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
-class AccountControllerTest {
+class AccountControllerUnitTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private AccountService accountService;
-
     @MockBean
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Autowired
     private ObjectMapper objectMapper;
 

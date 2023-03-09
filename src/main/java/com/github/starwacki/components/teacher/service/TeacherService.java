@@ -69,7 +69,7 @@ public class TeacherService {
 
     private SchoolClass getSchoolClassByNameAndYear(SchoolClassDTO schoolClassDTO) {
         return schoolClassRepository
-                .findByNameAndClassYear(schoolClassDTO.className(),schoolClassDTO.year())
+                .findSchoolClassByNameAndAndClassYear(schoolClassDTO.className(),schoolClassDTO.year())
                 .orElseThrow(() -> new SchoolClassNotFoundException(schoolClassDTO.className(), schoolClassDTO.year()));
     }
 

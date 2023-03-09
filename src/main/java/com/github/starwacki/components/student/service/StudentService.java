@@ -42,7 +42,7 @@ public class StudentService {
 
     private SchoolClass getSchoolClass(String className, int year) {
         return schoolClassRepository
-                .findByNameAndClassYear(className,year)
+                .findSchoolClassByNameAndAndClassYear(className,year)
                 .orElse(createNewSchoolClass(className,year));
     }
 

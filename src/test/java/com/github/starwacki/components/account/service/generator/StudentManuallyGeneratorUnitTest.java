@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class StudentManuallyGeneratorTest {
+class StudentManuallyGeneratorUnitTest {
 
     @InjectMocks
     private StudentManuallyGeneratorStrategy studentManuallyGenerator;
@@ -64,12 +64,12 @@ class StudentManuallyGeneratorTest {
                 .className(className)
                 .parentPhoneNumber("111222333")
                 .build();
-        given(schoolClassRepository.findByNameAndClassYear(className,year))
+        given(schoolClassRepository.findSchoolClassByNameAndAndClassYear(className,year))
                 .willReturn(Optional.of(new SchoolClass(className,year)));
 
         //when
         Student generatedStudent = studentManuallyGenerator.createAccount(accountStudentDTO);
-        SchoolClass expected = schoolClassRepository.findByNameAndClassYear(className,year).get();
+        SchoolClass expected = schoolClassRepository.findSchoolClassByNameAndAndClassYear(className,year).get();
 
         //then
         assertThat(expected,
@@ -93,7 +93,7 @@ class StudentManuallyGeneratorTest {
                 .className(className)
                 .parentPhoneNumber("111222333")
                 .build();
-        given(schoolClassRepository.findByNameAndClassYear(className,year))
+        given(schoolClassRepository.findSchoolClassByNameAndAndClassYear(className,year))
                 .willReturn(Optional.empty());
 
         //when
