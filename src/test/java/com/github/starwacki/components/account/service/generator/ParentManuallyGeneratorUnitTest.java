@@ -4,6 +4,8 @@ import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.global.model.account.Parent;
 import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
+import com.github.starwacki.global.security.AES;
+import com.github.starwacki.global.security.EgradePasswordEncoder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
@@ -89,7 +93,8 @@ class ParentManuallyGeneratorUnitTest {
         int passwordLength = 10;
 
         //then
-        assertThat(expected.getPassword().length(), is(passwordLength));
+        String decryptedPassword = AES.decrypt(expected.getPassword());
+        assertThat(decryptedPassword.length(), is(passwordLength));
     }
 
     @DisplayName("Test generating parent first random password does not have any special characters")
@@ -108,7 +113,8 @@ class ParentManuallyGeneratorUnitTest {
         Parent expected = parentManuallyGenerator.createAccount(accountStudentDTO);
 
         //then
-        assertThat(expected.getPassword(), matchesPattern("^[A-Za-z]+$"));
+        String decryptedPassword = AES.decrypt(expected.getPassword());
+        assertThat(decryptedPassword, matchesPattern("^[A-Za-z]+$"));
     }
 
 

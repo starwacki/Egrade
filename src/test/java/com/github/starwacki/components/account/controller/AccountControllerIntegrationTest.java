@@ -13,6 +13,7 @@ import com.github.starwacki.global.model.school_class.SchoolClass;
 import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
+import com.github.starwacki.global.security.AES;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -313,7 +314,7 @@ class AccountControllerIntegrationTest {
                 .lastname("lastname")
                 .role(Role.STUDENT)
                 .schoolClass(new SchoolClass("1A",2023))
-                .password("password")
+                .password(AES.encrypt("password"))
                 .build();
         studentRepository.save(student);
         int id = studentRepository.findAll().get(0).getId();
@@ -379,7 +380,7 @@ class AccountControllerIntegrationTest {
                 .lastname("lastname")
                 .role(Role.STUDENT)
                 .schoolClass(new SchoolClass("1A",2023))
-                .password("password")
+                .password(AES.encrypt("password"))
                 .build();
         studentRepository.save(student);
         int id = studentRepository.findAll().get(0).getId();
@@ -421,7 +422,7 @@ class AccountControllerIntegrationTest {
                 .lastname("lastname")
                 .role(Role.STUDENT)
                 .schoolClass(new SchoolClass("1A",2023))
-                .password(passwordInDatabase)
+                .password(AES.encrypt(passwordInDatabase))
                 .build();
         studentRepository.save(student);
         int id = studentRepository.findAll().get(0).getId();

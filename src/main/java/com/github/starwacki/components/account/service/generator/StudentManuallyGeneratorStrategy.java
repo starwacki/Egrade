@@ -7,13 +7,17 @@ import com.github.starwacki.global.model.account.Role;
 import com.github.starwacki.global.repositories.SchoolClassRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
+import com.github.starwacki.global.security.EgradePasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentManuallyGeneratorStrategy extends AccountGeneratorStrategy {
 
 
-    public StudentManuallyGeneratorStrategy(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
+    public StudentManuallyGeneratorStrategy(StudentRepository studentRepository,
+                                            SchoolClassRepository schoolClassRepository,
+                                            TeacherRepository teacherRepository) {
         super(studentRepository, schoolClassRepository, teacherRepository);
     }
 

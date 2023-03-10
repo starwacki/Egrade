@@ -28,7 +28,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-class TeacherServiceTest {
+class TeacherServiceUnitTest {
 
     @InjectMocks
     private TeacherService teacherService;

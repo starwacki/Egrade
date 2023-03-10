@@ -4,7 +4,11 @@ import com.github.starwacki.global.model.account.Account;
 import com.github.starwacki.global.repositories.SchoolClassRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
+import com.github.starwacki.global.security.AES;
+import com.github.starwacki.global.security.EgradePasswordEncoder;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -27,7 +31,7 @@ public abstract class AccountGeneratorStrategy {
     protected String generateFirstPassword() {
         StringBuilder stringBuilder = new StringBuilder();
         addRandomNumber(stringBuilder);
-        return stringBuilder.toString();
+        return AES.encrypt(stringBuilder.toString());
     }
 
     private void addRandomNumber(StringBuilder stringBuilder) {

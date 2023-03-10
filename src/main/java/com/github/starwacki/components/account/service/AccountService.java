@@ -15,9 +15,12 @@ import com.github.starwacki.global.model.account.*;
 import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
+import com.github.starwacki.global.security.AES;
+import com.github.starwacki.global.security.EgradePasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -41,7 +44,6 @@ public class AccountService {
               .toList();
     }
     public AccountViewDTO saveStudentAndParentAccount(AccountStudentDTO studentDTO) {
-        System.out.println(studentDTO);
         Student student = studentManuallyGeneratorStrategy.createAccount(studentDTO);
         Parent parent = parentManuallyGeneratorStrategy.createAccount(studentDTO);
         student.setParent(parent);
@@ -89,7 +91,7 @@ public class AccountService {
     private <T extends Account> AccountViewDTO getAccount(JpaRepository<T,Integer> jpaRepository, int id) {
         return jpaRepository
                 .findById(id)
-                .map(t -> AccountMapper.mapAccountToAccountViewDTO(t))
+                .map(account -> AccountMapper.mapAccountToAccountViewDTO(account))
                 .orElseThrow(() -> new AccountNotFoundException(id));
     }
 
@@ -109,12 +111,12 @@ public class AccountService {
     }
 
     private <T extends  Account> T setPassword(JpaRepository<T,Integer> repository, T account, String newPassword) {
-        account.setPassword(newPassword);
+        account.setPassword(AES.encrypt(newPassword));
         return  repository.save(account);
     }
 
     private boolean arePasswordsSame(Account account, String oldPassword) {
-        return account.getPassword().equals(oldPassword);
+        return AES.encrypt(oldPassword).equals(account.getPassword());
     }
 
     private <T extends Account> AccountViewDTO deleteAccount(JpaRepository<T,Integer> repository,int id) {

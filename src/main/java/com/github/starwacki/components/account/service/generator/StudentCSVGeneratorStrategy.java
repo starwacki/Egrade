@@ -5,8 +5,10 @@ import com.github.starwacki.global.repositories.SchoolClassRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.components.account.exceptions.WrongFileException;
 import com.github.starwacki.global.repositories.TeacherRepository;
+import com.github.starwacki.global.security.EgradePasswordEncoder;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.file.Files;
@@ -21,7 +23,9 @@ public class StudentCSVGeneratorStrategy extends StudentManuallyGeneratorStrateg
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 
-    public StudentCSVGeneratorStrategy(StudentRepository studentRepository, SchoolClassRepository schoolClassRepository, TeacherRepository teacherRepository) {
+    public StudentCSVGeneratorStrategy(StudentRepository studentRepository,
+                                       SchoolClassRepository schoolClassRepository,
+                                       TeacherRepository teacherRepository) {
         super(studentRepository, schoolClassRepository, teacherRepository);
     }
 

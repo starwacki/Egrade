@@ -1,6 +1,7 @@
 package com.github.starwacki.global.security;
 import lombok.SneakyThrows;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *  spring encoders are one-way functions). This is useful in cases where access
  *  to passwords is required for certain functionalities
  */
+
 public class EgradePasswordEncoder implements PasswordEncoder {
 
 
@@ -20,14 +22,12 @@ public class EgradePasswordEncoder implements PasswordEncoder {
      * @param rawPassword the raw password to be encrypted
      * @return the encrypted password as a string
      */
-    @SneakyThrows
+
     @Override
     public String encode(CharSequence rawPassword) {
         return AES.encrypt(rawPassword.toString());
     }
 
-
-    @SneakyThrows
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         return rawPassword.toString().equals(encodedPassword);

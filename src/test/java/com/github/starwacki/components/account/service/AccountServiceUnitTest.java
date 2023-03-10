@@ -17,6 +17,7 @@ import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
 import com.github.starwacki.global.model.grades.Subject;
+import com.github.starwacki.global.security.AES;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,7 +58,7 @@ class AccountServiceUnitTest {
                 .firstname("firstname")
                 .lastname("lastname")
                 .username("username")
-                .password("password")
+                .password(AES.encrypt("password"))
                 .role(Role.STUDENT)
                 .build();
     }
@@ -67,7 +68,7 @@ class AccountServiceUnitTest {
                 .firstname("firstname")
                 .lastname("lastname")
                 .username("username")
-                .password("password")
+                .password(AES.encrypt("password"))
                 .role(Role.TEACHER)
                 .build();
     }
@@ -77,7 +78,7 @@ class AccountServiceUnitTest {
                 .firstname("firstname")
                 .lastname("lastname")
                 .username("username")
-                .password("password")
+                .password(AES.encrypt("password"))
                 .role(Role.PARENT)
                 .build();
     }
@@ -161,6 +162,7 @@ class AccountServiceUnitTest {
         given(studentRepository.save(student)).willReturn(student);
 
         //when
+        System.out.println(student.getPassword());
         AccountViewDTO accountViewDT = accountService.changeAccountPassword(role,id,oldPassword,newPassword);
 
         //then
@@ -283,7 +285,7 @@ class AccountServiceUnitTest {
         assertEquals(expected.username(),parent.getUsername());
         assertEquals(expected.firstname(),parent.getFirstname());
         assertEquals(expected.lastname(),parent.getLastname());
-        assertEquals(expected.password(),parent.getPassword());
+        assertEquals(expected.password(),AES.decrypt(parent.getPassword()));
         assertEquals(expected.accountType(),parent.getRole().toString());
     }
 
@@ -295,6 +297,7 @@ class AccountServiceUnitTest {
         int id = 1;
         Parent parent = getParentTestAccount();
         given(parentRepository.findById(id)).willReturn(Optional.of(parent));
+        System.out.println(parent.getPassword());
 
         //when
         accountService.getAccountById(role,id);
@@ -319,7 +322,7 @@ class AccountServiceUnitTest {
         assertEquals(expected.username(),student.getUsername());
         assertEquals(expected.firstname(),student.getFirstname());
         assertEquals(expected.lastname(),student.getLastname());
-        assertEquals(expected.password(),student.getPassword());
+        assertEquals(expected.password(),AES.decrypt(student.getPassword()));
         assertEquals(expected.accountType(),student.getRole().toString());
     }
 
@@ -437,6 +440,7 @@ class AccountServiceUnitTest {
                 .firstname("Krzysztof")
                 .lastname("Szuprych")
                 .email("krzysztof@wp.pl")
+                .password(AES.encrypt("password"))
                 .workPhone("111222333")
                 .role(Role.TEACHER)
                 .subject(Subject.PHYSICS)
@@ -466,6 +470,7 @@ class AccountServiceUnitTest {
                 .firstname("Krzysztof")
                 .lastname("Szuprych")
                 .email("krzysztof@wp.pl")
+                .password(AES.encrypt("password"))
                 .workPhone("111222333")
                 .role(Role.TEACHER)
                 .subject(Subject.PHYSICS)
@@ -481,7 +486,7 @@ class AccountServiceUnitTest {
         assertThat(expected.lastname(), equalTo(teacher.getLastname()));
         assertThat(expected.id(), equalTo(teacher.getId()));
         assertThat(expected.username(), equalTo(teacher.getUsername()));
-        assertThat(expected.password(), equalTo(teacher.getPassword()));
+        assertThat(expected.password(), equalTo(AES.decrypt(teacher.getPassword())));
         assertThat(expected.accountType(), equalTo(teacher.getRole().toString()));
     }
 

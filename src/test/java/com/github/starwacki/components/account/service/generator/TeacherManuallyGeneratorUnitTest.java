@@ -4,6 +4,7 @@ import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.global.model.account.Teacher;
 import com.github.starwacki.global.repositories.TeacherRepository;
 import com.github.starwacki.global.model.grades.Subject;
+import com.github.starwacki.global.security.AES;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -81,7 +82,8 @@ class TeacherManuallyGeneratorUnitTest {
         int passwordLength = 10;
 
         //then
-        assertThat(expected.getPassword().length(), is(passwordLength));
+        String decryptedPassword = AES.decrypt(expected.getPassword());
+        assertThat(decryptedPassword.length(), is(passwordLength));
     }
 
     @DisplayName("Test generating teacher first random password does not have any special characters")
@@ -95,7 +97,8 @@ class TeacherManuallyGeneratorUnitTest {
         Teacher expected = teacherManuallyGenerator.createAccount(accountTeacherDTO);
 
         //then
-        assertThat(expected.getPassword(), matchesPattern("^[A-Za-z]+$"));
+        String decryptedPassword = AES.decrypt(expected.getPassword());
+        assertThat(decryptedPassword, matchesPattern("^[A-Za-z]+$"));
     }
 
 
