@@ -13,7 +13,7 @@ public class Student extends Account {
     private int diaryNumber;
 
     @ManyToOne
-            (cascade = {CascadeType.PERSIST} )
+            (cascade = {CascadeType.PERSIST})
     @JoinColumn
             (name = "classes_id")
     private SchoolClass schoolClass;
@@ -21,6 +21,11 @@ public class Student extends Account {
     @OneToOne
             (cascade ={CascadeType.ALL})
     private Parent parent;
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
 
     protected Student() {
     }

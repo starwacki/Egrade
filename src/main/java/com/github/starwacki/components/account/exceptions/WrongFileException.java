@@ -2,10 +2,6 @@ package com.github.starwacki.components.account.exceptions;
 
 public class WrongFileException extends RuntimeException{
 
-    public WrongFileException() {
-        super();
-    }
-
     public WrongFileException(String message) {
         super(message);
     }

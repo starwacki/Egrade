@@ -54,7 +54,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add student with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"STUDENT","PARENT","TEACHER",})
+    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER",})
     void addStudent_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
@@ -79,7 +79,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add student with ADMIN role return 201 HTTP status and should save student to database")
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void addStudent_givenAdminRole_shouldReturn_201_HTTPStatus_andCreateStudentAccountWithProperFields() throws Exception {
 
         //given
@@ -112,7 +112,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add student with ADMIN role return 201 HTTP status and should save parent to database")
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void addStudent_givenAdminRole_shouldReturn_201_HTTPStatus_andCreateParentAccountWithProperFields() throws Exception {
 
         //given
@@ -146,7 +146,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add student from csv file with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"STUDENT","PARENT","TEACHER",})
+    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER",})
     void addStudentFromCSVFile_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
@@ -179,7 +179,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add student from csv file with ADMIN role return 201 HTTP status and add students and parents to database")
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void addStudentFromCSVFile_givenAdminRole_shouldReturn_201_HTTPStatus_andAddStudentsAndParentsToDatabase() throws Exception {
 
         //given
@@ -215,7 +215,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add teacher with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"STUDENT","PARENT","TEACHER",})
+    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER",})
     void addTeacher_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
@@ -240,7 +240,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add teacher with ADMIN role return 201 HTTP status and should save student to database")
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void addTeacher_givenAdminRole_shouldReturn_201_HTTPStatus_andCreateTeacherAccountWithProperFields() throws Exception {
 
         //given
@@ -276,7 +276,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test get account by id with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"STUDENT","PARENT","TEACHER"})
+    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER"})
     void getAccountById_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
@@ -303,7 +303,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test get account by id with ADMIN role return 201 HTTP status and should save student to database")
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void getAccountById_givenAdminRole_shouldReturn_201_HTTPStatus_andReturnStudentWithCorrectFields() throws Exception {
 
         //given
@@ -342,7 +342,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test delete account by id with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"STUDENT","PARENT","TEACHER"})
+    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER"})
     void deleteAccountById_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
@@ -369,7 +369,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test delete account by id with ADMIN role return 201 HTTP status and should save student to database")
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void deleteAccountById_givenAdminRole_shouldReturn_201_HTTPStatus_andDeleteAccountFromDatabase() throws Exception {
 
         //given
@@ -409,7 +409,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test change account password with any role return 200 HTTP status and should change password")
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void changeAccountPassword_givenAdminRole_shouldReturn_200_HTTPStatus_andDeleteAccountFromDatabase() throws Exception {
 
         //given
@@ -429,7 +429,7 @@ class AccountControllerIntegrationTest {
         Role role = Role.STUDENT;
 
         //when
-        ResultActions resultActions  = mockMvc.perform(put("/account/"+role+"="+id)
+        ResultActions resultActions  = mockMvc.perform(put("/account/password/"+role+"="+id)
                 .param("oldPassword",passwordInDatabase)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));

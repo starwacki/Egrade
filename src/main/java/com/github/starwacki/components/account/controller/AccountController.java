@@ -5,10 +5,19 @@ import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.global.model.account.Role;
 import com.github.starwacki.components.account.service.AccountService;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import jdk.jfr.ContentType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,67 +28,59 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-
 @RequiredArgsConstructor
 @Validated
 @Controller
 @RequestMapping("/account")
-public class AccountController {
+public class AccountController implements AccountOperations {
 
     private final AccountService accountService;
 
-    @RolesAllowed(value = {"ADMIN"})
+    @Secured(value = {"ADMIN"})
     @PostMapping("/student")
-    ResponseEntity<AccountViewDTO> addStudent(
-            @RequestBody @Valid AccountStudentDTO studentDTO) {
+    public ResponseEntity<AccountViewDTO> addStudent(AccountStudentDTO studentDTO) {
         AccountViewDTO student = accountService.saveStudentAndParentAccount(studentDTO);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(student);
+        return ResponseEntity.status(HttpStatus.CREATED).body(student);
+
     }
 
-    @RolesAllowed(value = {"ADMIN"})
+    @Secured(value = {"ADMIN"})
     @PostMapping("/students")
-    ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(
-            @RequestParam @NotBlank String pathname) {
+    public ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(String pathname) {
       List<AccountViewDTO> list = accountService.saveStudentsAndParentsFromFile(pathname);
-      return ResponseEntity
-              .status(HttpStatus.CREATED)
-              .body(list);
+      return ResponseEntity.status(HttpStatus.CREATED).body(list);
     }
 
-    @RolesAllowed(value = {"ADMIN"})
+    @Secured(value = {"ADMIN"})
     @PostMapping("/teacher")
-    ResponseEntity<AccountViewDTO> addTeacher(
-            @RequestBody @Valid AccountTeacherDTO accountTeacherDTO) {
+    public ResponseEntity<AccountViewDTO> addTeacher(AccountTeacherDTO accountTeacherDTO) {
         AccountViewDTO teacher = accountService.saveTeacherAccount(accountTeacherDTO);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(teacher);
+        return ResponseEntity.status(HttpStatus.CREATED).body(teacher);
     }
 
-    @RolesAllowed(value = {"ADMIN"})
+    @Secured(value = {"ADMIN"})
     @GetMapping("/{role}={id}")
-    ResponseEntity<AccountViewDTO> getAccountById(
+    public ResponseEntity<AccountViewDTO> getAccountById(
             @PathVariable Role role,
             @PathVariable int id) {
         AccountViewDTO accountViewDTO = accountService.getAccountById(role,id);
         return ResponseEntity.ok(accountViewDTO);
     }
 
-    @RolesAllowed(value = {"ADMIN"})
+    @Secured(value = {"ADMIN"})
     @DeleteMapping("/{role}={id}")
-    ResponseEntity<AccountViewDTO> deleteAccountById(
+    public ResponseEntity<AccountViewDTO> deleteAccountById(
             @PathVariable Role role,
             @PathVariable int id) {
         AccountViewDTO accountViewDTO = accountService.deleteAccountById(role,id);
         return ResponseEntity.ok(accountViewDTO);
     }
 
-    //TODO: get id from jwt token - user should change only his own password
+
+    //Todo - implemented cookie jwt
     @PermitAll
-    @PutMapping("/{role}={id}")
-    ResponseEntity<AccountViewDTO> changeAccountPassword(
+    @PutMapping("password/{role}={id}")
+    public ResponseEntity<AccountViewDTO> changeAccountPassword(
             @PathVariable Role role,
             @PathVariable int id,
             @RequestParam String oldPassword,
@@ -87,5 +88,7 @@ public class AccountController {
         AccountViewDTO accountViewDTO = accountService.changeAccountPassword(role,id,oldPassword,newPassword);
         return ResponseEntity.ok(accountViewDTO);
     }
+
+
 
 }

@@ -696,7 +696,7 @@ class AccountControllerUnitTest {
 
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -724,7 +724,7 @@ class AccountControllerUnitTest {
         given(accountService.changeAccountPassword(role,accountId,oldPassword,newPassword)).willReturn(accountViewDTO);
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -748,7 +748,7 @@ class AccountControllerUnitTest {
         given(accountService.changeAccountPassword(role,accountId,oldPassword,newPassword)).willThrow(new IllegalOperationException(HttpMethod.PUT,role));
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -772,7 +772,7 @@ class AccountControllerUnitTest {
         given(accountService.changeAccountPassword(role,accountId,oldPassword,newPassword)).willThrow(new AccountNotFoundException(accountId));
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -796,7 +796,7 @@ class AccountControllerUnitTest {
         given(accountService.changeAccountPassword(role,accountId,oldPassword,newPassword)).willThrow(new WrongPasswordException());
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
