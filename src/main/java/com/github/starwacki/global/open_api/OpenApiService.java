@@ -13,8 +13,8 @@ public class OpenApiService {
         Map<String,ApiResponse> responsesMap = new HashMap<>();
         addAllAccountControllerResponses(responsesMap);
         addAllStudentControllerResponses(responsesMap);
+        addAllTeacherControllerResponses(responsesMap);
         addAllGlobalResponses(responsesMap);
-
         return responsesMap;
     }
 
@@ -22,12 +22,8 @@ public class OpenApiService {
         Map<String, RequestBody> requestsMap = new HashMap<>();
         addAllAccountControllerRequestBodies(requestsMap);
         addAllStudentControllerRequestBodies(requestsMap);
+        addAllTeacherControllerRequestBodies(requestsMap);
         return  requestsMap;
-    }
-
-    private void addAllAccountControllerRequestBodies(Map<String, RequestBody> requestsMap) {
-        requestsMap.put("accountStudentDTO", AccountControllerComponents.accountStudentDTORequestBody());
-        requestsMap.put("accountTeacherDTO", AccountControllerComponents.accountTeacherDTORequestBody());
     }
 
     private void addAllGlobalResponses(Map<String,ApiResponse> apiResponseMap) {
@@ -60,8 +56,27 @@ public class OpenApiService {
         apiResponseMap.put("getStudentSubjectGrades",StudentControllerComponents.getStudentSubjectGrades());
     }
 
+    private void addAllTeacherControllerResponses(Map<String,ApiResponse> apiResponseMap) {
+        apiResponseMap.put("getTeacherClassesResponse", TeacherControllerComponents.getTeacherClassesResponse());
+        apiResponseMap.put("teacherNotFoundResponse", TeacherControllerComponents.teacherNotFoundResponse());
+        apiResponseMap.put("addSchoolClassToTeacherResponse", TeacherControllerComponents.addSchoolClassToTeacherResponse());
+        apiResponseMap.put("getAllTeachersInformationResponse", TeacherControllerComponents.getAllTeachersInformationResponse());
+
+    }
+
+    private void addAllAccountControllerRequestBodies(Map<String, RequestBody> requestsMap) {
+        requestsMap.put("accountStudentDTO", AccountControllerComponents.accountStudentDTORequestBody());
+        requestsMap.put("accountTeacherDTO", AccountControllerComponents.accountTeacherDTORequestBody());
+    }
+
     private void addAllStudentControllerRequestBodies(Map<String, RequestBody> requestsMap) {
         requestsMap.put("changeStudentClassRequestBody", StudentControllerComponents.changeStudentClassRequestBody());
         requestsMap.put("updateStudentGradeRequestBody", StudentControllerComponents.updateStudentGradeRequestBody());
     }
+
+    private void addAllTeacherControllerRequestBodies(Map<String, RequestBody> requestsMap) {
+        requestsMap.put("addSchoolClassToTeacherRequestBody", TeacherControllerComponents.addSchoolClassToTeacherRequestBody());
+    }
+
+
 }

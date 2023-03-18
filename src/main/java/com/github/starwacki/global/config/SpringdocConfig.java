@@ -32,8 +32,11 @@ public class SpringdocConfig {
 
     private List<Tag> getDocumentationTags() {
         return List.of(new Tag()
-                .name("account-controller")
-                .description("Account controller is used for all account operations: add new account, delete account, change password etc.."));
+                       .name("account-controller")
+                       .description("Account controller is used for all account operations: add new account, delete account, change password etc.."),
+                new Tag()
+                        .name("student-controller")
+                        .description("Student controller provides operations related to student: get students grades, add grades, change student information etc.."));
     }
 
     private Components components() {
