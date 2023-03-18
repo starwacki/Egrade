@@ -6,9 +6,9 @@ import java.time.LocalDate;
 @Builder
 public record GradeViewDTO(
         String description,
-        String degree,
         int weight,
-        LocalDate addedDate,
+        String degree,
+        String addedDate,
         String addedBy
 ) {
 }

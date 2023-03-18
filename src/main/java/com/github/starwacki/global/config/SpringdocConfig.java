@@ -1,23 +1,22 @@
 package com.github.starwacki.global.config;
 
 
-import com.github.starwacki.components.account.controller.AccountController;
-import com.github.starwacki.global.open_api.AccountControllerComponents;
-import com.github.starwacki.global.open_api.GlobalComponents;
+import com.github.starwacki.global.open_api.OpenApiService;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
+@RequiredArgsConstructor
 public class SpringdocConfig {
+
+    private final OpenApiService openApiService;
 
     @Bean
     public OpenAPI baseOpenApi() {
@@ -39,29 +38,10 @@ public class SpringdocConfig {
 
     private Components components() {
         return new Components()
-                .responses(getAllApiResponses())
-                .requestBodies(Map.of(
-                        "accountStudentDTO", AccountControllerComponents.accountStudentDTORequestBody(),
-                        "accountTeacherDTO", AccountControllerComponents.accountTeacherDTORequestBody()
-                ));
+                .responses(openApiService.getAllApiResponses())
+                .requestBodies(openApiService.getAllApiRequestBodies());
     }
 
-    private Map<String, ApiResponse> getAllApiResponses() {
-        Map<String,ApiResponse> apiResponseMap = new HashMap<>();
-        apiResponseMap.put("createStudentResponse", AccountControllerComponents.addStudentResponse());
-        apiResponseMap.put("createStudentsResponse",AccountControllerComponents.addStudentsFromCSVFileResponse());
-        apiResponseMap.put("createTeacherResponse",AccountControllerComponents.addTeacherResponse());
-        apiResponseMap.put("getAccountByIdResponse",AccountControllerComponents.getAccountByIdResponse());
-        apiResponseMap.put("deleteAccountByIdResponse",AccountControllerComponents.deleteAccountByIdResponse());
-        apiResponseMap.put("badRequestDeleteAccountResponse",AccountControllerComponents.badRequestDeleteAccountResponse());
-        apiResponseMap.put("badRequestGetAccountResponse",AccountControllerComponents.badRequestGetAccountResponse());
-        apiResponseMap.put("badRequestAddStudentsFromCSVFileResponse",AccountControllerComponents.badRequestAddStudentsFromCSVFileResponse());
-        apiResponseMap.put("badRequestResponse", GlobalComponents.badRequestResponse());
-        apiResponseMap.put("forbiddenResponse",GlobalComponents.forbiddenResponse());
-        apiResponseMap.put("accountNotFoundResponse",GlobalComponents.accountNotFoundResponse());
-        apiResponseMap.put("badRequestChangeAccountPasswordResponse",AccountControllerComponents.badRequestChangeAccountPasswordResponse());
-        return apiResponseMap;
-    }
 
 
 }

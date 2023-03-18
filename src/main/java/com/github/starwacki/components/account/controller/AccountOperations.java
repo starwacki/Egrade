@@ -55,6 +55,7 @@ interface AccountOperations {
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
+            summary = "Add teacher account",
             description = "Operation add manually teacher account from information" +
                           " given in AccountTeacherDTO. Is only available for ADMIN role",
             requestBody =
@@ -70,6 +71,7 @@ interface AccountOperations {
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
+            summary = "Get account information",
             description = "Operation return account information with given role and id." +
                           " Is only available for ADMIN role",
             parameters = {
@@ -89,6 +91,7 @@ interface AccountOperations {
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
+            summary = "Delete account",
             description = "Operation delete account by given id. If you delete student account, dedicated" +
                     " parent account is removed too. " + "Is only available for ADMIN role",
             parameters = {
@@ -108,12 +111,16 @@ interface AccountOperations {
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
+            summary = "Change account password",
             description = "Operation change account password by given role and id. " +
-                    "Is only available for ADMIN role ",
+                    "Is  available for any role",
             parameters = {
                     @Parameter(name = "role",description = "Enum role in string.Change ADMIN password is illegal.",
                             schema = @Schema(allowableValues = {"STUDENT", "TEACHER", "PARENT"})),
-                    @Parameter(name = "id",description = "Account id")
+                    @Parameter(name = "id",description = "Account to changed id"),
+                    @Parameter(name = "oldPassword",description = "Actual account password"),
+                    @Parameter(name = "newPassword",description = "New password")
+
             },
             responses = {
                     @ApiResponse(responseCode = "200",ref = "deleteAccountByIdResponse"),

@@ -43,7 +43,7 @@ public class GradeMapper {
                 .description(grade.getDescription())
                 .weight(grade.getWeight())
                 .addedBy(grade.getAddedBy().getFirstname() + " " + grade.getAddedBy().getLastname())
-                .addedDate(grade.getAddedDate())
+                .addedDate(grade.getAddedDate().toString())
                 .degree(grade.getDegree().getSymbol())
                 .build();
     }

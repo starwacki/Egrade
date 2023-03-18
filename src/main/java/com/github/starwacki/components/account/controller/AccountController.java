@@ -77,7 +77,7 @@ public class AccountController implements AccountOperations {
     }
 
 
-    //Todo - implemented cookie jwt
+    //Todo - implement jwt token
     @PermitAll
     @PutMapping("password/{role}={id}")
     public ResponseEntity<AccountViewDTO> changeAccountPassword(
