@@ -20,7 +20,7 @@ import java.util.Objects;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/auth")
-public class AuthenticationController {
+public class AuthenticationController implements AuthenticationOperations {
 
     private final AuthenticationService authenticationService;
 
@@ -29,15 +29,10 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request,
             HttpServletResponse response
     ) {
-        String jwt = authenticationService.authenticate(request).token();
-        Cookie cookie = new Cookie("jwt", jwt);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setMaxAge(60*60*24*1000*7);
-        cookie.setPath("/");
+        AuthenticationResponse authResponse = authenticationService.authenticate(request);
+        Cookie cookie = authenticationService.generateJWTCookie(authResponse .token());
         response.addCookie(cookie);
-        return ResponseEntity.ok(AuthenticationResponse.builder()
-                .token(jwt).build());
+        return ResponseEntity.ok(authResponse );
     }
 
 

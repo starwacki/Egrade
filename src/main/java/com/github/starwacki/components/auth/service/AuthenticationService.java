@@ -2,12 +2,15 @@ package com.github.starwacki.components.auth.service;
 
 import com.github.starwacki.components.auth.dto.AuthenticationRequest;
 import com.github.starwacki.components.auth.dto.AuthenticationResponse;
+import com.github.starwacki.components.auth.exceptions.WrongAuthenticationException;
 import com.github.starwacki.global.model.account.Account;
 import com.github.starwacki.global.security.JwtService;
+import jakarta.servlet.http.Cookie;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,10 +28,23 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticateByUsernameAndPassword(request);
-        Account user = getUserAccount(request);
-        String jwt  = jwtService.generateToken(generateExtraClaims(user),user);
-        return createAuthenticationResponse(jwt);
+        try {
+            authenticateByUsernameAndPassword(request);
+            Account user = getUserAccount(request);
+            String jwt  = jwtService.generateToken(generateExtraClaims(user),user);
+            return createAuthenticationResponse(jwt);
+        } catch (AuthenticationException e) {
+            throw new WrongAuthenticationException();
+        }
+    }
+
+    public Cookie generateJWTCookie(String jwt) {
+        Cookie cookie = new Cookie("jwt", jwt);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(60*60*24*1000*7);
+        cookie.setPath("/");
+        return cookie;
     }
 
     private Map<String,Object> generateExtraClaims(Account account) {

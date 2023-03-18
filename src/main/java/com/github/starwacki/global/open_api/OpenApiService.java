@@ -14,6 +14,7 @@ public class OpenApiService {
         addAllAccountControllerResponses(responsesMap);
         addAllStudentControllerResponses(responsesMap);
         addAllTeacherControllerResponses(responsesMap);
+        addAllAuthenticationControllerResponses(responsesMap);
         addAllGlobalResponses(responsesMap);
         return responsesMap;
     }
@@ -23,6 +24,7 @@ public class OpenApiService {
         addAllAccountControllerRequestBodies(requestsMap);
         addAllStudentControllerRequestBodies(requestsMap);
         addAllTeacherControllerRequestBodies(requestsMap);
+        addAllAuthenticationControllerRequestBodies(requestsMap);
         return  requestsMap;
     }
 
@@ -64,6 +66,13 @@ public class OpenApiService {
 
     }
 
+    private void addAllAuthenticationControllerResponses(Map<String,ApiResponse> apiResponseMap) {
+        apiResponseMap.put("okAuthenticateUserResponse", AuthenticationControllerComponents.okAuthenticateUserResponse());
+        apiResponseMap.put("badRequestAuthenticateUserResponse",AuthenticationControllerComponents.badRequestAuthenticateUserResponse());
+        apiResponseMap.put("unauthorizedAuthenticateUserResponse",AuthenticationControllerComponents.unauthorizedAuthenticateUserResponse());
+
+    }
+
     private void addAllAccountControllerRequestBodies(Map<String, RequestBody> requestsMap) {
         requestsMap.put("accountStudentDTO", AccountControllerComponents.accountStudentDTORequestBody());
         requestsMap.put("accountTeacherDTO", AccountControllerComponents.accountTeacherDTORequestBody());
@@ -76,6 +85,10 @@ public class OpenApiService {
 
     private void addAllTeacherControllerRequestBodies(Map<String, RequestBody> requestsMap) {
         requestsMap.put("addSchoolClassToTeacherRequestBody", TeacherControllerComponents.addSchoolClassToTeacherRequestBody());
+    }
+
+    private void addAllAuthenticationControllerRequestBodies(Map<String, RequestBody> requestsMap) {
+        requestsMap.put("authenticateUserRequestBody", AuthenticationControllerComponents.authenticateUserRequestBody());
     }
 
 
