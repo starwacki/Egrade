@@ -2,6 +2,7 @@ package com.github.starwacki.components.auth.service;
 
 
 import com.github.starwacki.global.model.account.Account;
+import com.github.starwacki.global.repositories.AdminRepository;
 import com.github.starwacki.global.repositories.ParentRepository;
 import com.github.starwacki.global.repositories.StudentRepository;
 import com.github.starwacki.global.repositories.TeacherRepository;
@@ -17,9 +18,11 @@ class AccountOperationsService {
     private static final String STUDENT_ACCOUNT_VERIFIER = "STU";
     private static final String TEACHER_ACCOUNT_VERIFIER = "NAU";
     private static final String PARENT_ACCOUNT_VERIFIER = "RO";
+    private static final String ADMIN_ACCOUNT_VERIFIER = "ADM";
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final ParentRepository parentRepository;
+    private final AdminRepository adminRepository;
 
     public Optional<Account> findAccountByUsername(String username) {
         if (username.contains(STUDENT_ACCOUNT_VERIFIER))
@@ -28,7 +31,9 @@ class AccountOperationsService {
             return teacherRepository.findByUsername(username);
         else if (username.contains(PARENT_ACCOUNT_VERIFIER))
             return parentRepository.findByUsername(username);
-        else
+        else if (username.contains(ADMIN_ACCOUNT_VERIFIER)) {
+            return adminRepository.findByUsername(username);
+        } else
             return Optional.empty();
     }
 

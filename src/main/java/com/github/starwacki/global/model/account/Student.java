@@ -10,8 +10,6 @@ import lombok.*;
 @Table(name = "students")
 public class Student extends Account {
 
-    private int diaryNumber;
-
     @ManyToOne
             (cascade = {CascadeType.PERSIST})
     @JoinColumn
@@ -30,9 +28,8 @@ public class Student extends Account {
     protected Student() {
     }
 
-    private Student(String username, String password, String firstname, String lastname, Role role, int diaryNumber, SchoolClass schoolClass, Parent parent) {
+    private Student(String username, String password, String firstname, String lastname, Role role,  SchoolClass schoolClass, Parent parent) {
         super(username, password, firstname, lastname, role);
-        this.diaryNumber = diaryNumber;
         this.schoolClass = schoolClass;
         this.parent = parent;
     }
@@ -79,11 +76,6 @@ public class Student extends Account {
             return this;
         }
 
-        public Builder diaryNumber(int diaryNumber) {
-            this.diaryNumber = diaryNumber;
-            return this;
-        }
-
         public Builder schoolClass(SchoolClass schoolClass) {
             this.schoolClass= schoolClass;
             return this;
@@ -96,7 +88,7 @@ public class Student extends Account {
 
         @Override
         public Student build() {
-            return new Student(username,password,firstname,lastname,role,diaryNumber,schoolClass,parent);
+            return new Student(username,password,firstname,lastname,role,schoolClass,parent);
         }
 
     }

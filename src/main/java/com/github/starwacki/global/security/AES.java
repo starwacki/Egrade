@@ -11,8 +11,6 @@ public class AES {
 
     private AES() {
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(AES.class);
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
     private static final String SECRET_KEY = "3373367639792442";
