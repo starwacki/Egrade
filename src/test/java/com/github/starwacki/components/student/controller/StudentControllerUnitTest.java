@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @WebMvcTest(controllers = StudentController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
- class StudentControllerUnitTest {
+class StudentControllerUnitTest {
 
     @Autowired
     private MockMvc mockMvc;

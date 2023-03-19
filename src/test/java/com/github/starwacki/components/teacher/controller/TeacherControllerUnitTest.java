@@ -85,8 +85,8 @@ class TeacherControllerUnitTest {
     }
 
     @Test
-    @DisplayName("Test add school class to teacher return 200 HTTP status")
-    void addSchoolClassToTeacher_givenTeacherIdAndSchoolClassDto_shouldReturn_200_HTTPStatus() throws Exception {
+    @DisplayName("Test add school class to teacher return 204 HTTP status")
+    void addSchoolClassToTeacher_givenTeacherIdAndSchoolClassDto_shouldReturn_204_HTTPStatus() throws Exception {
         //given
         int teacherId = 1;
         SchoolClassDTO schoolClassDTO =   SchoolClassDTO
@@ -102,7 +102,7 @@ class TeacherControllerUnitTest {
 
         //then
         response
-                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()));
+                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NO_CONTENT.value()));
         verify(teacherService).addSchoolClassToTeacher(teacherId,schoolClassDTO);
     }
 

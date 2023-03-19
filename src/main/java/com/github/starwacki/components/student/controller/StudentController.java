@@ -37,7 +37,7 @@ public class StudentController implements StudentOperations {
     }
 
 
-    @RolesAllowed(value = {"ADMIN","TEACHER"})
+    @Secured(value = {"ADMIN","TEACHER"})
     @PutMapping("/id={id}/class")
     public ResponseEntity<?> changeStudentClass(
             @PathVariable int id,
@@ -47,7 +47,7 @@ public class StudentController implements StudentOperations {
         return ResponseEntity.noContent().build();
     }
 
-    @RolesAllowed(value = {"ADMIN","TEACHER"})
+    @Secured(value = {"ADMIN","TEACHER"})
     @PostMapping("/id={id}/grade")
     public ResponseEntity<GradeDTO> addGradeToStudent(
             @PathVariable int id,
@@ -65,7 +65,7 @@ public class StudentController implements StudentOperations {
         return ResponseEntity.ok(gradeViewDTO);
     }
 
-    @RolesAllowed(value = {"ADMIN","TEACHER"})
+    @Secured(value = {"ADMIN","TEACHER"})
     @PutMapping("/id={id}/grade={gradeID}")
     public ResponseEntity<GradeDTO> updateStudentGrade(
             @PathVariable int id,
@@ -75,7 +75,7 @@ public class StudentController implements StudentOperations {
         return ResponseEntity.ok(grade);
     }
 
-    @RolesAllowed(value = {"ADMIN","TEACHER"})
+    @Secured(value = {"ADMIN","TEACHER"})
     @DeleteMapping("/id={id}/grade={gradeID}")
     public ResponseEntity<GradeDTO> deleteStudentGrade(
             @PathVariable int id,

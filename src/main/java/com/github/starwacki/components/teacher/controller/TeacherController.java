@@ -9,6 +9,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class TeacherController implements TeacherOperations {
         return ResponseEntity.ok(teacherClasses);
     }
 
-    @RolesAllowed(value = {"ADMIN"})
+    @Secured(value = {"ADMIN"})
     @PutMapping("/id={id}/classes")
     public ResponseEntity<?> addSchoolClassToTeacher(
             @PathVariable int id,

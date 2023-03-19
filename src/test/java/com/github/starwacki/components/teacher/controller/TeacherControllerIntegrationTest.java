@@ -21,10 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Set;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -67,7 +65,7 @@ class TeacherControllerIntegrationTest {
 
     @Test
     @DisplayName("Test get teacher classes return 200 HTTP status and teacher classes in responseBody")
-    @WithMockUser(roles = {"ADMIN","STUDENT","PARENT"})
+    @WithMockUser(authorities = {"ADMIN","TEACHER","STUDENT","PARENT"})
     void  getTeacherClasses_givenTeacherId_shouldReturn_200_HTTPStatus_andTeacherClassesInResponseBody() throws Exception {
         //given
         int teacherId = teacherRepository.findAll().get(0).getId();
@@ -93,7 +91,7 @@ class TeacherControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add school class to teacher with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"TEACHER","STUDENT","PARENT"})
+    @WithMockUser(authorities = {"TEACHER","STUDENT","PARENT"})
     void  addSchoolClassToTeacher_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
         //given
         int teacherId = teacherRepository.findAll().get(0).getId();
@@ -115,9 +113,9 @@ class TeacherControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Test add school class to teacher with ADMIN role return 200 HTTP status and add class to teacher")
-    @WithMockUser(roles = "ADMIN")
-    void  addSchoolClassToTeacher_givenAdminRole_shouldReturn_200_HTTPStatus_andAddClassToTeacher() throws Exception {
+    @DisplayName("Test add school class to teacher with ADMIN role return 204 HTTP status and add class to teacher")
+    @WithMockUser(authorities = "ADMIN")
+    void  addSchoolClassToTeacher_givenAdminRole_shouldReturn_204_HTTPStatus_andAddClassToTeacher() throws Exception {
         //given
         int teacherId = teacherRepository.findAll().get(0).getId();
         SchoolClassDTO schoolClassDTO = SchoolClassDTO.builder()
@@ -133,14 +131,14 @@ class TeacherControllerIntegrationTest {
 
         //then
         resultActions
-                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()));
+                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NO_CONTENT.value()));
         Set<SchoolClass> actualTeacherClasses = teacherRepository.findTeacherById(teacherId).getClasses();
         assertTrue(actualTeacherClasses.contains(schoolClass));
     }
 
     @Test
     @DisplayName("Test get all teachers information with any role return 200 HTTP status informations in response body")
-    @WithMockUser(roles = {"STUDENT","PARENT","TEACHER","ADMIN"})
+    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER","ADMIN"})
     void   getAllTeachersInformation_shouldReturn_200_HTTPStatus_InformationAboutTeacher() throws Exception {
 
         //when

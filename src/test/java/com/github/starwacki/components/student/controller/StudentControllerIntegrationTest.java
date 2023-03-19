@@ -86,7 +86,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test get all students from class with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"PARENT","STUDENT"})
+    @WithMockUser(authorities = {"PARENT","STUDENT"})
     void getAllStudentsFromClass_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
@@ -104,7 +104,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test get all students from class with ADMIN role return 200 HTTP status and students in response body")
-    @WithMockUser(roles = {"ADMIN","TEACHER"})
+    @WithMockUser(authorities = {"ADMIN","TEACHER"})
     void getAllStudentsFromClass_givenAdminOrTeachdrRole_shouldReturn_200_HTTPStatus_andStudentsInResponseBody() throws Exception {
 
         //given
@@ -136,7 +136,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test change student class with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"PARENT","STUDENT"})
+    @WithMockUser(authorities = {"PARENT","STUDENT"})
     void changeStudentClass_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
@@ -159,7 +159,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test change student class with ADMIN or TEACHER role return 204 HTTP status and changed student class")
-    @WithMockUser(roles = {"ADMIN","TEACHER"})
+    @WithMockUser(authorities = {"ADMIN","TEACHER"})
     void changeStudentClass_givenAdminOrTeacherRole_shouldReturn_204_HTTPStatus_andChangedStudentClass() throws Exception {
 
         //given
@@ -185,7 +185,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add grade to student class with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"PARENT","STUDENT"})
+    @WithMockUser(authorities = {"PARENT","STUDENT"})
     void addGradeToStudent_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
@@ -216,7 +216,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add grade to student with ADMIN or TEACHER role return 201 HTTP status and add grade to database")
-    @WithMockUser(roles = {"ADMIN","TEACHER"})
+    @WithMockUser(authorities = {"ADMIN","TEACHER"})
     void addGradeToStudent_givenAdminOrTeacherRole_shouldReturn_201_HTTPStatus_andAddGradeToDatabase() throws Exception {
 
         //given
@@ -255,7 +255,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test get student grade with any role return 200 HTTP status")
-    @WithMockUser(roles = {"PARENT","STUDENT","ADMIN","TEACHER"})
+    @WithMockUser(authorities = {"PARENT","STUDENT","ADMIN","TEACHER"})
     void getStudentGrade_givenAnyRole_shouldReturn_200_HTTPStatus_andGradeViewDTOInResponseBody() throws Exception {
 
         //given
@@ -299,7 +299,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test delete student grade with roles without permissions return 403 HTTP status")
-    @WithMockUser(roles = {"PARENT","STUDENT"})
+    @WithMockUser(authorities = {"PARENT","STUDENT"})
     void deleteStudentGrade_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
@@ -333,7 +333,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test delete student grade with ADMIN or TEACHER role return 200 HTTP status and delete grade from database")
-    @WithMockUser(roles = {"ADMIN","TEACHER"})
+    @WithMockUser(authorities = {"ADMIN","TEACHER"})
     void deleteStudentGrade_givenAdminOrTeacherRole_shouldReturn_200_HTTPStatus_andDeleteGradeFromDatabase() throws Exception {
 
         //given
@@ -369,7 +369,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test get student grades with any role return 200 HTTP status and grades in response body")
-    @WithMockUser(roles = {"PARENT","STUDENT","ADMIN","TEACHER"})
+    @WithMockUser(authorities = {"PARENT","STUDENT","ADMIN","TEACHER"})
     void getStudentGrades_givenAnyRole_shouldReturn_200_HTTPStatus_andReturnGradesInResponseBody() throws Exception {
 
         //given
@@ -412,7 +412,7 @@ class StudentControllerIntegrationTest {
 
     @Test
     @DisplayName("Test get student subject grades with any role return 200 HTTP status and grades in response body")
-    @WithMockUser(roles = {"PARENT","STUDENT","ADMIN","TEACHER"})
+    @WithMockUser(authorities = {"PARENT","STUDENT","ADMIN","TEACHER"})
     void  getStudentSubjectGrades_givenAnyRole_shouldReturn_200_HTTPStatus_andReturnGradesInResponseBody() throws Exception {
 
         //given

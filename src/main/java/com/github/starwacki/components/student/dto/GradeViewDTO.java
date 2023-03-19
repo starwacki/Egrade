@@ -8,7 +8,7 @@ public record GradeViewDTO(
         String description,
         int weight,
         String degree,
-        String addedDate,
+        LocalDate addedDate,
         String addedBy
 ) {
 }
