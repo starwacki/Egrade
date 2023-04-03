@@ -1,6 +1,6 @@
 package com.github.starwacki.components.student.validator;
 
-import com.github.starwacki.global.model.grades.Degree;
+import com.github.starwacki.common.model.grades.Degree;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.Arrays;

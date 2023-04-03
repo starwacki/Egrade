@@ -1,19 +1,19 @@
 package com.github.starwacki.components.student.service;
 
-import com.github.starwacki.global.model.account.Student;
-import com.github.starwacki.global.model.account.Teacher;
+import com.github.starwacki.common.model.account.Student;
+import com.github.starwacki.common.model.account.Teacher;
 import com.github.starwacki.components.student.exceptions.StudentNotFoundException;
 import com.github.starwacki.components.student.exceptions.TeacherAccountNotFoundException;
-import com.github.starwacki.global.model.grades.Degree;
-import com.github.starwacki.global.repositories.TeacherRepository;
+import com.github.starwacki.common.model.grades.Degree;
+import com.github.starwacki.common.repositories.TeacherRepository;
 import com.github.starwacki.components.student.dto.GradeViewDTO;
 import com.github.starwacki.components.student.dto.SubjectDTO;
 import com.github.starwacki.components.student.exceptions.SubjectNotFoundException;
 import com.github.starwacki.components.student.mapper.GradeMapper;
-import com.github.starwacki.global.model.grades.Grade;
-import com.github.starwacki.global.model.grades.Subject;
-import com.github.starwacki.global.repositories.GradeRepository;
-import com.github.starwacki.global.repositories.StudentRepository;
+import com.github.starwacki.common.model.grades.Grade;
+import com.github.starwacki.common.model.grades.Subject;
+import com.github.starwacki.common.repositories.GradeRepository;
+import com.github.starwacki.common.repositories.StudentRepository;
 import com.github.starwacki.components.student.dto.GradeDTO;
 import com.github.starwacki.components.student.dto.StudentGradesDTO;
 import lombok.AllArgsConstructor;

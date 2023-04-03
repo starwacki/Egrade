@@ -1,7 +1,7 @@
 package com.github.starwacki.components.account.exceptions;
 
 
-import com.github.starwacki.global.model.account.Role;
+import com.github.starwacki.common.model.account.Role;
 import org.springframework.http.HttpMethod;
 
 public class IllegalOperationException extends RuntimeException{

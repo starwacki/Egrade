@@ -1,6 +1,6 @@
 package com.github.starwacki.components.student.mapper;
 
-import com.github.starwacki.global.model.account.Student;
+import com.github.starwacki.common.model.account.Student;
 import com.github.starwacki.components.student.dto.StudentDTO;
 import com.github.starwacki.components.student.dto.StudentGradesDTO;
 import com.github.starwacki.components.student.dto.SubjectDTO;

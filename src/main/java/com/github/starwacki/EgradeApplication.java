@@ -1,14 +1,9 @@
 package com.github.starwacki;
 
-import com.github.starwacki.global.model.account.Account;
-import com.github.starwacki.global.model.account.Admin;
-import com.github.starwacki.global.security.AES;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.time.LocalDate;
 
 
 @SpringBootApplication

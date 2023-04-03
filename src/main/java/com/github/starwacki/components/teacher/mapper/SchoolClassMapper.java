@@ -1,7 +1,7 @@
 package com.github.starwacki.components.teacher.mapper;
 
 import com.github.starwacki.components.teacher.dto.SchoolClassDTO;
-import com.github.starwacki.global.model.school_class.SchoolClass;
+import com.github.starwacki.common.model.school_class.SchoolClass;
 
 public class SchoolClassMapper {
 

@@ -6,10 +6,10 @@ import com.github.starwacki.components.teacher.exceptions.SchoolClassNotFoundExc
 import com.github.starwacki.components.teacher.exceptions.TeacherNotFoundException;
 import com.github.starwacki.components.teacher.mapper.SchoolClassMapper;
 import com.github.starwacki.components.teacher.mapper.TeacherMapper;
-import com.github.starwacki.global.model.account.Teacher;
-import com.github.starwacki.global.model.school_class.SchoolClass;
-import com.github.starwacki.global.repositories.SchoolClassRepository;
-import com.github.starwacki.global.repositories.TeacherRepository;
+import com.github.starwacki.common.model.account.Teacher;
+import com.github.starwacki.common.model.school_class.SchoolClass;
+import com.github.starwacki.common.repositories.SchoolClassRepository;
+import com.github.starwacki.common.repositories.TeacherRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
