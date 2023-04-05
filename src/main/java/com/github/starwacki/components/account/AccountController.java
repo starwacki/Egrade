@@ -2,7 +2,6 @@ package com.github.starwacki.components.account;
 
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.common.model.account.Role;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.constraints.*;

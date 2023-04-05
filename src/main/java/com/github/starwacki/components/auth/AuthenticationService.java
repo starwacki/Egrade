@@ -3,7 +3,6 @@ package com.github.starwacki.components.auth;
 import com.github.starwacki.components.auth.dto.AuthenticationRequest;
 import com.github.starwacki.components.auth.dto.AuthenticationResponse;
 import com.github.starwacki.components.auth.exceptions.WrongAuthenticationException;
-import com.github.starwacki.common.model.account.Account;
 import com.github.starwacki.common.security.JwtService;
 import jakarta.servlet.http.Cookie;
 import lombok.AllArgsConstructor;
@@ -14,23 +13,21 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @AllArgsConstructor
-public class AuthenticationService {
+class AuthenticationFacade {
 
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final AccountOperationsService accountOperationsService;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthAccountAuthDetailsRepository authAccountAuthDetailsRepository;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         try {
             authenticateByUsernameAndPassword(request);
-            Account user = getUserAccount(request);
+            AuthAccountDetails user = getUserAccountAuthDetails(request);
             String jwt  = jwtService.generateToken(generateExtraClaims(user),user);
             return createAuthenticationResponse(jwt);
         } catch (AuthenticationException e) {
@@ -47,20 +44,19 @@ public class AuthenticationService {
         return cookie;
     }
 
-    private Map<String,Object> generateExtraClaims(Account account) {
+    private Map<String,Object> generateExtraClaims(AuthAccountDetails authDetails) {
         HashMap<String,Object> claims = new HashMap<>();
-        claims.put("id",account.getId());
+        claims.put("role",authDetails.getAuthorities());
         return claims;
     }
 
     private Authentication authenticateByUsernameAndPassword(AuthenticationRequest request) {
         return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.username(), passwordEncoder.encode(request.password())));
+                request.username(), request.password()));
     }
 
-    private Account getUserAccount(AuthenticationRequest request) {
-        return accountOperationsService
-                .findAccountByUsername(request.username())
+    private AuthAccountDetails getUserAccountAuthDetails(AuthenticationRequest request) {
+        return   authAccountAuthDetailsRepository.findByUsername(request.username())
                 .orElseThrow(() -> new UsernameNotFoundException(request.username()));
     }
 
