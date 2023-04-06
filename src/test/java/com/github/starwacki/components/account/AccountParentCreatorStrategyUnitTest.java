@@ -1,7 +1,6 @@
 package com.github.starwacki.components.account;
 
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.common.security.AES;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -15,14 +14,16 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class AccountParentManuallyGeneratorUnitTest {
+class AccountParentCreatorStrategyUnitTest {
 
     @InjectMocks
     private AccountParentCreatorStrategy accountParentCreatorStrategy;
     @Mock
     private AccountParentRepository accountParentRepository;
+
     @Mock
     private AccountStudentRepository accountStudentRepository;
+
 
     @Test
     @DisplayName("Test generating parent with same fields like given student DTO")
@@ -35,18 +36,15 @@ class AccountParentManuallyGeneratorUnitTest {
                 .className("2A")
                 .parentPhoneNumber("111222333")
                 .build();
-
+        given(accountStudentRepository.count()).willReturn(0l);
 
         //when
         AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentDTO);
 
         //then
-        assertThat(expected,
-                allOf(
-                        hasProperty("firstname",equalTo( accountStudentDTO.firstname())),
-                        hasProperty("lastname",equalTo( accountStudentDTO.lastname())),
-                        hasProperty("phoneNumber",equalTo( accountStudentDTO.parentPhoneNumber())))
-        );
+        assertThat(expected.getFirstname(),is(equalTo(accountStudentDTO.firstname())));
+        assertThat(expected.getLastname(),is(equalTo(accountStudentDTO.lastname())));
+        assertThat(expected.getPhoneNumber(),is(equalTo(accountStudentDTO.parentPhoneNumber())));
     }
 
     @Test
@@ -68,7 +66,7 @@ class AccountParentManuallyGeneratorUnitTest {
         String parentUsernamePattern = accountStudentDTO.firstname()+ "."+ accountStudentDTO.lastname() + "RO"+thisParentId;
 
         //then
-        assertThat(expected,hasProperty("username",equalTo(parentUsernamePattern)));
+        assertThat(expected.getAccountDetails().getUsername(),is(equalTo(parentUsernamePattern)));
     }
 
     @Test
@@ -88,7 +86,7 @@ class AccountParentManuallyGeneratorUnitTest {
         int passwordLength = 10;
 
         //then
-        String decryptedPassword = AES.decrypt(expected.getAccountDetails().getPassword());
+        String decryptedPassword = expected.getAccountDetails().getPassword();
         assertThat(decryptedPassword.length(), is(passwordLength));
     }
 
@@ -108,7 +106,7 @@ class AccountParentManuallyGeneratorUnitTest {
         AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentDTO);
 
         //then
-        String decryptedPassword = AES.decrypt(expected.getAccountDetails().getPassword());
+        String decryptedPassword = expected.getAccountDetails().getPassword();
         assertThat(decryptedPassword, matchesPattern("^[A-Za-z]+$"));
     }
 

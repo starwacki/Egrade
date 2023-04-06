@@ -1,12 +1,6 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.components.account.StudentManuallyGeneratorStrategy;
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.components.account.AccountStudent;
-import com.github.starwacki.common.repositories.SchoolClassRepository;
-import com.github.starwacki.components.account.StudentRepository;
-import com.github.starwacki.common.model.school_class.SchoolClass;
-import com.github.starwacki.common.security.AES;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -14,20 +8,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class AccountStudentManuallyGeneratorUnitTest {
+class AccountStudentCreatorStrategyUnitTest {
 
     @InjectMocks
-    private StudentManuallyGeneratorStrategy studentManuallyGenerator;
+    private AccountStudentCreatorStrategy accountStudentCreatorStrategy;
     @Mock
-    private StudentRepository studentRepository;
-    @Mock
-    private SchoolClassRepository schoolClassRepository;
+    private AccountStudentRepository accountStudentRepository;
+
 
     @Test
     @DisplayName("Test generating student with same fields like given DTO")
@@ -42,73 +35,13 @@ class AccountStudentManuallyGeneratorUnitTest {
                 .build();
 
         //when
-        AccountStudent expected = studentManuallyGenerator.createAccount(accountStudentDTO);
+        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentDTO);
 
         //then
-        assertThat(expected,
-                allOf(
-                        hasProperty("firstname",equalTo(accountStudentDTO.firstname())),
-                        hasProperty("lastname",equalTo(accountStudentDTO.lastname()))
-                )
-        );
-    }
-
-    @Test
-    @DisplayName("Test generating student will have given school class fields")
-    void generateStudentAccount_givenAccountStudentDTO_shouldReturnStudentWithGivenInDTOSchoolClassWhenSchoolClassExist() {
-        //given
-        int year = 2022;
-        String className = "2A";
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
-                .firstname("firstname")
-                .lastname("lastname")
-                .year(year)
-                .className(className)
-                .parentPhoneNumber("111222333")
-                .build();
-        given(schoolClassRepository.findSchoolClassByNameAndAndClassYear(className,year))
-                .willReturn(Optional.of(new SchoolClass(className,year)));
-
-        //when
-        AccountStudent generatedAccountStudent = studentManuallyGenerator.createAccount(accountStudentDTO);
-        SchoolClass expected = schoolClassRepository.findSchoolClassByNameAndAndClassYear(className,year).get();
-
-        //then
-        assertThat(expected,
-                allOf(
-                        hasProperty("classYear",equalTo(generatedAccountStudent.getSchoolClass().getClassYear())),
-                        hasProperty("name",equalTo(generatedAccountStudent.getSchoolClass().getName()))
-                )
-        );
-    }
-
-    @Test
-    @DisplayName("Test generating student will have given school class fields when class isn't in database")
-    void generateStudentAccount_givenAccountStudentDTO_shouldReturnStudentWithGivenInDTOSchoolClassWhenSchoolClassNoExist() {
-        //given
-        int year = 2022;
-        String className = "2A";
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
-                .firstname("firstname")
-                .lastname("lastname")
-                .year(year)
-                .className(className)
-                .parentPhoneNumber("111222333")
-                .build();
-        given(schoolClassRepository.findSchoolClassByNameAndAndClassYear(className,year))
-                .willReturn(Optional.empty());
-
-        //when
-        AccountStudent generatedAccountStudent = studentManuallyGenerator.createAccount(accountStudentDTO);
-        SchoolClass expected = new SchoolClass(className,year);
-
-        //then
-        assertThat(expected,
-                allOf(
-                        hasProperty("classYear",equalTo(generatedAccountStudent.getSchoolClass().getClassYear())),
-                        hasProperty("name",equalTo(generatedAccountStudent.getSchoolClass().getName()))
-                )
-        );
+        assertThat(expected.getFirstname(),is(equalTo(accountStudentDTO.firstname())));
+        assertThat(expected.getLastname(),is(equalTo(accountStudentDTO.lastname())));
+        assertThat(expected.getSchoolClassYear(),is(equalTo(accountStudentDTO.year())));
+        assertThat(expected.getSchoolClassName(),is(equalTo(accountStudentDTO.className())));
     }
 
     @Test
@@ -122,15 +55,15 @@ class AccountStudentManuallyGeneratorUnitTest {
                 .className("2A")
                 .parentPhoneNumber("111222333")
                 .build();
-        given(studentRepository.count()).willReturn(0l);
+        given(accountStudentRepository.count()).willReturn(0l);
 
         //when
-        AccountStudent expected = studentManuallyGenerator.createAccount(accountStudentDTO);
-        long thisStudentId = studentRepository.count()+1;
+        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentDTO);
+        long thisStudentId = accountStudentRepository.count()+1;
         String studentUsernamePattern = accountStudentDTO.firstname()+ "."+ accountStudentDTO.lastname() + "STU"+thisStudentId;
 
         //then
-        assertThat(expected,hasProperty("username",equalTo(studentUsernamePattern)));
+        assertThat(expected.getAccountDetails().getUsername(),is(equalTo(studentUsernamePattern)));
     }
 
     @Test
@@ -146,11 +79,11 @@ class AccountStudentManuallyGeneratorUnitTest {
                 .build();
 
         //when
-        AccountStudent expected = studentManuallyGenerator.createAccount(accountStudentDTO);
+        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentDTO);
         int passwordLength = 10;
 
         //then
-        String decryptedPassword = AES.decrypt(expected.getPassword());
+        String decryptedPassword = expected.getAccountDetails().getPassword();
         assertThat(decryptedPassword.length(), is(passwordLength));
     }
 
@@ -168,10 +101,10 @@ class AccountStudentManuallyGeneratorUnitTest {
 
 
         //when
-        AccountStudent expected = studentManuallyGenerator.createAccount(accountStudentDTO);
+        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentDTO);
 
         //then
-        String decryptedPassword = AES.decrypt(expected.getPassword());
+        String decryptedPassword = expected.getAccountDetails().getPassword();
         assertThat(decryptedPassword, matchesPattern("^[A-Za-z]+$"));
     }
 

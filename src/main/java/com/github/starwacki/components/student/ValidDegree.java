@@ -1,4 +1,4 @@
-package com.github.starwacki.components.student.validator;
+package com.github.starwacki.components.student;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

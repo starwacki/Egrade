@@ -1,4 +1,4 @@
-package com.github.starwacki.common.security;
+package com.github.starwacki.components.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

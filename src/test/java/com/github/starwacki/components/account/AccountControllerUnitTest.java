@@ -9,10 +9,7 @@ import com.github.starwacki.components.account.exceptions.AccountNotFoundExcepti
 import com.github.starwacki.components.account.exceptions.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.WrongFileException;
 import com.github.starwacki.components.account.exceptions.WrongPasswordException;
-import com.github.starwacki.common.model.account.Role;
-import com.github.starwacki.components.account.AccountService;
 import com.github.starwacki.common.model.grades.Subject;
-import com.github.starwacki.common.security.JwtAuthenticationFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,9 +42,9 @@ class AccountControllerUnitTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private AccountService accountService;
-    @MockBean
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private AccountFacade accountFacade;
+
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -68,12 +65,12 @@ class AccountControllerUnitTest {
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
-                .accountType(Role.STUDENT.toString())
+                .accountType(AccountRole.STUDENT.toString())
                 .id(1)
                 .password("password")
                 .username("Firstname.Lastname1STU")
                 .build();
-        given(accountService.saveStudentAndParentAccount(accountStudentDTO)).willReturn(accountViewDTO);
+        given(accountFacade.saveStudentAndParentAccount(accountStudentDTO)).willReturn(accountViewDTO);
 
         //when
         ResultActions response= mockMvc.perform(post("/account/student")
@@ -260,7 +257,7 @@ class AccountControllerUnitTest {
     void addStudentsFromCSVFile_givenWrongFilePath_shouldReturn_400_HTTPStatus_andResponseBodyErrorMessage() throws Exception {
         //given
         String wrongFileFilePath = "wrong";
-        given(accountService.saveStudentsAndParentsFromFile(wrongFileFilePath)).willThrow(new WrongFileException(WrongFileException.Code.FILE));
+        given(accountFacade.saveStudentsAndParentsFromFile(wrongFileFilePath)).willThrow(new WrongFileException(WrongFileException.Code.FILE));
 
 
         //when
@@ -282,7 +279,7 @@ class AccountControllerUnitTest {
         //given
         String filePath = "correct";
         int wrongLine = 2;
-        given(accountService.saveStudentsAndParentsFromFile(filePath)).willThrow(new WrongFileException(WrongFileException.Code.YEAR_FORMAT,wrongLine));
+        given(accountFacade.saveStudentsAndParentsFromFile(filePath)).willThrow(new WrongFileException(WrongFileException.Code.YEAR_FORMAT,wrongLine));
 
 
         //when
@@ -304,7 +301,7 @@ class AccountControllerUnitTest {
         //given
         String filePath = "correct";
         int wrongLine = 2;
-        given(accountService.saveStudentsAndParentsFromFile(filePath)).willThrow(new WrongFileException(WrongFileException.Code.LINE,wrongLine));
+        given(accountFacade.saveStudentsAndParentsFromFile(filePath)).willThrow(new WrongFileException(WrongFileException.Code.LINE,wrongLine));
 
 
         //when
@@ -326,7 +323,7 @@ class AccountControllerUnitTest {
         //given
         String filePath = "correct";
         int wrongLine = 2;
-        given(accountService.saveStudentsAndParentsFromFile(filePath)).willThrow(new WrongFileException(WrongFileException.Code.VALIDATION,wrongLine));
+        given(accountFacade.saveStudentsAndParentsFromFile(filePath)).willThrow(new WrongFileException(WrongFileException.Code.VALIDATION,wrongLine));
 
 
         //when
@@ -352,11 +349,11 @@ class AccountControllerUnitTest {
                 .firstname("firstname")
                 .lastname("lastname")
                 .username("firstname.lastname1STU")
-                .accountType(Role.STUDENT.toString())
+                .accountType(AccountRole.STUDENT.toString())
                 .password("password")
                 .build();
         List<AccountViewDTO> listOfCreatedAccounts = List.of( accountStudentDTO,accountStudentDTO,accountStudentDTO);
-        given(accountService.saveStudentsAndParentsFromFile(filePath)).willReturn(listOfCreatedAccounts);
+        given(accountFacade.saveStudentsAndParentsFromFile(filePath)).willReturn(listOfCreatedAccounts);
 
 
         //when
@@ -388,12 +385,12 @@ class AccountControllerUnitTest {
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
-                .accountType(Role.TEACHER.toString())
+                .accountType(AccountRole.TEACHER.toString())
                 .id(1)
                 .password("password")
                 .username("firstname.lastname1NAU")
                 .build();
-        given(accountService.saveTeacherAccount(accountTeacherDTO)).willReturn(accountViewDTO);
+        given(accountFacade.saveTeacherAccount(accountTeacherDTO)).willReturn(accountViewDTO);
 
         //when
         ResultActions response= mockMvc.perform(post("/account/teacher")
@@ -547,22 +544,22 @@ class AccountControllerUnitTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Role.class,names = {"STUDENT","TEACHER","PARENT"})
+    @EnumSource(value = AccountRole.class,names = {"STUDENT","TEACHER","PARENT"})
     @DisplayName("Test get account by id given legal role return 200 HTTP status and AccountViewDTO in response body")
-    void  getAccountById_givenCorrectRole_shouldReturn_200_HTTPStatus_andResponseBodyWithAccountViewDto(Role role) throws Exception {
+    void  getAccountById_givenCorrectRole_shouldReturn_200_HTTPStatus_andResponseBodyWithAccountViewDto(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
         AccountViewDTO accountViewDTO = AccountViewDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .id(accountId)
-                .accountType(role.toString())
+                .accountType(accountRole.toString())
                 .password("password")
                 .build();
-        given(accountService.getAccountById(role,accountId)).willReturn(accountViewDTO);
+        given(accountFacade.getAccountById(accountRole,accountId)).willReturn(accountViewDTO);
 
         //when
-        ResultActions response= mockMvc.perform(get("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(get("/account/"+ accountRole +"="+accountId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -577,15 +574,15 @@ class AccountControllerUnitTest {
     void  getAccountById_givenAdminRole_shouldReturn_400_HTTPStatus_andResponseBodyWithErrorMessage() throws Exception {
         //given
         int accountId = 1;
-        Role role = Role.ADMIN;
-        given(accountService.getAccountById(role,accountId)).willThrow(new IllegalOperationException(HttpMethod.GET,Role.ADMIN));
+        AccountRole accountRole = AccountRole.ADMIN;
+        given(accountFacade.getAccountById(accountRole,accountId)).willThrow(new IllegalOperationException(HttpMethod.GET, AccountRole.ADMIN.toString()));
 
         //when
-        ResultActions response= mockMvc.perform(get("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(get("/account/"+ accountRole +"="+accountId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = "Illegal operation type: " + HttpMethod.GET + " for role: " + role;
+        String expectedResponseBody = "Illegal operation type: " + HttpMethod.GET + " for role: " + accountRole;
         response
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
@@ -593,15 +590,15 @@ class AccountControllerUnitTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Role.class,names = {"STUDENT","TEACHER","PARENT"})
+    @EnumSource(value = AccountRole.class,names = {"STUDENT","TEACHER","PARENT"})
     @DisplayName("Test get account by id when account no exist return 404 HTTP status and error message in response body")
-    void  getAccountById_givenCorrectRoleAndNoExistAccountId_shouldReturn_404_HTTPStatus_andResponseBodyErrorMessage(Role role) throws Exception {
+    void  getAccountById_givenCorrectRoleAndNoExistAccountId_shouldReturn_404_HTTPStatus_andResponseBodyErrorMessage(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
-        given(accountService.getAccountById(role,accountId)).willThrow(new AccountNotFoundException(accountId));
+        given(accountFacade.getAccountById(accountRole,accountId)).willThrow(new AccountNotFoundException(accountId));
 
         //when
-        ResultActions response= mockMvc.perform(get("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(get("/account/"+ accountRole +"="+accountId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -613,22 +610,22 @@ class AccountControllerUnitTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Role.class,names = {"STUDENT","TEACHER"})
+    @EnumSource(value = AccountRole.class,names = {"STUDENT","TEACHER"})
     @DisplayName("Test delete account by id given legal role return 200 HTTP status and AccountViewDTO in response body")
-    void  deleteAccountById_givenCorrectRole_shouldReturn_200_HTTPStatus_andResponseBodyWithAccountViewDto(Role role) throws Exception {
+    void  deleteAccountById_givenCorrectRole_shouldReturn_200_HTTPStatus_andResponseBodyWithAccountViewDto(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
         AccountViewDTO accountViewDTO = AccountViewDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .id(accountId)
-                .accountType(role.toString())
+                .accountType(accountRole.toString())
                 .password("password")
                 .build();
-        given(accountService.deleteAccountById(role,accountId)).willReturn(accountViewDTO);
+        given(accountFacade.deleteAccountById(accountRole,accountId)).willReturn(accountViewDTO);
 
         //when
-        ResultActions response= mockMvc.perform(delete("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(delete("/account/"+ accountRole +"="+accountId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -640,19 +637,19 @@ class AccountControllerUnitTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Role.class,names = {"ADMIN","PARENT"})
+    @EnumSource(value = AccountRole.class,names = {"ADMIN","PARENT"})
     @DisplayName("Test delete account by id given illegal role return 400 HTTP status and error message in response body")
-    void  deleteAccountById_givenIllegalRole_shouldReturn_400_HTTPStatus_andResponseBodyWithErrorMessage(Role role) throws Exception {
+    void  deleteAccountById_givenIllegalRole_shouldReturn_400_HTTPStatus_andResponseBodyWithErrorMessage(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
-        given(accountService.deleteAccountById(role,accountId)).willThrow(new IllegalOperationException(HttpMethod.DELETE,role));
+        given(accountFacade.deleteAccountById(accountRole,accountId)).willThrow(new IllegalOperationException(HttpMethod.DELETE, accountRole.toString()));
 
         //when
-        ResultActions response= mockMvc.perform(delete("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(delete("/account/"+ accountRole +"="+accountId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = "Illegal operation type: " + HttpMethod.DELETE + " for role: " + role;
+        String expectedResponseBody = "Illegal operation type: " + HttpMethod.DELETE + " for role: " + accountRole;
         response
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
@@ -660,15 +657,15 @@ class AccountControllerUnitTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Role.class,names = {"STUDENT","TEACHER"})
+    @EnumSource(value = AccountRole.class,names = {"STUDENT","TEACHER"})
     @DisplayName("Test get account by id when account no exist return 404 HTTP status and error message in response body")
-    void  deleteAccountById_givenCorrectRoleAndNoExistAccountId_shouldReturn_404_HTTPStatus_andResponseBodyErrorMessage(Role role) throws Exception {
+    void  deleteAccountById_givenCorrectRoleAndNoExistAccountId_shouldReturn_404_HTTPStatus_andResponseBodyErrorMessage(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
-        given(accountService.deleteAccountById(role,accountId)).willThrow(new AccountNotFoundException(accountId));
+        given(accountFacade.deleteAccountById(accountRole,accountId)).willThrow(new AccountNotFoundException(accountId));
 
         //when
-        ResultActions response= mockMvc.perform(delete("/account/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(delete("/account/"+ accountRole +"="+accountId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -692,11 +689,11 @@ class AccountControllerUnitTest {
         //given
         int accountId = 1;
         String oldPassword = "oldpassword";
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
 
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+ accountRole +"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -707,9 +704,9 @@ class AccountControllerUnitTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Role.class,names = {"STUDENT","TEACHER","PARENT"})
+    @EnumSource(value = AccountRole.class,names = {"STUDENT","TEACHER","PARENT"})
     @DisplayName("Test change account password return 200 HTTP status and AccountViewDTO in response body")
-    void  changeAccountPassword_givenCorrectRole_shouldReturn_200_HTTPStatus_andResponseBodyWithAccountViewDto(Role role) throws Exception {
+    void  changeAccountPassword_givenCorrectRole_shouldReturn_200_HTTPStatus_andResponseBodyWithAccountViewDto(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
         String oldPassword = "oldpassword";
@@ -718,13 +715,13 @@ class AccountControllerUnitTest {
                 .firstname("firstname")
                 .lastname("lastname")
                 .id(accountId)
-                .accountType(role.toString())
+                .accountType(accountRole.toString())
                 .password(newPassword)
                 .build();
-        given(accountService.changeAccountPassword(role,accountId,oldPassword,newPassword)).willReturn(accountViewDTO);
+        given(accountFacade.changeAccountPassword(accountRole,accountId,oldPassword,newPassword)).willReturn(accountViewDTO);
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+ accountRole +"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -738,23 +735,23 @@ class AccountControllerUnitTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Role.class,names = {"ADMIN","PARENT"})
+    @EnumSource(value = AccountRole.class,names = {"ADMIN","PARENT"})
     @DisplayName("Test change account by id given illegal role return 400 HTTP status and error message in response body")
-    void  changeAccountPassword_givenIllegalRole_shouldReturn_400_HTTPStatus_andResponseBodyWithErrorMessage(Role role) throws Exception {
+    void  changeAccountPassword_givenIllegalRole_shouldReturn_400_HTTPStatus_andResponseBodyWithErrorMessage(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
         String oldPassword = "oldpassword";
         String newPassword = "Password1.";
-        given(accountService.changeAccountPassword(role,accountId,oldPassword,newPassword)).willThrow(new IllegalOperationException(HttpMethod.PUT,role));
+        given(accountFacade.changeAccountPassword(accountRole,accountId,oldPassword,newPassword)).willThrow(new IllegalOperationException(HttpMethod.PUT, accountRole.toString()));
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+ accountRole +"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = "Illegal operation type: " + HttpMethod.PUT + " for role: " + role;
+        String expectedResponseBody = "Illegal operation type: " + HttpMethod.PUT + " for role: " + accountRole;
         response
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
@@ -762,17 +759,17 @@ class AccountControllerUnitTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Role.class,names = {"STUDENT","TEACHER","PARENT"})
+    @EnumSource(value = AccountRole.class,names = {"STUDENT","TEACHER","PARENT"})
     @DisplayName("Test get account by id when account no exist return 404 HTTP status and error message in response body")
-    void  changeAccountPassword_givenCorrectRoleAndNoExistAccountId_shouldReturn_404_HTTPStatus_andResponseBodyErrorMessage(Role role) throws Exception {
+    void  changeAccountPassword_givenCorrectRoleAndNoExistAccountId_shouldReturn_404_HTTPStatus_andResponseBodyErrorMessage(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
         String oldPassword = "oldpassword";
         String newPassword = "Password1.";
-        given(accountService.changeAccountPassword(role,accountId,oldPassword,newPassword)).willThrow(new AccountNotFoundException(accountId));
+        given(accountFacade.changeAccountPassword(accountRole,accountId,oldPassword,newPassword)).willThrow(new AccountNotFoundException(accountId));
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+ accountRole +"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -786,17 +783,17 @@ class AccountControllerUnitTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Role.class,names = {"STUDENT","TEACHER","PARENT"})
+    @EnumSource(value = AccountRole.class,names = {"STUDENT","TEACHER","PARENT"})
     @DisplayName("Test get account by id when password not same return 400 HTTP status and error message in response body")
-    void  changeAccountPassword_givenPasswordNotSameLikePasswordInDatabase_shouldReturn_400_HTTPStatus_andResponseBodyErrorMessage(Role role) throws Exception {
+    void  changeAccountPassword_givenPasswordNotSameLikePasswordInDatabase_shouldReturn_400_HTTPStatus_andResponseBodyErrorMessage(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
         String oldPassword = "oldpassword";
         String newPassword = "Password1.";
-        given(accountService.changeAccountPassword(role,accountId,oldPassword,newPassword)).willThrow(new WrongPasswordException());
+        given(accountFacade.changeAccountPassword(accountRole,accountId,oldPassword,newPassword)).willThrow(new WrongPasswordException());
 
         //when
-        ResultActions response= mockMvc.perform(put("/account/password/"+role+"="+accountId)
+        ResultActions response= mockMvc.perform(put("/account/password/"+ accountRole +"="+accountId)
                 .param("oldPassword",oldPassword)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -808,12 +805,5 @@ class AccountControllerUnitTest {
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
                         is(equalTo(expectedResponseBody))));
     }
-
-
-
-
-
-
-
 
 }

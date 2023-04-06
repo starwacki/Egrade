@@ -1,4 +1,4 @@
-package com.github.starwacki.components.student.controller;
+package com.github.starwacki.components.student;
 
 import com.github.starwacki.components.student.dto.GradeDTO;
 import com.github.starwacki.components.student.dto.GradeViewDTO;

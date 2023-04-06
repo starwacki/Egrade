@@ -3,7 +3,6 @@ package com.github.starwacki.components.auth;
 import com.github.starwacki.components.auth.dto.AuthenticationRequest;
 import com.github.starwacki.components.auth.dto.AuthenticationResponse;
 import com.github.starwacki.components.auth.exceptions.WrongAuthenticationException;
-import com.github.starwacki.common.security.JwtService;
 import jakarta.servlet.http.Cookie;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,11 +17,11 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor
-class AuthenticationFacade {
+class AuthenticationService {
 
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final AuthAccountAuthDetailsRepository authAccountAuthDetailsRepository;
+    private final AuthAccountAuthQueryRepository authAccountAuthQueryRepository;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         try {
@@ -46,17 +45,17 @@ class AuthenticationFacade {
 
     private Map<String,Object> generateExtraClaims(AuthAccountDetails authDetails) {
         HashMap<String,Object> claims = new HashMap<>();
-        claims.put("role",authDetails.getAuthorities());
+        claims.put("ROLE",authDetails.getAuthorities());
         return claims;
     }
 
     private Authentication authenticateByUsernameAndPassword(AuthenticationRequest request) {
         return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.username(), request.password()));
+                request.username(), AuthenticationAESAlgorithm.encrypt(request.password())));
     }
 
     private AuthAccountDetails getUserAccountAuthDetails(AuthenticationRequest request) {
-        return   authAccountAuthDetailsRepository.findByUsername(request.username())
+        return   authAccountAuthQueryRepository.findByUsername(request.username())
                 .orElseThrow(() -> new UsernameNotFoundException(request.username()));
     }
 

@@ -1,11 +1,12 @@
-package com.github.starwacki.common.security;
+package com.github.starwacki.components.auth;
 
+import com.github.starwacki.common.security.exception.AESException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AESUnitTest {
+class AuthenticationAESAlgorithmUnitTest {
 
     @Test
     @DisplayName("Test encrypt return char sentence another than given password")
@@ -14,7 +15,7 @@ class AESUnitTest {
         String password = "password";
 
         //when
-        String encryptionPassword = AES.encrypt(password);
+        String encryptionPassword = AuthenticationAESAlgorithm.encrypt(password);
 
         //then
         assertNotEquals(password,encryptionPassword);
@@ -28,8 +29,8 @@ class AESUnitTest {
         String password = "password";
 
         //when
-        String encryptionPassword = AES.encrypt(password);
-        String decryptionPassword = AES.decrypt(encryptionPassword);
+        String encryptionPassword = AuthenticationAESAlgorithm.encrypt(password);
+        String decryptionPassword = AuthenticationAESAlgorithm.decrypt(encryptionPassword);
 
         //then
         assertNotEquals(password,encryptionPassword);
@@ -43,7 +44,7 @@ class AESUnitTest {
         String password = "password";
 
         //then
-        assertThrows(AESException.class,() -> AES.decrypt(password));
+        assertThrows(AESException.class,() -> AuthenticationAESAlgorithm.decrypt(password));
     }
 
     @Test
@@ -53,6 +54,6 @@ class AESUnitTest {
         String password = null;
 
         //then
-        assertThrows(AESException.class,() -> AES.encrypt(password));
+        assertThrows(AESException.class,() -> AuthenticationAESAlgorithm.encrypt(password));
     }
 }

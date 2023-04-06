@@ -25,7 +25,7 @@ class AuthenticationController implements AuthenticationOperations {
         AuthenticationResponse authResponse = authenticationService.authenticate(request);
         Cookie cookie = authenticationService.generateJWTCookie(authResponse.token());
         response.addCookie(cookie);
-        return ResponseEntity.ok(authResponse );
+        return ResponseEntity.ok(authResponse);
     }
 
 

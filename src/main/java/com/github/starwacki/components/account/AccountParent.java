@@ -9,16 +9,16 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "parents")
-class Parent extends Account {
+class AccountParent extends Account {
 
     private String phoneNumber;
 
-    private Parent(AccountDetails accountDetails, String firstname, String lastname,String phoneNumber) {
+    private AccountParent(AccountDetails accountDetails, String firstname, String lastname, String phoneNumber) {
         super(accountDetails, firstname, lastname);
         this.phoneNumber = phoneNumber;
     }
 
-    protected Parent() {
+    protected AccountParent() {
         super();
     }
 
@@ -55,8 +55,8 @@ class Parent extends Account {
         }
 
         @Override
-        public Parent build() {
-            return new Parent(accountDetails,firstname,lastname,phoneNumber);
+        public AccountParent build() {
+            return new AccountParent(accountDetails,firstname,lastname,phoneNumber);
         }
     }
 

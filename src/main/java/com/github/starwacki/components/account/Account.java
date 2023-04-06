@@ -16,7 +16,7 @@ abstract class Account {
 
     private String lastname;
 
-    @OneToOne
+    @OneToOne(cascade ={CascadeType.ALL})
     private AccountDetails accountDetails;
 
     protected Account() {

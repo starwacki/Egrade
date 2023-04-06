@@ -1,11 +1,8 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.components.account.TeacherManuallyGeneratorStrategy;
+import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.components.account.AccountTeacher;
-import com.github.starwacki.components.account.TeacherRepository;
 import com.github.starwacki.common.model.grades.Subject;
-import com.github.starwacki.common.security.AES;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -13,17 +10,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class AccountTeacherManuallyGeneratorUnitTest {
+class AccountTeacherCreatorStrategyUnitTest {
 
     @InjectMocks
-    private TeacherManuallyGeneratorStrategy teacherManuallyGenerator;
+    private AccountTeacherCreatorStrategy accountTeacherCreatorStrategy;
     @Mock
-    private TeacherRepository teacherRepository;
+    private AccountTeacherRepository accountTeacherRepository;
+
+    @Autowired
+    private EgradePasswordEncoder egradePasswordEncoder;
 
     @Test
     @DisplayName("Test generating teacher with same fields like given DTO")
@@ -38,18 +40,14 @@ class AccountTeacherManuallyGeneratorUnitTest {
                 .build();
 
         //when
-        AccountTeacher expected = teacherManuallyGenerator.createAccount(accountTeacherDTO);
+        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
 
         //then
-        assertThat(expected,
-                allOf(
-                hasProperty("firstname",equalTo(accountTeacherDTO.firstname())),
-                hasProperty("lastname",equalTo(accountTeacherDTO.lastname())),
-                hasProperty("workPhone",equalTo(accountTeacherDTO.workPhone())),
-                hasProperty("subject",equalTo(accountTeacherDTO.subject())),
-                hasProperty("email",equalTo(accountTeacherDTO.email()))
-                )
-        );
+        assertThat(expected.getFirstname(),is(equalTo(accountTeacherDTO.firstname())));
+        assertThat(expected.getLastname(),is(equalTo(accountTeacherDTO.lastname())));
+        assertThat(expected.getWorkPhone(),is(equalTo(accountTeacherDTO.workPhone())));
+        assertThat(expected.getSubject(),is(equalTo(accountTeacherDTO.subject())));
+        assertThat(expected.getEmail(),is(equalTo(accountTeacherDTO.email())));
     }
 
     @Test
@@ -60,15 +58,15 @@ class AccountTeacherManuallyGeneratorUnitTest {
                 .firstname("teacher")
                 .lastname("lastname")
                 .build();
-        given(teacherRepository.count()).willReturn(0l);
+        given(accountTeacherRepository.count()).willReturn(0l);
 
         //when
-        AccountTeacher expected = teacherManuallyGenerator.createAccount(accountTeacherDTO);
-        long thisTeacherId = teacherRepository.count()+1;
+        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
+        long thisTeacherId = accountTeacherRepository.count()+1;
         String teacherUsernamePattern = accountTeacherDTO.firstname()+ "."+ accountTeacherDTO.lastname() + "NAU"+thisTeacherId;
 
         //then
-        assertThat(expected,hasProperty("username",equalTo(teacherUsernamePattern)));
+        assertThat(expected.getAccountDetails().getUsername(),is(equalTo(teacherUsernamePattern)));
     }
 
     @Test
@@ -79,11 +77,11 @@ class AccountTeacherManuallyGeneratorUnitTest {
                 .build();
 
         //when
-        AccountTeacher expected = teacherManuallyGenerator.createAccount(accountTeacherDTO);
+        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
         int passwordLength = 10;
 
         //then
-        String decryptedPassword = AES.decrypt(expected.getPassword());
+        String decryptedPassword = egradePasswordEncoder.decode(expected.getAccountDetails().getPassword());
         assertThat(decryptedPassword.length(), is(passwordLength));
     }
 
@@ -95,10 +93,10 @@ class AccountTeacherManuallyGeneratorUnitTest {
                 .build();
 
         //when
-        AccountTeacher expected = teacherManuallyGenerator.createAccount(accountTeacherDTO);
+        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
 
         //then
-        String decryptedPassword = AES.decrypt(expected.getPassword());
+        String decryptedPassword = egradePasswordEncoder.decode(expected.getAccountDetails().getPassword());
         assertThat(decryptedPassword, matchesPattern("^[A-Za-z]+$"));
     }
 

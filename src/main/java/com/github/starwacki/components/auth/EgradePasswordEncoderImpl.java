@@ -1,5 +1,5 @@
-package com.github.starwacki.common.security;
-import org.springframework.security.crypto.password.PasswordEncoder;
+package com.github.starwacki.components.auth;
+import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *  to passwords is required for certain functionalities
  */
 
-public class EgradePasswordEncoder implements PasswordEncoder {
+class EgradePasswordEncoderImpl implements EgradePasswordEncoder {
 
 
     /**
@@ -23,14 +23,19 @@ public class EgradePasswordEncoder implements PasswordEncoder {
 
     @Override
     public String encode(CharSequence rawPassword) {
-        return AES.encrypt(rawPassword.toString());
+        return AuthenticationAESAlgorithm.encrypt(rawPassword.toString());
     }
 
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
+        System.out.println(rawPassword);
+        System.out.println(encodedPassword);
         return rawPassword.toString().equals(encodedPassword);
     }
 
 
-
+    @Override
+    public String decode(String password) {
+        return AuthenticationAESAlgorithm.decrypt(password);
+    }
 }

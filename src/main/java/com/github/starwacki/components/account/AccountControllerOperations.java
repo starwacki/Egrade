@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping("/account")
-interface AccountOperations {
+interface AccountControllerOperations {
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -85,8 +85,8 @@ interface AccountOperations {
                     @ApiResponse (responseCode = "404",ref = "accountNotFoundResponse")
             }
     )
-    @GetMapping("/{role}={id}")
-    ResponseEntity<AccountViewDTO> getAccountById(@PathVariable Role role, @PathVariable int id);
+    @GetMapping("/{accountRole}={id}")
+    ResponseEntity<AccountViewDTO> getAccountById(@PathVariable AccountRole accountRole, @PathVariable int id);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -105,8 +105,8 @@ interface AccountOperations {
                     @ApiResponse (responseCode = "404",ref = "accountNotFoundResponse")
             }
     )
-    @DeleteMapping("/{role}={id}")
-    ResponseEntity<AccountViewDTO> deleteAccountById(@PathVariable Role role, @PathVariable int id);
+    @DeleteMapping("/{accountRole}={id}")
+    ResponseEntity<AccountViewDTO> deleteAccountById(@PathVariable AccountRole accountRole, @PathVariable int id);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -128,9 +128,9 @@ interface AccountOperations {
                     @ApiResponse (responseCode = "404",ref = "accountNotFoundResponse")
             }
     )
-    @PutMapping("/{role}={id}")
+    @PutMapping("/{accountRole}={id}")
     ResponseEntity<AccountViewDTO> changeAccountPassword(
-            @PathVariable Role role,
+            @PathVariable AccountRole accountRole,
             @PathVariable int id,
             @RequestParam String oldPassword,
             @RequestParam @Pattern(regexp = "^(?=.*\\d)(?=.*[A-Z])(?=.*\\W).{6,25}$") String newPassword);

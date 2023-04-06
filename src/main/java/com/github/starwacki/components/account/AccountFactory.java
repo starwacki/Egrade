@@ -1,8 +1,5 @@
-package com.github.starwacki.components.account.factory;
+package com.github.starwacki.components.account;
 
-import com.github.starwacki.components.account.Parent;
-import com.github.starwacki.components.account.Student;
-import com.github.starwacki.components.account.Teacher;
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import lombok.RequiredArgsConstructor;
@@ -12,26 +9,26 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AccountFactory {
+class AccountFactory {
 
-    private final StudentManuallyGeneratorStrategy studentManuallyGeneratorStrategy;
-    private final TeacherManuallyGeneratorStrategy teacherManuallyGeneratorStrategy;
-    private final ParentManuallyGeneratorStrategy parentManuallyGeneratorStrategy;
-    private final StudentCSVGeneratorStrategy studentCSVGeneratorStrategy;
+    private final AccountStudentCreatorStrategy accountStudentCreatorStrategy;
+    private final AccountTeacherCreatorStrategy accountTeacherCreatorStrategy;
+    private final AccountParentCreatorStrategy accountParentCreatorStrategy;
+    private final AccountStudentCsvCreatorStrategy accountStudentCsvCreatorStrategy;
 
-    public Student createStudent(AccountStudentDTO accountStudentDTO) {
-        return studentManuallyGeneratorStrategy.createAccount(accountStudentDTO);
+    public AccountStudent createStudent(AccountStudentDTO accountStudentDTO) {
+        return accountStudentCreatorStrategy.createAccount(accountStudentDTO);
     }
 
-    public Parent createParent(AccountStudentDTO accountStudentDTO) {
-        return parentManuallyGeneratorStrategy.createAccount(accountStudentDTO);
+    public AccountParent createParent(AccountStudentDTO accountStudentDTO) {
+        return accountParentCreatorStrategy.createAccount(accountStudentDTO);
     }
 
-    public Teacher createTeacher(AccountTeacherDTO accountTeacherDTO) {
-        return  teacherManuallyGeneratorStrategy.createAccount(accountTeacherDTO);
+    public AccountTeacher createTeacher(AccountTeacherDTO accountTeacherDTO) {
+        return  accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
     }
 
     public List<AccountStudentDTO> createStudents(String path) {
-        return studentCSVGeneratorStrategy.generateStudents(path);
+        return accountStudentCsvCreatorStrategy.generateStudents(path);
     }
 }

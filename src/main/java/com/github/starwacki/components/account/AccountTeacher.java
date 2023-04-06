@@ -10,20 +10,18 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "teachers")
-public class Teacher extends Account {
+class AccountTeacher extends Account {
 
     private String workPhone;
-
     private String email;
-
     @Enumerated(value = EnumType.STRING)
     private Subject subject;
 
-    protected Teacher() {
+    protected AccountTeacher() {
 
     }
 
-    private Teacher(AccountDetails accountDetails, String firstname, String lastname, String workPhone, String email,Subject subject) {
+    private AccountTeacher(AccountDetails accountDetails, String firstname, String lastname, String workPhone, String email, Subject subject) {
         super(accountDetails,firstname, lastname);
         this.workPhone = workPhone;
         this.email = email;
@@ -85,8 +83,8 @@ public class Teacher extends Account {
         }
 
         @Override
-        public Teacher build() {
-            return new Teacher(accountDetails,firstname,lastname,workPhone,email,subject);
+        public AccountTeacher build() {
+            return new AccountTeacher(accountDetails,firstname,lastname,workPhone,email,subject);
         }
 
     }

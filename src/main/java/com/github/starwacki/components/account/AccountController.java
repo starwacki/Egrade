@@ -18,14 +18,14 @@ import java.util.List;
 @Validated
 @Controller
 @RequestMapping("/account")
-class AccountController implements AccountOperations {
+class AccountController implements AccountControllerOperations {
 
-    private final AccountService accountService;
+    private final AccountFacade accountFacade;
 
     @Secured(value = {"ADMIN"})
     @PostMapping("/student")
     public ResponseEntity<AccountViewDTO> addStudent(AccountStudentDTO studentDTO) {
-        AccountViewDTO student = accountService.saveStudentAndParentAccount(studentDTO);
+        AccountViewDTO student = accountFacade.saveStudentAndParentAccount(studentDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(student);
 
     }
@@ -33,45 +33,45 @@ class AccountController implements AccountOperations {
     @Secured(value = {"ADMIN"})
     @PostMapping("/students")
     public ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(String pathname) {
-      List<AccountViewDTO> list = accountService.saveStudentsAndParentsFromFile(pathname);
+      List<AccountViewDTO> list = accountFacade.saveStudentsAndParentsFromFile(pathname);
       return ResponseEntity.status(HttpStatus.CREATED).body(list);
     }
 
     @Secured(value = {"ADMIN"})
     @PostMapping("/teacher")
     public ResponseEntity<AccountViewDTO> addTeacher(AccountTeacherDTO accountTeacherDTO) {
-        AccountViewDTO teacher = accountService.saveTeacherAccount(accountTeacherDTO);
+        AccountViewDTO teacher = accountFacade.saveTeacherAccount(accountTeacherDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(teacher);
     }
 
     @Secured(value = {"ADMIN"})
-    @GetMapping("/{role}={id}")
+    @GetMapping("/{accountRole}={id}")
     public ResponseEntity<AccountViewDTO> getAccountById(
-            @PathVariable Role role,
+            @PathVariable AccountRole accountRole,
             @PathVariable int id) {
-        AccountViewDTO accountViewDTO = accountService.getAccountById(role,id);
+        AccountViewDTO accountViewDTO = accountFacade.getAccountById(accountRole,id);
         return ResponseEntity.ok(accountViewDTO);
     }
 
     @Secured(value = {"ADMIN"})
-    @DeleteMapping("/{role}={id}")
+    @DeleteMapping("/{accountRole}={id}")
     public ResponseEntity<AccountViewDTO> deleteAccountById(
-            @PathVariable Role role,
+            @PathVariable AccountRole accountRole,
             @PathVariable int id) {
-        AccountViewDTO accountViewDTO = accountService.deleteAccountById(role,id);
+        AccountViewDTO accountViewDTO = accountFacade.deleteAccountById(accountRole,id);
         return ResponseEntity.ok(accountViewDTO);
     }
 
 
     //Todo - implement jwt token
     @PermitAll
-    @PutMapping("password/{role}={id}")
+    @PutMapping("password/{accountRole}={id}")
     public ResponseEntity<AccountViewDTO> changeAccountPassword(
-            @PathVariable Role role,
+            @PathVariable AccountRole accountRole,
             @PathVariable int id,
             @RequestParam String oldPassword,
             @RequestParam @Pattern(regexp = "^(?=.*\\d)(?=.*[A-Z])(?=.*\\W).{6,25}$") String newPassword) {
-        AccountViewDTO accountViewDTO = accountService.changeAccountPassword(role,id,oldPassword,newPassword);
+        AccountViewDTO accountViewDTO = accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword);
         return ResponseEntity.ok(accountViewDTO);
     }
 

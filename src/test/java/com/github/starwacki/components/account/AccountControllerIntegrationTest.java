@@ -1,19 +1,11 @@
 package com.github.starwacki.components.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
-import com.github.starwacki.common.model.account.Parent;
-import com.github.starwacki.common.model.account.Role;
-import com.github.starwacki.common.model.account.Student;
-import com.github.starwacki.common.model.account.Teacher;
 import com.github.starwacki.common.model.grades.Subject;
-import com.github.starwacki.common.model.school_class.SchoolClass;
-import com.github.starwacki.common.repositories.ParentRepository;
-import com.github.starwacki.common.repositories.StudentRepository;
-import com.github.starwacki.common.repositories.TeacherRepository;
-import com.github.starwacki.common.security.AES;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -46,11 +38,13 @@ class AccountControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private StudentRepository studentRepository;
+    private AccountStudentRepository accountStudentRepository;
     @Autowired
-    private ParentRepository parentRepository;
+    private AccountParentRepository accountParentRepository;
     @Autowired
-    private TeacherRepository teacherRepository;
+    private AccountTeacherRepository accountTeacherRepository;
+    @Autowired
+    private EgradePasswordEncoder egradePasswordEncoder;
 
     @Test
     @DisplayName("Test add student with roles without permissions return 403 HTTP status")
@@ -101,13 +95,12 @@ class AccountControllerIntegrationTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));
 
-        List<Student> studentsInDataBase = studentRepository.findAll();
+        List<AccountStudent> studentsInDataBase = accountStudentRepository.findAll();
+        AccountStudent student = studentsInDataBase.get(0);
         assertThat(studentsInDataBase, hasSize(1));
-        assertThat(studentsInDataBase.get(0), allOf(
-                hasProperty("username", equalTo("Firstname.LastnameSTU1")),
-                hasProperty("firstname", equalTo("Firstname")),
-                hasProperty("lastname", equalTo("Lastname"))
-        ));
+        assertThat(student.getFirstname(),is(equalTo(accountStudentDTO.firstname())));
+        assertThat(student.getLastname(),is(equalTo(accountStudentDTO.lastname())));
+        assertThat(student.getAccountDetails().getUsername(),is(equalTo("Firstname.LastnameSTU1")));
     }
 
     @Test
@@ -134,14 +127,13 @@ class AccountControllerIntegrationTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));
 
-        List<Parent> parentsInDatabase = parentRepository.findAll();
+        List<AccountParent> parentsInDatabase = accountParentRepository.findAll();
+        AccountParent accountParent  = parentsInDatabase.get(0);
         assertThat(parentsInDatabase, hasSize(1));
-        assertThat(parentsInDatabase.get(0), allOf(
-                hasProperty("username", equalTo("Firstname.LastnameRO1")),
-                hasProperty("firstname", equalTo("Firstname")),
-                hasProperty("lastname", equalTo("Lastname")),
-                hasProperty("phoneNumber",equalTo("111222333"))
-        ));
+        assertThat(accountParent.getAccountDetails().getUsername(),equalTo("Firstname.LastnameRO1"));
+        assertThat(accountParent.getFirstname(),equalTo("Firstname"));
+        assertThat(accountParent.getLastname(), equalTo("Lastname"));
+        assertThat(accountParent.getPhoneNumber(),equalTo("111222333"));
     }
 
     @Test
@@ -208,8 +200,8 @@ class AccountControllerIntegrationTest {
         //then
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));
-        assertThat(studentRepository.findAll(),hasSize(4));
-        assertThat(parentRepository.findAll(),hasSize(4));
+        assertThat(accountStudentRepository.findAll(),hasSize(4));
+        assertThat(accountParentRepository.findAll(),hasSize(4));
         new File(filePath).delete();
     }
 
@@ -262,16 +254,15 @@ class AccountControllerIntegrationTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));
 
-        List<Teacher> teachersInDatabase = teacherRepository.findAll();
+        List<AccountTeacher> teachersInDatabase = accountTeacherRepository.findAll();
+        AccountTeacher accountTeacher = teachersInDatabase.get(0);
         assertThat(teachersInDatabase, hasSize(1));
-        assertThat(teachersInDatabase.get(0), allOf(
-                hasProperty("username", equalTo("Firstname.LastnameNAU1")),
-                hasProperty("firstname", equalTo("Firstname")),
-                hasProperty("lastname", equalTo("Lastname")),
-                hasProperty("workPhone", equalTo("111222333")),
-                hasProperty("email", equalTo("email@wp.pl")),
-                hasProperty("subject", equalTo(Subject.PHYSICS))
-        ));
+        assertThat(accountTeacher.getFirstname(),is(equalTo(accountTeacherDTO.firstname())));
+        assertThat(accountTeacher.getLastname(),is(equalTo(accountTeacherDTO.lastname())));
+        assertThat(accountTeacher.getAccountDetails().getUsername(),is(equalTo("Firstname.LastnameNAU1")));
+        assertThat(accountTeacher.getWorkPhone(),is(equalTo(accountTeacherDTO.workPhone())));
+        assertThat(accountTeacher.getEmail(),is(equalTo(accountTeacherDTO.email())));
+        assertThat(accountTeacher.getSubject(),is(equalTo(accountTeacherDTO.subject())));
     }
 
     @Test
@@ -280,20 +271,25 @@ class AccountControllerIntegrationTest {
     void getAccountById_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
-        Student student = Student
+        AccountStudent accountStudent = AccountStudent
                 .builder()
+                .accountDetails(AccountDetails
+                        .builder()
+                        .username("username")
+                        .password(egradePasswordEncoder.encode("password"))
+                        .accountRole(AccountRole.STUDENT)
+                        .build())
                 .firstname("firstname")
                 .lastname("lastname")
-                .role(Role.STUDENT)
-                .schoolClass(new SchoolClass("1A",2023))
-                .password("password")
+                .schoolClassName("1A")
+                .schoolClassYear(2023)
                 .build();
-        studentRepository.save(student);
-        int id = studentRepository.findAll().get(0).getId();
-        Role role = Role.STUDENT;
+        accountStudentRepository.save(accountStudent);
+        int id = accountStudentRepository.findAll().get(0).getId();
+        AccountRole accountRole = AccountRole.STUDENT;
 
         //when
-        ResultActions resultActions  = mockMvc.perform(get("/account/"+role+"="+id)
+        ResultActions resultActions  = mockMvc.perform(get("/account/"+ accountRole +"="+id)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -307,21 +303,25 @@ class AccountControllerIntegrationTest {
     void getAccountById_givenAdminRole_shouldReturn_201_HTTPStatus_andReturnStudentWithCorrectFields() throws Exception {
 
         //given
-        Student student = Student
+        AccountStudent accountStudent = AccountStudent
                 .builder()
-                .username("username")
+                .accountDetails(AccountDetails
+                        .builder()
+                        .username("username")
+                        .password(egradePasswordEncoder.encode("password"))
+                        .accountRole(AccountRole.STUDENT)
+                        .build())
                 .firstname("firstname")
                 .lastname("lastname")
-                .role(Role.STUDENT)
-                .schoolClass(new SchoolClass("1A",2023))
-                .password(AES.encrypt("password"))
+                .schoolClassName("1A")
+                .schoolClassYear(2023)
                 .build();
-        studentRepository.save(student);
-        int id = studentRepository.findAll().get(0).getId();
-        Role role = Role.STUDENT;
+        accountStudentRepository.save(accountStudent);
+        int id = accountStudentRepository.findAll().get(0).getId();
+        AccountRole accountRole = AccountRole.STUDENT;
 
         //when
-        ResultActions resultActions  = mockMvc.perform(get("/account/"+role+"="+id)
+        ResultActions resultActions  = mockMvc.perform(get("/account/"+ accountRole +"="+id)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -329,7 +329,7 @@ class AccountControllerIntegrationTest {
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
-                .accountType(Role.STUDENT.toString())
+                .accountType(AccountRole.STUDENT.toString())
                 .id(id)
                 .username("username")
                 .password("password")
@@ -346,20 +346,25 @@ class AccountControllerIntegrationTest {
     void deleteAccountById_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
-        Student student = Student
+        AccountStudent accountStudent = AccountStudent
                 .builder()
+                .accountDetails(AccountDetails
+                        .builder()
+                        .username("username")
+                        .password(egradePasswordEncoder.encode("password"))
+                        .accountRole(AccountRole.STUDENT)
+                        .build())
                 .firstname("firstname")
                 .lastname("lastname")
-                .role(Role.STUDENT)
-                .schoolClass(new SchoolClass("1A",2023))
-                .password("password")
+                .schoolClassName("1A")
+                .schoolClassYear(2023)
                 .build();
-        studentRepository.save(student);
-        int id = studentRepository.findAll().get(0).getId();
-        Role role = Role.STUDENT;
+        accountStudentRepository.save(accountStudent);
+        int id = accountStudentRepository.findAll().get(0).getId();
+        AccountRole accountRole = AccountRole.STUDENT;
 
         //when
-        ResultActions resultActions  = mockMvc.perform(delete("/account/"+role+"="+id)
+        ResultActions resultActions  = mockMvc.perform(delete("/account/"+ accountRole +"="+id)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -373,21 +378,25 @@ class AccountControllerIntegrationTest {
     void deleteAccountById_givenAdminRole_shouldReturn_201_HTTPStatus_andDeleteAccountFromDatabase() throws Exception {
 
         //given
-        Student student = Student
+        AccountStudent accountStudent = AccountStudent
                 .builder()
-                .username("username")
+                .accountDetails(AccountDetails
+                        .builder()
+                        .username("username")
+                        .password(egradePasswordEncoder.encode("password"))
+                        .accountRole(AccountRole.STUDENT)
+                        .build())
                 .firstname("firstname")
                 .lastname("lastname")
-                .role(Role.STUDENT)
-                .schoolClass(new SchoolClass("1A",2023))
-                .password(AES.encrypt("password"))
+                .schoolClassName("1A")
+                .schoolClassYear(2023)
                 .build();
-        studentRepository.save(student);
-        int id = studentRepository.findAll().get(0).getId();
-        Role role = Role.STUDENT;
+        accountStudentRepository.save(accountStudent);
+        int id = accountStudentRepository.findAll().get(0).getId();
+        AccountRole accountRole = AccountRole.STUDENT;
 
         //when
-        ResultActions resultActions  = mockMvc.perform(delete("/account/"+role+"="+id)
+        ResultActions resultActions  = mockMvc.perform(delete("/account/"+ accountRole +"="+id)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -395,7 +404,7 @@ class AccountControllerIntegrationTest {
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
-                .accountType(Role.STUDENT.toString())
+                .accountType(AccountRole.STUDENT.toString())
                 .id(id)
                 .username("username")
                 .password("password")
@@ -404,7 +413,7 @@ class AccountControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
                         is(equalTo(objectMapper.writeValueAsString(expectedAccountViewDTO)))));
-        assertThat(studentRepository.findById(id),is(Optional.empty()));
+        assertThat(accountStudentRepository.findById(id),is(Optional.empty()));
     }
 
     @Test
@@ -415,21 +424,25 @@ class AccountControllerIntegrationTest {
         //given
         String passwordInDatabase = "password";
         String newPassword = "Password1.";
-        Student student = Student
+        AccountStudent accountStudent = AccountStudent
                 .builder()
-                .username("username")
+                .accountDetails(AccountDetails
+                        .builder()
+                        .username("username")
+                        .password(egradePasswordEncoder.encode("password"))
+                        .accountRole(AccountRole.STUDENT)
+                        .build())
                 .firstname("firstname")
                 .lastname("lastname")
-                .role(Role.STUDENT)
-                .schoolClass(new SchoolClass("1A",2023))
-                .password(AES.encrypt(passwordInDatabase))
+                .schoolClassName("1A")
+                .schoolClassYear(2023)
                 .build();
-        studentRepository.save(student);
-        int id = studentRepository.findAll().get(0).getId();
-        Role role = Role.STUDENT;
+        accountStudentRepository.save(accountStudent);
+        int id = accountStudentRepository.findAll().get(0).getId();
+        AccountRole accountRole = AccountRole.STUDENT;
 
         //when
-        ResultActions resultActions  = mockMvc.perform(put("/account/password/"+role+"="+id)
+        ResultActions resultActions  = mockMvc.perform(put("/account/password/"+ accountRole +"="+id)
                 .param("oldPassword",passwordInDatabase)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -439,7 +452,7 @@ class AccountControllerIntegrationTest {
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
-                .accountType(Role.STUDENT.toString())
+                .accountType(AccountRole.STUDENT.toString())
                 .id(id)
                 .username("username")
                 .password(newPassword)

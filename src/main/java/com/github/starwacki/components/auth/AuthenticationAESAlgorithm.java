@@ -1,19 +1,20 @@
-package com.github.starwacki.common.security;
+package com.github.starwacki.components.auth;
 
+import com.github.starwacki.common.security.exception.AESException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-public class AES {
+class AuthenticationAESAlgorithm {
 
-    private AES() {
+    private AuthenticationAESAlgorithm() {
     }
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
     private static final String SECRET_KEY = "3373367639792442";
 
-    public static String encrypt(String plainText) {
+     static String encrypt(String plainText) {
         try {
             SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
@@ -26,7 +27,7 @@ public class AES {
 
     }
 
-    public static String decrypt(String encryptedText) {
+    static String decrypt(String encryptedText) {
         try {
             SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);

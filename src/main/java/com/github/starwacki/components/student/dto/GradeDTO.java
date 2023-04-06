@@ -1,7 +1,7 @@
 package com.github.starwacki.components.student.dto;
 
 import com.github.starwacki.common.model.grades.Subject;
-import com.github.starwacki.components.student.validator.ValidDegree;
+import com.github.starwacki.components.student.ValidDegree;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;

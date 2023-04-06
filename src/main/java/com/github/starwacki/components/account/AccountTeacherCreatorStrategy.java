@@ -1,25 +1,25 @@
 package com.github.starwacki.components.account;
 
+import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.common.repositories.SchoolClassRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
 @Service
-class TeacherManuallyGeneratorStrategy extends AccountGeneratorStrategy {
+class AccountTeacherCreatorStrategy extends AccountCreatorStrategy {
 
 
-    public TeacherManuallyGeneratorStrategy(StudentRepository studentRepository,
-                                            SchoolClassRepository schoolClassRepository,
-                                            TeacherRepository teacherRepository) {
-        super(studentRepository, schoolClassRepository, teacherRepository);
+    public AccountTeacherCreatorStrategy(AccountStudentRepository accountStudentRepository,
+                                         AccountTeacherRepository accountTeacherRepository,
+                                         EgradePasswordEncoder egradePasswordEncoder) {
+        super(accountStudentRepository, accountTeacherRepository, egradePasswordEncoder);
     }
 
     @Override
-    public Teacher createAccount(Record dto) {
+    public AccountTeacher createAccount(Record dto) {
         AccountTeacherDTO teacherDTO = (AccountTeacherDTO) dto;
-        return Teacher.builder()
+        return AccountTeacher.builder()
                 .firstname(teacherDTO.firstname())
                 .lastname(teacherDTO.lastname())
                 .subject(teacherDTO.subject())
@@ -33,14 +33,14 @@ class TeacherManuallyGeneratorStrategy extends AccountGeneratorStrategy {
         return AccountDetails
                 .builder()
                 .username(generateAccountUsername(accountTeacherDTO.firstname(),accountTeacherDTO.lastname(),getLastTeacherId()))
-                .password(generateFirstPassword())
+                .password(egradePasswordEncoder.encode(generateFirstPassword()))
                 .createdDate(LocalDate.now().toString())
-                .role(Role.STUDENT)
+                .accountRole(AccountRole.STUDENT)
                 .build();
     }
 
     private long getLastTeacherId() {
-       return teacherRepository.count() +1;
+       return accountTeacherRepository.count() +1;
     }
 
     @Override

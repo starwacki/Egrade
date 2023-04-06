@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class AccountStudentCSVGeneratorUnitTest {
+class AccountStudentCsvCreatorUnitTest {
 
     @InjectMocks
     private AccountStudentCsvCreatorStrategy accountStudentCsvCreatorStrategy;

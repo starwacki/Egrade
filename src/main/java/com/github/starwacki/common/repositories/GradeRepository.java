@@ -11,8 +11,8 @@ import java.util.Optional;
 @Repository
 public interface GradeRepository extends JpaRepository<Grade,Integer> {
 
-    List<Grade> findAllByStudentIdAndSubject(int studentID, Subject subject);
-    Optional<Grade> findByStudentIdAndId(int studentID, int gradeId);
+//    List<Grade> findAllByStudentIdAndSubject(int studentID, Subject subject);
+//    Optional<Grade> findByStudentIdAndId(int studentID, int gradeId);
 
 
 }

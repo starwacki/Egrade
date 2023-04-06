@@ -1,6 +1,4 @@
 package com.github.starwacki.common.model.school_class;
-import com.github.starwacki.common.model.account.Student;
-import com.github.starwacki.common.model.account.Teacher;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Set;
@@ -24,10 +22,6 @@ public class SchoolClass {
     private int classYear;
 
 
-    @OneToMany(mappedBy = "schoolClass")
-    private Set<Student> students;
 
-    @ManyToMany(mappedBy = "classes")
-    private Set<Teacher> teachers;
 
 }

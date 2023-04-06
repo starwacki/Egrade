@@ -1,29 +1,31 @@
 package com.github.starwacki.components.account;
 
+import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.common.repositories.SchoolClassRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
 @Service
-class ParentManuallyGeneratorStrategy extends AccountGeneratorStrategy {
+class AccountParentCreatorStrategy extends AccountCreatorStrategy {
 
 
-    protected ParentManuallyGeneratorStrategy(StudentRepository studentRepository,
-                                              SchoolClassRepository schoolClassRepository,
-                                              TeacherRepository teacherRepository) {
-        super(studentRepository, schoolClassRepository, teacherRepository);
+    AccountParentCreatorStrategy(AccountStudentRepository accountStudentRepository,
+                                 AccountTeacherRepository accountTeacherRepository,
+                                 EgradePasswordEncoder egradePasswordEncoder) {
+        super(accountStudentRepository, accountTeacherRepository,egradePasswordEncoder);
     }
 
     private long getLastStudentId() {
-        return (studentRepository.count() + 1);
+        return (accountStudentRepository.count() + 1);
     }
 
     @Override
-    public Parent createAccount(Record dto) {
+    public AccountParent createAccount(Record dto) {
         AccountStudentDTO studentDTO = (AccountStudentDTO) dto;
-        return Parent.builder()
+        return AccountParent.builder()
+                .firstname(studentDTO.firstname())
+                .lastname(studentDTO.lastname())
                 .accountDetails(getAccountDetails(studentDTO))
                 .phoneNumber(studentDTO.parentPhoneNumber())
                 .build();
@@ -33,9 +35,9 @@ class ParentManuallyGeneratorStrategy extends AccountGeneratorStrategy {
         return AccountDetails
                 .builder()
                 .username(generateAccountUsername(studentDTO.firstname(),studentDTO.lastname(),getLastStudentId()))
-                .password(generateFirstPassword())
+                .password(egradePasswordEncoder.encode(generateFirstPassword()))
                 .createdDate(LocalDate.now().toString())
-                .role(Role.STUDENT)
+                .accountRole(AccountRole.STUDENT)
                 .build();
     }
 

@@ -1,4 +1,4 @@
-package com.github.starwacki.components.teacher.dto;
+package com.github.starwacki.components.teacher;
 
 import lombok.Builder;
 

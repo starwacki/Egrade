@@ -1,7 +1,6 @@
-package com.github.starwacki.components.teacher.mapper;
+package com.github.starwacki.components.teacher;
 
-import com.github.starwacki.components.teacher.TeacherDTO;
-import com.github.starwacki.components.account.AccountTeacher;
+
 
 public class TeacherMapper {
 
@@ -9,14 +8,14 @@ public class TeacherMapper {
 
     }
 
-    public static TeacherDTO mapTeacherToTeacherDTO(AccountTeacher accountTeacher) {
-        return TeacherDTO
-                .builder()
-                .firstname(accountTeacher.getFirstname())
-                .lastname(accountTeacher.getLastname())
-                .phone(accountTeacher.getWorkPhone())
-                .subject(accountTeacher.getSubject().toString())
-                .email(accountTeacher.getEmail())
-                .build();
-    }
+//    public static TeacherDTO mapTeacherToTeacherDTO(Teacher accountTeacher) {
+//        return TeacherDTO
+//                .builder()
+//                .firstname(accountTeacher.getFirstname())
+//                .lastname(accountTeacher.getLastname())
+//                .phone(accountTeacher.getWorkPhone())
+//                .subject(accountTeacher.getSubject().toString())
+//                .email(accountTeacher.getEmail())
+//                .build();
+//    }
 }

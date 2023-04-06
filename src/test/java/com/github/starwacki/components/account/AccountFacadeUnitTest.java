@@ -6,7 +6,6 @@ import com.github.starwacki.components.account.exceptions.AccountNotFoundExcepti
 import com.github.starwacki.components.account.exceptions.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.WrongPasswordException;
 import com.github.starwacki.common.model.grades.Subject;
-import com.github.starwacki.common.security.AES;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,49 +20,60 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class AccountServiceUnitTest {
+class AccountFacadeUnitTest {
 
     @InjectMocks
-    private AccountService accountService;
-
+    private AccountFacade accountFacade;
     @Mock
     private AccountFactory accountFactory;
     @Mock
-    private StudentRepository studentRepository;
+    private AccountStudentRepository accountStudentRepository;
     @Mock
-    private TeacherRepository teacherRepository;
+    private AccountTeacherRepository accountTeacherRepository;
     @Mock
-    private ParentRepository parentRepository;
+    private AccountParentRepository accountParentRepository;
 
 
 
-    private static Student getStudentTestAccount() {
-        return Student.builder()
+    private static AccountStudent getStudentTestAccount() {
+        return  AccountStudent
+                .builder()
+                .accountDetails(AccountDetails
+                        .builder()
+                        .username("username")
+                        .password("password")
+                        .accountRole(AccountRole.STUDENT)
+                        .build())
                 .firstname("firstname")
                 .lastname("lastname")
-                .username("username")
-                .password(AES.encrypt("password"))
-                .role(Role.STUDENT)
+                .schoolClassName("1A")
+                .schoolClassYear(2023)
                 .build();
     }
 
-    private static Teacher getTeacherTestAccount() {
-        return Teacher.builder()
+    private static AccountTeacher getTeacherTestAccount() {
+        return AccountTeacher.builder()
                 .firstname("firstname")
                 .lastname("lastname")
-                .username("username")
-                .password(AES.encrypt("password"))
-                .role(Role.TEACHER)
+                .accountDetails(AccountDetails
+                                .builder()
+                                .username("username")
+                                .password("password")
+                                .accountRole(AccountRole.TEACHER)
+                                .build())
                 .build();
     }
 
-    private static Parent getParentTestAccount() {
-        return Parent.builder()
+    private static AccountParent getParentTestAccount() {
+        return AccountParent.builder()
                 .firstname("firstname")
                 .lastname("lastname")
-                .username("username")
-                .password(AES.encrypt("password"))
-                .role(Role.PARENT)
+                .accountDetails(AccountDetails
+                        .builder()
+                        .username("username")
+                        .password("password")
+                        .accountRole(AccountRole.TEACHER)
+                        .build())
                 .build();
     }
 
@@ -71,14 +81,14 @@ class AccountServiceUnitTest {
     @DisplayName("Test change account password when giving no exist id account role should throw exception with message")
     void changeAccountPassword_givenNoExistId_shouldThrowAccountNotFoundExceptionWithNotFoundMessage() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
         String oldPassword = "password";
         String newPassword = "changedPassword";
-        given(studentRepository.findById(id)).willReturn(Optional.empty());
+        given(accountStudentRepository.findById(id)).willReturn(Optional.empty());
 
         //when
-        Exception exception = assertThrows(AccountNotFoundException.class,() -> accountService.changeAccountPassword(role,id,oldPassword,newPassword));
+        Exception exception = assertThrows(AccountNotFoundException.class,() -> accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword));
         String actualMessage = exception.getMessage();
 
         //then
@@ -90,31 +100,31 @@ class AccountServiceUnitTest {
     @DisplayName("Test change account password when giving no exist id account role should throw exception")
     void changeAccountPassword_givenNoExistId_shouldThrowAccountNotFoundException() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
         String oldPassword = "password";
         String newPassword = "changedPassword";
-        given(studentRepository.findById(id)).willReturn(Optional.empty());
+        given(accountStudentRepository.findById(id)).willReturn(Optional.empty());
 
         //then
-        assertThrows(AccountNotFoundException.class,()-> accountService.changeAccountPassword(role,id,oldPassword,newPassword));
+        assertThrows(AccountNotFoundException.class,()-> accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword));
     }
 
     @Test
     @DisplayName("Test change account password when giving illegal role should return illegal operation exception message")
     void changeAccountPassword_givenIllegalRoleAndId_shouldThrowAccountNotFoundExceptionWithIllegalOperationMessage() {
         //given
-        Role role = Role.ADMIN;
+        AccountRole accountRole = AccountRole.ADMIN;
         int id = 1;
         String oldPassword = "password";
         String newPassword = "changedPassword";
 
         //when
-        Exception exception = assertThrows(IllegalOperationException.class,() -> accountService.changeAccountPassword(role,id,oldPassword,newPassword));
+        Exception exception = assertThrows(IllegalOperationException.class,() -> accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword));
         String actualMessage = exception.getMessage();
 
         //then
-        String expectedMessage = "Illegal operation type: PUT for role: " + role;
+        String expectedMessage = "Illegal operation type: PUT for role: " + accountRole;
         assertEquals(actualMessage,expectedMessage);
     }
 
@@ -124,30 +134,30 @@ class AccountServiceUnitTest {
     @DisplayName("Test change account password when giving illegal role")
     void changeAccountPassword_givenIllegalRoleAndId_shouldThrowAccountNotFoundException() {
         //given
-        Role role = Role.ADMIN;
+        AccountRole accountRole = AccountRole.ADMIN;
         int id = 1;
         String oldPassword = "password";
         String newPassword = "changedPassword";
 
         //then
-        assertThrows(IllegalOperationException.class,() -> accountService.changeAccountPassword(role,id,oldPassword,newPassword));
+        assertThrows(IllegalOperationException.class,() -> accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword));
     }
 
     @Test
     @DisplayName("Test change account password return entity with changed password")
     void changeAccountPassword_givenRoleAndId_andOldPasswordSameAsNewPassword_shouldReturnAccountViewDTOWithChangedPassword() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
         String oldPassword = "password";
         String newPassword = "changedPassword";
-        Student student = getStudentTestAccount();
-        given(studentRepository.findById(id)).willReturn(Optional.of(student));
-        given(studentRepository.save(student)).willReturn(student);
+        AccountStudent accountStudent = getStudentTestAccount();
+        given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
+        given(accountStudentRepository.save(accountStudent)).willReturn(accountStudent);
 
         //when
-        System.out.println(student.getPassword());
-        AccountViewDTO accountViewDT = accountService.changeAccountPassword(role,id,oldPassword,newPassword);
+        System.out.println(accountStudent.getAccountDetails().getPassword());
+        AccountViewDTO accountViewDT = accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword);
 
         //then
         assertEquals(accountViewDT.password(),newPassword);
@@ -157,30 +167,30 @@ class AccountServiceUnitTest {
     @DisplayName("Test change account password given bad password throw wrong password exception")
     void changeAccountPassword_givenRoleAndId_andOldPasswordNotSameAsPasswordInDataBase_shouldThrowWrongPasswordException() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
         String oldPassword = "badpassword";
         String newPassword = "changedPassword";
-        Student student = getStudentTestAccount();
-        given(studentRepository.findById(id)).willReturn(Optional.of(student));
+        AccountStudent accountStudent = getStudentTestAccount();
+        given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
 
         //then
-        assertThrows(WrongPasswordException.class,() -> accountService.changeAccountPassword(role,id,oldPassword,newPassword));
+        assertThrows(WrongPasswordException.class,() -> accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword));
     }
 
     @Test
     @DisplayName("Test change account password given bad password throw wrong password exception message")
     void changeAccountPassword_givenRoleAndId_andOldPasswordNotSameAsPasswordInDataBase_shouldThrowWrongPasswordExceptionWithMessage() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
         String oldPassword = "badpassword";
         String newPassword = "changedPassword";
-        Student student = getStudentTestAccount();
-        given(studentRepository.findById(id)).willReturn(Optional.of(student));
+        AccountStudent accountStudent = getStudentTestAccount();
+        given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
 
         //when
-        Exception exception = assertThrows(WrongPasswordException.class,() -> accountService.changeAccountPassword(role,id,oldPassword,newPassword));
+        Exception exception = assertThrows(WrongPasswordException.class,() -> accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword));
         String expectedMessage = exception.getMessage();
 
         //then
@@ -194,34 +204,34 @@ class AccountServiceUnitTest {
     @DisplayName("Test change account password save entity to database")
     void changeAccountPassword_givenRoleAndId_andOldPasswordSameAsPasswordInDataBase_shouldSaveEntityWithNewPassword() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
         String oldPassword = "password";
         String newPassword = "changedPassword";
-        Student student = getStudentTestAccount();
-        given(studentRepository.findById(id)).willReturn(Optional.of(student));
-        given(studentRepository.save(student)).willReturn(student);
+        AccountStudent accountStudent = getStudentTestAccount();
+        given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
+        given(accountStudentRepository.save(accountStudent)).willReturn(accountStudent);
 
         //when
-        accountService.changeAccountPassword(role,id,oldPassword,newPassword);
+        accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword);
 
         //then
-        verify(studentRepository).save(student);
+        verify(accountStudentRepository).save(accountStudent);
     }
 
     @Test
     @DisplayName("Test get illegal role - should throw exception with illegal operation type message")
     void getAccountById_givenIllegalRoleAndId_shouldThrowAccountNotFoundExceptionWithMessage() {
         //given
-        Role role = Role.ADMIN;
+        AccountRole accountRole = AccountRole.ADMIN;
         int id = 1;
 
         //when
-        Exception exception = assertThrows(IllegalOperationException.class, () ->  accountService.getAccountById(role,id));
+        Exception exception = assertThrows(IllegalOperationException.class, () ->  accountFacade.getAccountById(accountRole,id));
         String actualMessage = exception.getMessage();
 
         //then
-        String expectedMessage = "Illegal operation type: GET for role: " + role;
+        String expectedMessage = "Illegal operation type: GET for role: " + accountRole;
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
@@ -229,11 +239,11 @@ class AccountServiceUnitTest {
     @DisplayName("Test get illegal role - should throw exception ")
     void getAccountById_givenIllegalRoleAndId_shouldThrowAccountNotFoundException() {
         //given
-        Role role = Role.ADMIN;
+        AccountRole accountRole = AccountRole.ADMIN;
         int id = 1;
 
         //then
-        assertThrows(IllegalOperationException.class,() -> accountService.getAccountById(role,id));
+        assertThrows(IllegalOperationException.class,() -> accountFacade.getAccountById(accountRole,id));
     }
 
 
@@ -241,104 +251,104 @@ class AccountServiceUnitTest {
     @DisplayName("Test get account by id")
     void  getAccountById_givenTeacherRoleAndId_shouldGetTeacherFromDatabase() {
         //given
-        Role role = Role.TEACHER;
+        AccountRole accountRole = AccountRole.TEACHER;
         int id = 1;
-        Teacher teacher = getTeacherTestAccount();
-        given(teacherRepository.findById(id)).willReturn(Optional.of(teacher));
+        AccountTeacher accountTeacher = getTeacherTestAccount();
+        given(accountTeacherRepository.findById(id)).willReturn(Optional.of(accountTeacher));
 
         //when
-        accountService.getAccountById(role,id);
+        accountFacade.getAccountById(accountRole,id);
 
         //then
-        verify(teacherRepository).findById(id);
+        verify(accountTeacherRepository).findById(id);
     }
 
     @Test
     @DisplayName("Test get account by id return accountViewDto with correct fields")
     void  getAccountById_givenParentRoleAndId_shouldReturnAccountViewDtoWithSameFieldsLikeGivenParent() {
         //given
-        Role role = Role.PARENT;
+        AccountRole accountRole = AccountRole.PARENT;
         int id = 1;
-        Parent parent = getParentTestAccount();
-        given(parentRepository.findById(id)).willReturn(Optional.of(parent));
+        AccountParent accountParent = getParentTestAccount();
+        given(accountParentRepository.findById(id)).willReturn(Optional.of(accountParent));
 
         //when
-        AccountViewDTO expected =  accountService.getAccountById(role,id);
+        AccountViewDTO expected =  accountFacade.getAccountById(accountRole,id);
 
         //then
-        assertEquals(expected.username(),parent.getUsername());
-        assertEquals(expected.firstname(),parent.getFirstname());
-        assertEquals(expected.lastname(),parent.getLastname());
-        assertEquals(expected.password(),AES.decrypt(parent.getPassword()));
-        assertEquals(expected.accountType(),parent.getRole().toString());
+        assertEquals(expected.username(), accountParent.getAccountDetails().getUsername());
+        assertEquals(expected.firstname(), accountParent.getFirstname());
+        assertEquals(expected.lastname(), accountParent.getLastname());
+        assertEquals(expected.password(),accountParent.getAccountDetails().getPassword());
+        assertEquals(expected.accountType(), accountParent.getAccountDetails().getAccountRole().toString());
     }
 
     @Test
     @DisplayName("Test get parent account by id")
     void  getAccountById_givenParentRoleAndId_shouldGetParentFromDatabase() {
         //given
-        Role role = Role.PARENT;
+        AccountRole accountRole = AccountRole.PARENT;
         int id = 1;
-        Parent parent = getParentTestAccount();
-        given(parentRepository.findById(id)).willReturn(Optional.of(parent));
-        System.out.println(parent.getPassword());
+        AccountParent accountParent = getParentTestAccount();
+        given(accountParentRepository.findById(id)).willReturn(Optional.of(accountParent));
+        System.out.println(accountParent.getAccountDetails().getPassword());
 
         //when
-        accountService.getAccountById(role,id);
+        accountFacade.getAccountById(accountRole,id);
 
         //then
-        verify(parentRepository).findById(id);
+        verify(accountParentRepository).findById(id);
     }
 
     @Test
     @DisplayName("Test get student account by id return accountViewDto with correct fields")
     void  getAccountById_givenStudentRoleAndId_shouldReturnAccountViewDtoWithSameFieldsLikeGivenStudent() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
-        Student student = getStudentTestAccount();
-        given(studentRepository.findById(id)).willReturn(Optional.of(student));
+        AccountStudent accountStudent = getStudentTestAccount();
+        given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
 
         //when
-       AccountViewDTO expected =  accountService.getAccountById(role,id);
+       AccountViewDTO expected =  accountFacade.getAccountById(accountRole,id);
 
         //then
-        assertEquals(expected.username(),student.getUsername());
-        assertEquals(expected.firstname(),student.getFirstname());
-        assertEquals(expected.lastname(),student.getLastname());
-        assertEquals(expected.password(),AES.decrypt(student.getPassword()));
-        assertEquals(expected.accountType(),student.getRole().toString());
+        assertEquals(expected.username(), accountStudent.getAccountDetails().getUsername());
+        assertEquals(expected.firstname(), accountStudent.getFirstname());
+        assertEquals(expected.lastname(), accountStudent.getLastname());
+        assertEquals(expected.password(),accountStudent.getAccountDetails().getPassword());
+        assertEquals(expected.accountType(), accountStudent.getAccountDetails().getAccountRole().toString());
     }
 
     @Test
     @DisplayName("Test get student account by id")
     void  getAccountById_givenStudentRoleAndId_shouldGetStudentFromDatabase() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
-        Student student = getStudentTestAccount();
-        given(studentRepository.findById(id)).willReturn(Optional.of(student));
+        AccountStudent accountStudent = getStudentTestAccount();
+        given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
 
         //when
-        accountService.getAccountById(role,id);
+        accountFacade.getAccountById(accountRole,id);
 
         //then
-        verify(studentRepository).findById(id);
+        verify(accountStudentRepository).findById(id);
     }
 
     @Test
     @DisplayName("Test delete illegal role - should throw exception with illegal operation type message")
     void deleteAccountById_givenParentRoleAndId_shouldThrowAccountNotFoundExceptionWithMessage() {
         //given
-        Role role = Role.PARENT;
+        AccountRole accountRole = AccountRole.PARENT;
         int id = 1;
 
         //when
-        Exception exception = assertThrows(IllegalOperationException.class, () ->  accountService.deleteAccountById(role,id));
+        Exception exception = assertThrows(IllegalOperationException.class, () ->  accountFacade.deleteAccountById(accountRole,id));
         String actualMessage = exception.getMessage();
 
         //then
-        String expectedMessage = "Illegal operation type: DELETE for role: " + role;
+        String expectedMessage = "Illegal operation type: DELETE for role: " + accountRole;
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
@@ -346,67 +356,67 @@ class AccountServiceUnitTest {
     @DisplayName("Test delete parent - should throw exception (parent is delete when student account is delete)")
     void deleteAccountById_givenParentRoleAndId_shouldThrowAccountNotFoundException() {
         //given
-        Role role = Role.PARENT;
+        AccountRole accountRole = AccountRole.PARENT;
         int id = 1;
 
         //then
-        assertThrows(IllegalOperationException.class,() -> accountService.deleteAccountById(role,id));
+        assertThrows(IllegalOperationException.class,() -> accountFacade.deleteAccountById(accountRole,id));
     }
 
     @Test
     @DisplayName("Test delete no exist teacher")
     void deleteAccountById_givenNoExistTeacherRoleAndId_shouldThrowAccountNotFoundException() {
         //given
-        Role role = Role.TEACHER;
+        AccountRole accountRole = AccountRole.TEACHER;
         int id = 1;
-        given(teacherRepository.findById(id)).willReturn(Optional.empty());
+        given(accountTeacherRepository.findById(id)).willReturn(Optional.empty());
 
         //then
-        assertThrows(AccountNotFoundException.class,() -> accountService.deleteAccountById(role,id));
+        assertThrows(AccountNotFoundException.class,() -> accountFacade.deleteAccountById(accountRole,id));
     }
 
     @Test
     @DisplayName("Test delete exist teacher")
     void deleteAccountById_givenExistTeacherRoleAndId_shouldDeleteTeacher() {
         //given
-        Role role = Role.TEACHER;
+        AccountRole accountRole = AccountRole.TEACHER;
         int id = 1;
-        Teacher teacher = getTeacherTestAccount();
-        given(teacherRepository.findById(id)).willReturn(Optional.of(teacher));
+        AccountTeacher accountTeacher = getTeacherTestAccount();
+        given(accountTeacherRepository.findById(id)).willReturn(Optional.of(accountTeacher));
 
         //when
-        accountService.deleteAccountById(role,id);
+        accountFacade.deleteAccountById(accountRole,id);
 
         //then
-        verify(teacherRepository).delete(teacher);
+        verify(accountTeacherRepository).delete(accountTeacher);
     }
 
     @Test
     @DisplayName("Test delete no exist student")
     void deleteAccountById_givenNoExistStudentRoleAndId_shouldThrowAccountNotFoundException() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
-        given(studentRepository.findById(id)).willReturn(Optional.empty());
+        given(accountStudentRepository.findById(id)).willReturn(Optional.empty());
 
         //then
-        assertThrows(AccountNotFoundException.class,() -> accountService.deleteAccountById(role,id));
+        assertThrows(AccountNotFoundException.class,() -> accountFacade.deleteAccountById(accountRole,id));
     }
 
     @Test
     @DisplayName("Test delete exist student")
     void deleteAccountById_givenExistStudentRoleAndId_shouldDeleteStudent() {
         //given
-        Role role = Role.STUDENT;
+        AccountRole accountRole = AccountRole.STUDENT;
         int id = 1;
-        Student student = getStudentTestAccount();
-        given(studentRepository.findById(id)).willReturn(Optional.of(student));
+        AccountStudent accountStudent = getStudentTestAccount();
+        given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
 
         //when
-        accountService.deleteAccountById(role,id);
+        accountFacade.deleteAccountById(accountRole,id);
 
         //then
-        verify(studentRepository).delete(student);
+        verify(accountStudentRepository).delete(accountStudent);
     }
 
     @Test
@@ -420,23 +430,26 @@ class AccountServiceUnitTest {
                 .workPhone("111222333")
                 .subject(Subject.PHYSICS)
                 .build();
-        Teacher teacher = Teacher.builder()
+        AccountTeacher accountTeacher = AccountTeacher.builder()
                 .firstname("Krzysztof")
                 .lastname("Szuprych")
                 .email("krzysztof@wp.pl")
-                .password(AES.encrypt("password"))
+                .accountDetails(AccountDetails
+                        .builder()
+                        .password("password")
+                        .accountRole(AccountRole.TEACHER)
+                        .build())
                 .workPhone("111222333")
-                .role(Role.TEACHER)
                 .subject(Subject.PHYSICS)
                 .build();
-        given(accountFactory.createTeacher(accountTeacherDTO)).willReturn(teacher);
-        given(teacherRepository.save(teacher)).willReturn(teacher);
+        given(accountFactory.createTeacher(accountTeacherDTO)).willReturn(accountTeacher);
+        given(accountTeacherRepository.save(accountTeacher)).willReturn(accountTeacher);
 
         //when
-        accountService.saveTeacherAccount(accountTeacherDTO);
+        accountFacade.saveTeacherAccount(accountTeacherDTO);
 
         //then
-        verify(teacherRepository).save(teacher);
+        verify(accountTeacherRepository).save(accountTeacher);
     }
 
     @Test
@@ -450,28 +463,31 @@ class AccountServiceUnitTest {
                 .workPhone("111222333")
                 .subject(Subject.PHYSICS)
                 .build();
-        Teacher teacher = Teacher.builder()
+        AccountTeacher accountTeacher = AccountTeacher.builder()
                 .firstname("Krzysztof")
                 .lastname("Szuprych")
                 .email("krzysztof@wp.pl")
-                .password(AES.encrypt("password"))
+                .accountDetails(AccountDetails
+                        .builder()
+                        .password("password")
+                        .accountRole(AccountRole.TEACHER)
+                        .build())
                 .workPhone("111222333")
-                .role(Role.TEACHER)
                 .subject(Subject.PHYSICS)
                 .build();
-        given(accountFactory.createTeacher(accountTeacherDTO)).willReturn(teacher);
-        given(teacherRepository.save(accountFactory.createTeacher(accountTeacherDTO))).willReturn(teacher);
+        given(accountFactory.createTeacher(accountTeacherDTO)).willReturn(accountTeacher);
+        given(accountTeacherRepository.save(accountFactory.createTeacher(accountTeacherDTO))).willReturn(accountTeacher);
 
         //when
-        AccountViewDTO expected = accountService.saveTeacherAccount(accountTeacherDTO);
+        AccountViewDTO expected = accountFacade.saveTeacherAccount(accountTeacherDTO);
 
         //then
-        assertThat(expected.firstname(), equalTo(teacher.getFirstname()));
-        assertThat(expected.lastname(), equalTo(teacher.getLastname()));
-        assertThat(expected.id(), equalTo(teacher.getId()));
-        assertThat(expected.username(), equalTo(teacher.getUsername()));
-        assertThat(expected.password(), equalTo(AES.decrypt(teacher.getPassword())));
-        assertThat(expected.accountType(), equalTo(teacher.getRole().toString()));
+        assertThat(expected.firstname(), equalTo(accountTeacher.getFirstname()));
+        assertThat(expected.lastname(), equalTo(accountTeacher.getLastname()));
+        assertThat(expected.id(), equalTo(accountTeacher.getId()));
+        assertThat(expected.username(), equalTo(accountTeacher.getAccountDetails().getUsername()));
+        assertThat(expected.password(), equalTo(accountTeacher.getAccountDetails().getPassword()));
+        assertThat(expected.accountType(), equalTo(accountTeacher.getAccountDetails().getAccountRole().toString()));
     }
 
 

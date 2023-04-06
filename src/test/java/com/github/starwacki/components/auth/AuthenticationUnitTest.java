@@ -2,13 +2,9 @@ package com.github.starwacki.components.auth;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.starwacki.components.auth.AuthenticationController;
 import com.github.starwacki.components.auth.dto.AuthenticationRequest;
 import com.github.starwacki.components.auth.dto.AuthenticationResponse;
 import com.github.starwacki.components.auth.exceptions.WrongAuthenticationException;
-import com.github.starwacki.components.auth.AuthenticationService;
-import com.github.starwacki.common.security.JwtAuthenticationFilter;
-import com.github.starwacki.common.security.JwtService;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

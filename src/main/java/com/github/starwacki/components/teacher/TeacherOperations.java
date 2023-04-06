@@ -1,12 +1,9 @@
-package com.github.starwacki.components.teacher.controller;
+package com.github.starwacki.components.teacher;
 
-import com.github.starwacki.components.teacher.dto.SchoolClassDTO;
-import com.github.starwacki.components.teacher.dto.TeacherDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

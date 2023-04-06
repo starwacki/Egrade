@@ -5,12 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Data
 @Entity
 @Table(name = "admins")
-class Admin extends Account{
+class AccountAdmin extends Account{
 
-    protected Admin() {
+    protected AccountAdmin() {
     }
 
 }

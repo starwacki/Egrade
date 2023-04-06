@@ -1,7 +1,5 @@
 package com.github.starwacki.common.model.grades;
 
-import com.github.starwacki.common.model.account.Student;
-import com.github.starwacki.common.model.account.Teacher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +16,7 @@ import java.time.LocalDate;
 public class Grade {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private String studentUsername;
 
     private String description;
 
@@ -34,11 +31,7 @@ public class Grade {
 
     private LocalDate addedDate;
 
-    @OneToOne
-    private Student student;
+    private String addedBy;
 
-    @OneToOne
-    @JoinColumn(name = "teacher_id")
-    private Teacher addedBy;
 
 }

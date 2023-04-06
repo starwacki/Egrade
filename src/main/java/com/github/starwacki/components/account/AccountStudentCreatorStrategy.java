@@ -1,29 +1,29 @@
 package com.github.starwacki.components.account;
 
+import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.common.model.school_class.SchoolClass;
-import com.github.starwacki.common.repositories.SchoolClassRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
 @Service
-class StudentManuallyGeneratorStrategy extends AccountGeneratorStrategy {
+class AccountStudentCreatorStrategy extends AccountCreatorStrategy {
 
 
-    public StudentManuallyGeneratorStrategy(StudentRepository studentRepository,
-                                            SchoolClassRepository schoolClassRepository,
-                                            TeacherRepository teacherRepository) {
-        super(studentRepository, schoolClassRepository, teacherRepository);
+    AccountStudentCreatorStrategy(AccountStudentRepository accountStudentRepository,
+                                  AccountTeacherRepository accountTeacherRepository,
+                                  EgradePasswordEncoder egradePasswordEncoder) {
+        super(accountStudentRepository, accountTeacherRepository, egradePasswordEncoder);
     }
 
     @Override
-    public Student createAccount(Record dto) {
+     AccountStudent createAccount(Record dto) {
         AccountStudentDTO studentDTO = (AccountStudentDTO) dto;
-        return Student.builder()
+        return AccountStudent.builder()
                 .firstname(studentDTO.firstname())
                 .lastname(studentDTO.lastname())
-                .schoolClass(getSchoolClass(studentDTO))
+                .schoolClassName(studentDTO.className())
+                .schoolClassYear(studentDTO.year())
                 .accountDetails(getAccountDetails(studentDTO))
                 .build();
     }
@@ -32,28 +32,18 @@ class StudentManuallyGeneratorStrategy extends AccountGeneratorStrategy {
         return AccountDetails
                 .builder()
                 .username(generateAccountUsername(studentDTO.firstname(),studentDTO.lastname(),getLastStudentId()))
-                .password(generateFirstPassword())
+                .password(egradePasswordEncoder.encode(generateFirstPassword()))
                 .createdDate(LocalDate.now().toString())
-                .role(Role.STUDENT)
+                .accountRole(AccountRole.STUDENT)
                 .build();
     }
 
-    private SchoolClass getSchoolClass(AccountStudentDTO studentDTO) {
-        return schoolClassRepository.findSchoolClassByNameAndAndClassYear(studentDTO.className(), studentDTO.year())
-                .orElse(getNewSchoolClass(studentDTO));
-
-    }
-
     private long getLastStudentId() {
-        return (studentRepository.count() + 1);
-    }
-
-    private SchoolClass getNewSchoolClass(AccountStudentDTO studentDTO) {
-        return new SchoolClass(studentDTO.className(), studentDTO.year());
+        return (accountStudentRepository.count() + 1);
     }
 
     @Override
-    protected String generateAccountUsername(String firstname, String lastname, long id) {
+    String generateAccountUsername(String firstname, String lastname, long id) {
         return firstname + "." + lastname + getStudentAccountIdentity()+id;
     }
 

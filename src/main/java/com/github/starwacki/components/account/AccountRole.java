@@ -1,6 +1,6 @@
 package com.github.starwacki.components.account;
 
-enum Role {
+enum AccountRole {
     ADMIN,
     STUDENT,
     PARENT,

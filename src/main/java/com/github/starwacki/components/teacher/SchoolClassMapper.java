@@ -1,4 +1,4 @@
-package com.github.starwacki.components.teacher.mapper;
+package com.github.starwacki.components.teacher;
 
 import com.github.starwacki.components.teacher.SchoolClassDTO;
 import com.github.starwacki.common.model.school_class.SchoolClass;

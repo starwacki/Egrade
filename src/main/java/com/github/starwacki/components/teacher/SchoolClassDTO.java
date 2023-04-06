@@ -1,4 +1,4 @@
-package com.github.starwacki.components.teacher.dto;
+package com.github.starwacki.components.teacher;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;

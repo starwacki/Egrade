@@ -4,15 +4,6 @@ package com.github.starwacki.components.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.starwacki.components.auth.dto.AuthenticationRequest;
 import com.github.starwacki.components.auth.dto.AuthenticationResponse;
-import com.github.starwacki.common.model.account.Parent;
-import com.github.starwacki.common.model.account.Role;
-import com.github.starwacki.common.model.account.Student;
-import com.github.starwacki.common.model.account.Teacher;
-import com.github.starwacki.common.repositories.ParentRepository;
-import com.github.starwacki.common.repositories.StudentRepository;
-import com.github.starwacki.common.repositories.TeacherRepository;
-import com.github.starwacki.common.security.AES;
-import com.github.starwacki.common.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,30 +35,23 @@ class AuthenticationControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private TeacherRepository teacherRepository;
-    @Autowired
-    private ParentRepository parentRepository;
+    private AuthAccountAuthQueryRepository authAccountAuthQueryRepository;
     @Autowired
     private JwtService jwtService;
 
     @Test
     @DisplayName("Test authenticate exist student return 200 HTTP status, add cookie with jwt and return jwt with correct claims")
-    void authenticate_givenExistStudent_shouldReturn_200_HTTPStatus_andReturnJWTCookieInHTTPResponse_andReturnJWTWithCorrectClaims() throws Exception {
+    void authenticate_givenExistStudentAuthAccountDetails_shouldReturn_200_HTTPStatus_andReturnJWTCookieInHTTPResponse_andReturnJWTWithCorrectClaims() throws Exception {
 
         //given
         String username = "usernameSTU1";
         String password = "123456";
 
-        Student student = Student.builder()
-                .firstname("firstname")
-                .lastname("lastname")
+        AuthAccountDetails accountStudent = AuthAccountDetails.builder()
                 .username(username)
-                .role(Role.STUDENT)
-                .password(AES.encrypt(password))
+                .accountRole("STUDENT")
+                .password(AuthenticationAESAlgorithm.encrypt(password))
                 .build();
-        int studentId = studentRepository.save(student).getId();
         AuthenticationRequest authenticationRequest = AuthenticationRequest
                 .builder()
                 .username(username)
@@ -80,7 +64,7 @@ class AuthenticationControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedJWT = jwtService.generateToken(Map.of("id",studentId),student);
+        String expectedJWT = jwtService.generateToken(Map.of("ROLE","STUDENT"), accountStudent);
         String actualJWT= objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class).token();
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
@@ -88,26 +72,23 @@ class AuthenticationControllerIntegrationTest {
                 ));
        assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.getSubject()),
                is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.getSubject()))));
-       assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.get("id")),
-               is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.get("id")))));
+       assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.get("ROLE")),
+               is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.get("ROLE")))));
     }
 
     @Test
     @DisplayName("Test authenticate exist teacher return 200 HTTP status, add cookie with jwt and return jwt with correct claims")
-    void authenticate_givenExistTeacher_shouldReturn_200_HTTPStatus_andReturnJWTCookieInHTTPResponse_andReturnJWTWithCorrectClaims() throws Exception {
+    void authenticate_givenExistTeacherAuthAccountDetails_shouldReturn_200_HTTPStatus_andReturnJWTCookieInHTTPResponse_andReturnJWTWithCorrectClaims() throws Exception {
 
         //given
         String username = "usernameNAU1";
         String password = "123456";
 
-        Teacher teacher = Teacher.builder()
-                .firstname("firstname")
-                .lastname("lastname")
+        AuthAccountDetails accountTeacher = AuthAccountDetails.builder()
                 .username(username)
-                .role(Role.STUDENT)
-                .password(AES.encrypt(password))
+                .accountRole("TEACHER")
+                .password(AuthenticationAESAlgorithm.encrypt(password))
                 .build();
-        int teacherId = teacherRepository.save(teacher).getId();
         AuthenticationRequest authenticationRequest = AuthenticationRequest
                 .builder()
                 .username(username)
@@ -120,7 +101,7 @@ class AuthenticationControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedJWT = jwtService.generateToken(Map.of("id",teacherId),teacher);
+        String expectedJWT = jwtService.generateToken(Map.of("ROLE","TEACHER"), accountTeacher);
         String actualJWT= objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class).token();
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
@@ -128,26 +109,23 @@ class AuthenticationControllerIntegrationTest {
                 ));
         assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.getSubject()),
                 is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.getSubject()))));
-        assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.get("id")),
-                is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.get("id")))));
+        assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.get("ROLE")),
+                is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.get("ROLE")))));
     }
 
     @Test
     @DisplayName("Test authenticate exist parent return 200 HTTP status, add cookie with jwt and return jwt with correct claims")
-    void authenticate_givenExistParent_shouldReturn_200_HTTPStatus_andReturnJWTCookieInHTTPResponse_andReturnJWTWithCorrectClaims() throws Exception {
+    void authenticate_givenExistParentAccountAuthDetails_shouldReturn_200_HTTPStatus_andReturnJWTCookieInHTTPResponse_andReturnJWTWithCorrectClaims() throws Exception {
 
         //given
         String username = "usernameRO1";
         String password = "123456";
 
-        Parent parent = Parent.builder()
-                .firstname("firstname")
-                .lastname("lastname")
+        AuthAccountDetails accountParent = AuthAccountDetails.builder()
                 .username(username)
-                .role(Role.STUDENT)
-                .password(AES.encrypt(password))
+                .accountRole("PARENT")
+                .password(AuthenticationAESAlgorithm.encrypt(password))
                 .build();
-        int parentId = parentRepository.save(parent).getId();
         AuthenticationRequest authenticationRequest = AuthenticationRequest
                 .builder()
                 .username(username)
@@ -160,7 +138,7 @@ class AuthenticationControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedJWT = jwtService.generateToken(Map.of("id",parentId),parent);
+        String expectedJWT = jwtService.generateToken(Map.of("ROLE","PARENT"),accountParent);
         String actualJWT= objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class).token();
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
@@ -168,8 +146,8 @@ class AuthenticationControllerIntegrationTest {
                 ));
         assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.getSubject()),
                 is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.getSubject()))));
-        assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.get("id")),
-                is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.get("id")))));
+        assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.get("ROLE")),
+                is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.get("ROLE")))));
     }
 
     @ParameterizedTest

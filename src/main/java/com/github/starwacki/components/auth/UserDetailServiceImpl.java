@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class UserDetailServiceImpl implements UserDetailsService {
+class UserDetailServiceImpl implements UserDetailsService {
 
-    private final AccountOperationsService accountOperationsService;
+    private final AuthAccountAuthQueryRepository authAccountAuthQueryRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-           return accountOperationsService.findAccountByUsername(username)
+        System.out.println(authAccountAuthQueryRepository.findByUsername(username).toString());
+           return  authAccountAuthQueryRepository.findByUsername(username)
                    .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 

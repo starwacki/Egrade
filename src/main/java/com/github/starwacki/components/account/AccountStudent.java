@@ -1,37 +1,34 @@
 package com.github.starwacki.components.account;
 
 
-import com.github.starwacki.common.model.school_class.SchoolClass;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Data
 @Entity
 @Table(name = "students")
-public class Student extends Account {
+class AccountStudent extends Account {
 
-    @ManyToOne
-            (cascade = {CascadeType.PERSIST})
-    @JoinColumn
-            (name = "classes_id")
-    private SchoolClass schoolClass;
+    private String schoolClassName;
+    private int schoolClassYear;
 
     @OneToOne
             (cascade ={CascadeType.ALL})
-    private Parent parent;
+    private AccountParent accountParent;
 
     @Override
     public String toString(){
         return super.toString();
     }
 
-    protected Student() {
+    protected AccountStudent() {
     }
 
-    private Student(AccountDetails accountDetails, String firstname, String lastname,  SchoolClass schoolClass, Parent parent) {
+    private AccountStudent(AccountDetails accountDetails, String firstname, String lastname, String schoolClassName, int schoolClassYear, AccountParent accountParent) {
         super(accountDetails, firstname, lastname);
-        this.schoolClass = schoolClass;
-        this.parent = parent;
+        this.accountParent = accountParent;
+        this.schoolClassYear = schoolClassYear;
+        this.schoolClassName = schoolClassName;
     }
 
     public static Builder builder() {
@@ -40,9 +37,9 @@ public class Student extends Account {
 
     public static class Builder extends  Account.Builder {
 
-        private SchoolClass schoolClass;
-
-        private Parent parent;
+        private String schoolClassName;
+        private int schoolClassYear;
+        private AccountParent accountParent;
 
         @Override
         public Builder accountDetails(AccountDetails accountDetails) {
@@ -62,19 +59,24 @@ public class Student extends Account {
             return this;
         }
 
-        public Builder schoolClass(SchoolClass schoolClass) {
-            this.schoolClass= schoolClass;
+        public Builder schoolClassName(String schoolClassName) {
+            this.schoolClassName = schoolClassName;
             return this;
         }
 
-        public Builder parent(Parent parent) {
-            this.parent = parent;
+        public Builder schoolClassYear(int schoolClassYear) {
+            this.schoolClassYear = schoolClassYear;
+            return this;
+        }
+
+        public Builder parent(AccountParent accountParent) {
+            this.accountParent = accountParent;
             return this;
         }
 
         @Override
-        public Student build() {
-            return new Student(accountDetails,firstname,lastname,schoolClass,parent);
+        public AccountStudent build() {
+            return new AccountStudent(accountDetails,firstname,lastname,schoolClassName,schoolClassYear, accountParent);
         }
 
     }

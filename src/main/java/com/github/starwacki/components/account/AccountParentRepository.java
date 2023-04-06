@@ -1,7 +1,9 @@
 package com.github.starwacki.components.account;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-interface ParentRepository extends JpaRepository<Parent,Integer> {
+@Repository
+interface AccountParentRepository extends JpaRepository<AccountParent,Integer> {
 
 }

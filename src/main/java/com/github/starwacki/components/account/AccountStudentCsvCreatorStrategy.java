@@ -1,5 +1,6 @@
 package com.github.starwacki.components.account;
 
+import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.common.repositories.SchoolClassRepository;
 import com.github.starwacki.components.account.exceptions.WrongFileException;
@@ -14,15 +15,15 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-class StudentCSVGeneratorStrategy extends StudentManuallyGeneratorStrategy {
+class AccountStudentCsvCreatorStrategy extends AccountStudentCreatorStrategy {
 
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 
-    public StudentCSVGeneratorStrategy(StudentRepository studentRepository,
-                                       SchoolClassRepository schoolClassRepository,
-                                       TeacherRepository teacherRepository) {
-        super(studentRepository, schoolClassRepository, teacherRepository);
+    public AccountStudentCsvCreatorStrategy(AccountStudentRepository accountStudentRepository,
+                                            AccountTeacherRepository accountTeacherRepository,
+                                            EgradePasswordEncoder egradePasswordEncoder) {
+        super(accountStudentRepository, accountTeacherRepository, egradePasswordEncoder);
     }
 
     public List<AccountStudentDTO> generateStudents(String path)  {

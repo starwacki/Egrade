@@ -1,8 +1,8 @@
-package com.github.starwacki.common.security;
+package com.github.starwacki.common.security.exception;
 
 public class AESException extends RuntimeException{
 
-    AESException(String message) {
+    public AESException(String message) {
         super(message);
     }
 }
