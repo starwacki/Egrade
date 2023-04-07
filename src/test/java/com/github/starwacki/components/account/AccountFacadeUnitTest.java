@@ -1,38 +1,43 @@
 package com.github.starwacki.components.account;
 
+import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
 import com.github.starwacki.components.account.exceptions.AccountNotFoundException;
 import com.github.starwacki.components.account.exceptions.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.WrongPasswordException;
 import com.github.starwacki.common.model.grades.Subject;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccountFacadeUnitTest {
 
-    @InjectMocks
-    private AccountFacade accountFacade;
-    @Mock
-    private AccountFactory accountFactory;
-    @Mock
-    private AccountStudentRepository accountStudentRepository;
-    @Mock
-    private AccountTeacherRepository accountTeacherRepository;
-    @Mock
-    private AccountParentRepository accountParentRepository;
+    private static AccountFacade accountFacade;
+    private static AccountFactory accountFactory;
+    private static AccountStudentRepository accountStudentRepository;
+    private static AccountTeacherRepository accountTeacherRepository;
+    private static AccountParentRepository accountParentRepository;
+    private static EgradePasswordEncoder egradePasswordEncoder;
 
+    @BeforeAll
+    static void setup() {
+        accountFactory = mock(AccountFactory.class);
+        accountStudentRepository = mock(AccountStudentRepository.class);
+        accountTeacherRepository = mock(AccountTeacherRepository.class);
+        accountParentRepository  = mock(AccountParentRepository.class);
+        egradePasswordEncoder = new EgradePasswordEncoderAccountSTUB();
+        accountFacade = new AccountFacade(accountFactory,accountStudentRepository,accountTeacherRepository,accountParentRepository,egradePasswordEncoder);
+    }
 
 
     private static AccountStudent getStudentTestAccount() {
@@ -82,7 +87,7 @@ class AccountFacadeUnitTest {
     void changeAccountPassword_givenNoExistId_shouldThrowAccountNotFoundExceptionWithNotFoundMessage() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 16;
         String oldPassword = "password";
         String newPassword = "changedPassword";
         given(accountStudentRepository.findById(id)).willReturn(Optional.empty());
@@ -101,7 +106,7 @@ class AccountFacadeUnitTest {
     void changeAccountPassword_givenNoExistId_shouldThrowAccountNotFoundException() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 17;
         String oldPassword = "password";
         String newPassword = "changedPassword";
         given(accountStudentRepository.findById(id)).willReturn(Optional.empty());
@@ -148,7 +153,7 @@ class AccountFacadeUnitTest {
     void changeAccountPassword_givenRoleAndId_andOldPasswordSameAsNewPassword_shouldReturnAccountViewDTOWithChangedPassword() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 18;
         String oldPassword = "password";
         String newPassword = "changedPassword";
         AccountStudent accountStudent = getStudentTestAccount();
@@ -168,7 +173,7 @@ class AccountFacadeUnitTest {
     void changeAccountPassword_givenRoleAndId_andOldPasswordNotSameAsPasswordInDataBase_shouldThrowWrongPasswordException() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 19;
         String oldPassword = "badpassword";
         String newPassword = "changedPassword";
         AccountStudent accountStudent = getStudentTestAccount();
@@ -183,7 +188,7 @@ class AccountFacadeUnitTest {
     void changeAccountPassword_givenRoleAndId_andOldPasswordNotSameAsPasswordInDataBase_shouldThrowWrongPasswordExceptionWithMessage() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 20;
         String oldPassword = "badpassword";
         String newPassword = "changedPassword";
         AccountStudent accountStudent = getStudentTestAccount();
@@ -205,7 +210,7 @@ class AccountFacadeUnitTest {
     void changeAccountPassword_givenRoleAndId_andOldPasswordSameAsPasswordInDataBase_shouldSaveEntityWithNewPassword() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 21;
         String oldPassword = "password";
         String newPassword = "changedPassword";
         AccountStudent accountStudent = getStudentTestAccount();
@@ -252,7 +257,7 @@ class AccountFacadeUnitTest {
     void  getAccountById_givenTeacherRoleAndId_shouldGetTeacherFromDatabase() {
         //given
         AccountRole accountRole = AccountRole.TEACHER;
-        int id = 1;
+        int id = 22;
         AccountTeacher accountTeacher = getTeacherTestAccount();
         given(accountTeacherRepository.findById(id)).willReturn(Optional.of(accountTeacher));
 
@@ -268,7 +273,7 @@ class AccountFacadeUnitTest {
     void  getAccountById_givenParentRoleAndId_shouldReturnAccountViewDtoWithSameFieldsLikeGivenParent() {
         //given
         AccountRole accountRole = AccountRole.PARENT;
-        int id = 1;
+        int id = 23;
         AccountParent accountParent = getParentTestAccount();
         given(accountParentRepository.findById(id)).willReturn(Optional.of(accountParent));
 
@@ -288,7 +293,7 @@ class AccountFacadeUnitTest {
     void  getAccountById_givenParentRoleAndId_shouldGetParentFromDatabase() {
         //given
         AccountRole accountRole = AccountRole.PARENT;
-        int id = 1;
+        int id = 24;
         AccountParent accountParent = getParentTestAccount();
         given(accountParentRepository.findById(id)).willReturn(Optional.of(accountParent));
         System.out.println(accountParent.getAccountDetails().getPassword());
@@ -305,7 +310,7 @@ class AccountFacadeUnitTest {
     void  getAccountById_givenStudentRoleAndId_shouldReturnAccountViewDtoWithSameFieldsLikeGivenStudent() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 25;
         AccountStudent accountStudent = getStudentTestAccount();
         given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
 
@@ -325,7 +330,7 @@ class AccountFacadeUnitTest {
     void  getAccountById_givenStudentRoleAndId_shouldGetStudentFromDatabase() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 26;
         AccountStudent accountStudent = getStudentTestAccount();
         given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
 
@@ -368,7 +373,7 @@ class AccountFacadeUnitTest {
     void deleteAccountById_givenNoExistTeacherRoleAndId_shouldThrowAccountNotFoundException() {
         //given
         AccountRole accountRole = AccountRole.TEACHER;
-        int id = 1;
+        int id = 27;
         given(accountTeacherRepository.findById(id)).willReturn(Optional.empty());
 
         //then
@@ -380,7 +385,7 @@ class AccountFacadeUnitTest {
     void deleteAccountById_givenExistTeacherRoleAndId_shouldDeleteTeacher() {
         //given
         AccountRole accountRole = AccountRole.TEACHER;
-        int id = 1;
+        int id = 28;
         AccountTeacher accountTeacher = getTeacherTestAccount();
         given(accountTeacherRepository.findById(id)).willReturn(Optional.of(accountTeacher));
 
@@ -396,7 +401,7 @@ class AccountFacadeUnitTest {
     void deleteAccountById_givenNoExistStudentRoleAndId_shouldThrowAccountNotFoundException() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 29;
         given(accountStudentRepository.findById(id)).willReturn(Optional.empty());
 
         //then
@@ -408,7 +413,7 @@ class AccountFacadeUnitTest {
     void deleteAccountById_givenExistStudentRoleAndId_shouldDeleteStudent() {
         //given
         AccountRole accountRole = AccountRole.STUDENT;
-        int id = 1;
+        int id = 30;
         AccountStudent accountStudent = getStudentTestAccount();
         given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
 

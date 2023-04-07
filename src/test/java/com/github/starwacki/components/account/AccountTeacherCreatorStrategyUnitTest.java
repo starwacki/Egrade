@@ -3,29 +3,34 @@ package com.github.starwacki.components.account;
 import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.common.model.grades.Subject;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class AccountTeacherCreatorStrategyUnitTest {
 
-    @InjectMocks
-    private AccountTeacherCreatorStrategy accountTeacherCreatorStrategy;
-    @Mock
-    private AccountTeacherRepository accountTeacherRepository;
+    private static AccountTeacherCreatorStrategy accountTeacherCreatorStrategy;
+    private static AccountTeacherRepository accountTeacherRepository;
+    private static EgradePasswordEncoder egradePasswordEncoder;
 
-    @Autowired
-    private EgradePasswordEncoder egradePasswordEncoder;
+    @BeforeAll
+    static void setup() {
+        AccountStudentRepository accountStudentRepository = mock(AccountStudentRepository.class);
+        accountTeacherRepository = mock(AccountTeacherRepository.class);
+        egradePasswordEncoder = new EgradePasswordEncoderAccountSTUB();
+        accountTeacherCreatorStrategy = new AccountTeacherCreatorStrategy(accountStudentRepository,accountTeacherRepository,egradePasswordEncoder);
+    }
+
+
+
 
     @Test
     @DisplayName("Test generating teacher with same fields like given DTO")

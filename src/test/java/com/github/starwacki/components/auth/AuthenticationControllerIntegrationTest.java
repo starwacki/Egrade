@@ -13,12 +13,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
+import java.util.Set;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -52,6 +54,7 @@ class AuthenticationControllerIntegrationTest {
                 .accountRole("STUDENT")
                 .password(AuthenticationAESAlgorithm.encrypt(password))
                 .build();
+        authAccountAuthQueryRepository.save(accountStudent);
         AuthenticationRequest authenticationRequest = AuthenticationRequest
                 .builder()
                 .username(username)
@@ -64,7 +67,7 @@ class AuthenticationControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedJWT = jwtService.generateToken(Map.of("ROLE","STUDENT"), accountStudent);
+        String expectedJWT = jwtService.generateToken(Map.of("ROLE",Set.of(new SimpleGrantedAuthority("STUDENT"))), accountStudent);
         String actualJWT= objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class).token();
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
@@ -89,6 +92,7 @@ class AuthenticationControllerIntegrationTest {
                 .accountRole("TEACHER")
                 .password(AuthenticationAESAlgorithm.encrypt(password))
                 .build();
+        authAccountAuthQueryRepository.save(accountTeacher);
         AuthenticationRequest authenticationRequest = AuthenticationRequest
                 .builder()
                 .username(username)
@@ -101,7 +105,7 @@ class AuthenticationControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedJWT = jwtService.generateToken(Map.of("ROLE","TEACHER"), accountTeacher);
+        String expectedJWT = jwtService.generateToken(Map.of("ROLE",Set.of(new SimpleGrantedAuthority("TEACHER"))), accountTeacher);
         String actualJWT= objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class).token();
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
@@ -126,6 +130,7 @@ class AuthenticationControllerIntegrationTest {
                 .accountRole("PARENT")
                 .password(AuthenticationAESAlgorithm.encrypt(password))
                 .build();
+        authAccountAuthQueryRepository.save(accountParent);
         AuthenticationRequest authenticationRequest = AuthenticationRequest
                 .builder()
                 .username(username)
@@ -138,7 +143,7 @@ class AuthenticationControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedJWT = jwtService.generateToken(Map.of("ROLE","PARENT"),accountParent);
+        String expectedJWT = jwtService.generateToken(Map.of("ROLE",Set.of(new SimpleGrantedAuthority("PARENT"))), accountParent);
         String actualJWT= objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class).token();
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))

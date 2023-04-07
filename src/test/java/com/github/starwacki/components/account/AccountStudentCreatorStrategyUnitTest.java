@@ -1,25 +1,32 @@
 package com.github.starwacki.components.account;
 
+import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class AccountStudentCreatorStrategyUnitTest {
 
-    @InjectMocks
-    private AccountStudentCreatorStrategy accountStudentCreatorStrategy;
-    @Mock
-    private AccountStudentRepository accountStudentRepository;
+    private static AccountStudentCreatorStrategy accountStudentCreatorStrategy;
+    private static AccountStudentRepository accountStudentRepository;
+    private static EgradePasswordEncoder egradePasswordEncoder;
+
+    @BeforeAll
+    static void setup() {
+        accountStudentRepository = mock(AccountStudentRepository.class);
+        AccountTeacherRepository accountTeacherRepository = mock(AccountTeacherRepository.class);
+        egradePasswordEncoder = new EgradePasswordEncoderAccountSTUB();
+        accountStudentCreatorStrategy = new AccountStudentCreatorStrategy(accountStudentRepository,accountTeacherRepository,egradePasswordEncoder);
+    }
 
 
     @Test

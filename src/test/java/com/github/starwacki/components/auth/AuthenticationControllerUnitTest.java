@@ -1,6 +1,5 @@
 package com.github.starwacki.components.auth;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.starwacki.components.auth.dto.AuthenticationRequest;
 import com.github.starwacki.components.auth.dto.AuthenticationResponse;
@@ -14,37 +13,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
+import org.springframework.web.filter.OncePerRequestFilter;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@WebMvcTest(controllers = AuthenticationController.class)
+@WebMvcTest(controllers = AuthenticationController.class,
+        excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        classes = OncePerRequestFilter.class))
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
-class AuthenticationUnitTest {
+class AuthenticationControllerUnitTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private JwtService jwtService;
-    @MockBean
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-    @MockBean
     private AuthenticationService authenticationService;
-    @MockBean
-    private AuthenticationManager authenticationManager;
-    @MockBean
-    private PasswordEncoder passwordEncoder;
+
 
     @Autowired
     private ObjectMapper objectMapper;

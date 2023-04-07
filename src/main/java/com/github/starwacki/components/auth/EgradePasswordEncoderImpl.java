@@ -28,8 +28,6 @@ class EgradePasswordEncoderImpl implements EgradePasswordEncoder {
 
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        System.out.println(rawPassword);
-        System.out.println(encodedPassword);
         return rawPassword.toString().equals(encodedPassword);
     }
 
