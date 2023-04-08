@@ -1,7 +1,7 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
-import com.github.starwacki.components.account.dto.AccountViewDTO;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
+import com.github.starwacki.components.account.dto.AccountResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,8 +11,8 @@ class AccountMapper {
     }
 
 
-   public static AccountViewDTO mapAccountToAccountViewDTO(EgradePasswordEncoder passwordEncoder,Account account) {
-       return AccountViewDTO
+   public static AccountResponseDTO mapAccountToAccountViewDTO(EgradePasswordEncoder passwordEncoder, Account account) {
+       return AccountResponseDTO
                .builder()
                .id(account.getId())
                .firstname(account.getFirstname())

@@ -1,7 +1,7 @@
 package com.github.starwacki.components.grades;
 
-import com.github.starwacki.components.grades.dto.GradeDTO;
-import com.github.starwacki.components.grades.dto.GradeViewDTO;
+import com.github.starwacki.components.grades.dto.GradeRequestDTO;
+import com.github.starwacki.components.grades.dto.GradeResponeDTO;
 
 import java.time.LocalDate;
 
@@ -11,8 +11,8 @@ class GradeMapper {
     }
 
 
-    public static GradeDTO mapGradeToGradeDTO(Grade grade) {
-        return GradeDTO
+    public static GradeRequestDTO mapGradeToGradeDTO(Grade grade) {
+        return GradeRequestDTO
                 .builder()
                 .degree(grade.getGradeSymbolValue().getSymbol())
                 .subject(grade.getGradeSubject().toString())
@@ -22,22 +22,22 @@ class GradeMapper {
                 .build();
     }
 
-    public static Grade mapGradeDTOToGrade(GradeDTO gradeDTO, GradeSymbolValue gradeSymbolValue) {
+    public static Grade mapGradeDTOToGrade(GradeRequestDTO gradeRequestDTO, GradeSymbolValue gradeSymbolValue) {
         return Grade
                 .builder()
-                .description(gradeDTO.description())
+                .description(gradeRequestDTO.description())
                 .gradeSymbolValue(gradeSymbolValue)
-                .gradeSubject(GradeSubject.valueOf(gradeDTO.subject()))
-                .weight(gradeDTO.weight())
-                .addedBy(gradeDTO.addedBy())
+                .gradeSubject(GradeSubject.valueOf(gradeRequestDTO.subject()))
+                .weight(gradeRequestDTO.weight())
+                .addedBy(gradeRequestDTO.addedBy())
                 .addedDate(LocalDate.now())
-                .studentID(gradeDTO.studentID())
+                .studentID(gradeRequestDTO.studentID())
                 .build();
     }
 
 
-    public static GradeViewDTO mapGradeToGradeViewDTO(Grade grade) {
-        return GradeViewDTO
+    public static GradeResponeDTO mapGradeToGradeViewDTO(Grade grade) {
+        return GradeResponeDTO
                 .builder()
                 .description(grade.getDescription())
                 .weight(grade.getWeight())

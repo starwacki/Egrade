@@ -1,8 +1,8 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.components.account.dto.AccountViewDTO;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
+import com.github.starwacki.components.account.dto.AccountTeacherRequestDTO;
+import com.github.starwacki.components.account.dto.AccountResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,7 +33,7 @@ interface AccountControllerOperations {
             }
     )
     @PostMapping("/student")
-    ResponseEntity<AccountViewDTO> addStudent(@RequestBody @Valid AccountStudentDTO studentDTO);
+    ResponseEntity<AccountResponseDTO> addStudent(@RequestBody @Valid AccountStudentRequestDTO studentDTO);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -50,7 +50,7 @@ interface AccountControllerOperations {
             }
     )
     @PostMapping("/students")
-    ResponseEntity<List<AccountViewDTO>> addStudentsFromCSVFile(@RequestParam @NotBlank String pathname);
+    ResponseEntity<List<AccountResponseDTO>> addStudentsFromCSVFile(@RequestParam @NotBlank String pathname);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -66,7 +66,7 @@ interface AccountControllerOperations {
             }
     )
     @PostMapping("/teacher")
-    ResponseEntity<AccountViewDTO> addTeacher(@RequestBody @Valid AccountTeacherDTO accountTeacherDTO);
+    ResponseEntity<AccountResponseDTO> addTeacher(@RequestBody @Valid AccountTeacherRequestDTO accountTeacherRequestDTO);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -86,7 +86,7 @@ interface AccountControllerOperations {
             }
     )
     @GetMapping("/{accountRole}={id}")
-    ResponseEntity<AccountViewDTO> getAccountById(@PathVariable AccountRole accountRole, @PathVariable int id);
+    ResponseEntity<AccountResponseDTO> getAccountById(@PathVariable AccountRole accountRole, @PathVariable int id);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -106,7 +106,7 @@ interface AccountControllerOperations {
             }
     )
     @DeleteMapping("/{accountRole}={id}")
-    ResponseEntity<AccountViewDTO> deleteAccountById(@PathVariable AccountRole accountRole, @PathVariable int id);
+    ResponseEntity<AccountResponseDTO> deleteAccountById(@PathVariable AccountRole accountRole, @PathVariable int id);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -129,7 +129,7 @@ interface AccountControllerOperations {
             }
     )
     @PutMapping("/{accountRole}={id}")
-    ResponseEntity<AccountViewDTO> changeAccountPassword(
+    ResponseEntity<AccountResponseDTO> changeAccountPassword(
             @PathVariable AccountRole accountRole,
             @PathVariable int id,
             @RequestParam String oldPassword,

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @Validated
 @RequestMapping("/auth")
-class AuthenticationController implements AuthenticationOperations {
+class AuthenticationController implements AuthenticationControllerOperations {
 
     private final AuthenticationService authenticationService;
 

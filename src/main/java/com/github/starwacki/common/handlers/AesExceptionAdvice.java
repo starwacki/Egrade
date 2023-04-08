@@ -1,8 +1,6 @@
 package com.github.starwacki.common.handlers;
 
-import com.github.starwacki.common.security.exception.AESException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.starwacki.components.auth.exceptions.AESException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

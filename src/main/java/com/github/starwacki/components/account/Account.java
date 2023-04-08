@@ -4,7 +4,7 @@ package com.github.starwacki.components.account;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+@Getter
 @MappedSuperclass
 abstract class Account {
 
@@ -28,7 +28,7 @@ abstract class Account {
         this.lastname = lastname;
     }
 
-    public abstract static class Builder implements AccountBuilder{
+    abstract static class Builder implements AccountBuilder{
         protected AccountDetails accountDetails;
 
         protected String firstname;

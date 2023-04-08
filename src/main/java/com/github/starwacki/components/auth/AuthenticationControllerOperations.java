@@ -3,10 +3,7 @@ package com.github.starwacki.components.auth;
 import com.github.starwacki.components.auth.dto.AuthenticationRequest;
 import com.github.starwacki.components.auth.dto.AuthenticationResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/auth")
-interface AuthenticationOperations {
+interface AuthenticationControllerOperations {
 
     @Operation(
             summary = "Authenticate user",

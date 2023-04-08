@@ -5,7 +5,7 @@ import lombok.Builder;
 
 
 @Builder
-public record AccountTeacherDTO(
+public record AccountTeacherRequestDTO(
         @Pattern(regexp = "^[A-Za-z]{3,40}$") String firstname,
         @Pattern(regexp = "^[A-Za-z]{3,40}$") String lastname,
         @NotBlank @Size(min = 9, max = 9) @Pattern(regexp = "^\\d+$") String workPhone,

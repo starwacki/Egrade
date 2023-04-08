@@ -2,9 +2,9 @@ package com.github.starwacki.components.grades;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.starwacki.components.grades.dto.GradeDTO;
-import com.github.starwacki.components.grades.dto.GradeViewDTO;
-import com.github.starwacki.components.grades.dto.SubjectDTO;
+import com.github.starwacki.components.grades.dto.GradeRequestDTO;
+import com.github.starwacki.components.grades.dto.GradeResponeDTO;
+import com.github.starwacki.components.grades.dto.SubjectResponseDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ class GradesControllerIntegrationTest {
     void addGradeToStudent_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
 
-        GradeDTO gradeDTO = GradeDTO
+        GradeRequestDTO gradeRequestDTO = GradeRequestDTO
                 .builder()
                 .addedBy("Szymon Kawka")
                 .subject(GradeSubject.PHYSICS.toString())
@@ -59,7 +59,7 @@ class GradesControllerIntegrationTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/grades/grade")
-                .content(objectMapper.writeValueAsString(gradeDTO))
+                .content(objectMapper.writeValueAsString(gradeRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -74,7 +74,7 @@ class GradesControllerIntegrationTest {
 
         //given
         int studentId = 1;
-        GradeDTO gradeDTO = GradeDTO
+        GradeRequestDTO gradeRequestDTO = GradeRequestDTO
                 .builder()
                 .addedBy("Szymon Kawka")
                 .subject(GradeSubject.PHYSICS.toString())
@@ -86,7 +86,7 @@ class GradesControllerIntegrationTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/grades/grade")
-                .content(objectMapper.writeValueAsString(gradeDTO))
+                .content(objectMapper.writeValueAsString(gradeRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -95,12 +95,12 @@ class GradesControllerIntegrationTest {
         List<Grade> gradeList = gradeRepository.findAllByStudentID(studentId).get();
         assertThat(gradeList,hasSize(1));
         Grade expectedGradeInDatabase = gradeList.get(0);
-        assertThat(expectedGradeInDatabase.getStudentID(),is(equalTo(gradeDTO.studentID())));
-        assertThat(expectedGradeInDatabase.getGradeSubject().toString(),is(equalTo(gradeDTO.subject())));
-        assertThat(expectedGradeInDatabase.getWeight(),is(equalTo(gradeDTO.weight())));
-        assertThat(expectedGradeInDatabase.getGradeSymbolValue().getSymbol(),is(equalTo(gradeDTO.degree())));
-        assertThat(expectedGradeInDatabase.getAddedBy(),is(equalTo(gradeDTO.addedBy())));
-        assertThat(expectedGradeInDatabase.getDescription(),is(equalTo(gradeDTO.description())));
+        assertThat(expectedGradeInDatabase.getStudentID(),is(equalTo(gradeRequestDTO.studentID())));
+        assertThat(expectedGradeInDatabase.getGradeSubject().toString(),is(equalTo(gradeRequestDTO.subject())));
+        assertThat(expectedGradeInDatabase.getWeight(),is(equalTo(gradeRequestDTO.weight())));
+        assertThat(expectedGradeInDatabase.getGradeSymbolValue().getSymbol(),is(equalTo(gradeRequestDTO.degree())));
+        assertThat(expectedGradeInDatabase.getAddedBy(),is(equalTo(gradeRequestDTO.addedBy())));
+        assertThat(expectedGradeInDatabase.getDescription(),is(equalTo(gradeRequestDTO.description())));
     }
 
     @Test
@@ -127,7 +127,7 @@ class GradesControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        GradeViewDTO expectedGradeInResponseBody = GradeViewDTO
+        GradeResponeDTO expectedGradeInResponseBody = GradeResponeDTO
                 .builder()
                 .weight(5)
                 .addedBy("firstname lastname")
@@ -212,9 +212,9 @@ class GradesControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-       List<SubjectDTO> expectedSubjectDTOList = new ArrayList<>();
+       List<SubjectResponseDTO> expectedSubjectResponseDTOList = new ArrayList<>();
         for (GradeSubject gradeSubject : GradeSubject.values()) {
-            expectedSubjectDTOList.add(SubjectDTO
+            expectedSubjectResponseDTOList.add(SubjectResponseDTO
                     .builder()
                             .subject(gradeSubject.toString())
                             .gradeAverage("0,00")
@@ -224,7 +224,7 @@ class GradesControllerIntegrationTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result -> assertTrue(result.getResponse().getContentAsString()
-                        .contains(objectMapper.writeValueAsString(expectedSubjectDTOList))));
+                        .contains(objectMapper.writeValueAsString(expectedSubjectResponseDTOList))));
     }
 
     @Test
@@ -241,7 +241,7 @@ class GradesControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        SubjectDTO subjectDTO = SubjectDTO
+        SubjectResponseDTO subjectResponseDTO = SubjectResponseDTO
                 .builder()
                 .subject(subject.toString())
                 .gradeAverage("0,00")
@@ -250,7 +250,7 @@ class GradesControllerIntegrationTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result -> assertTrue(result.getResponse().getContentAsString()
-                        .contains(objectMapper.writeValueAsString(subjectDTO))));
+                        .contains(objectMapper.writeValueAsString(subjectResponseDTO))));
     }
 
 

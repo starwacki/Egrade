@@ -1,6 +1,6 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
 
 class EgradePasswordEncoderAccountSTUB implements EgradePasswordEncoder {
     @Override

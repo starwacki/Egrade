@@ -1,9 +1,9 @@
 package com.github.starwacki.components.grades;
 
-import com.github.starwacki.components.grades.dto.GradeDTO;
-import com.github.starwacki.components.grades.dto.GradeViewDTO;
-import com.github.starwacki.components.grades.dto.SubjectDTO;
-import com.github.starwacki.components.grades.exceptions.StudentNotFoundException;
+import com.github.starwacki.components.grades.dto.GradeRequestDTO;
+import com.github.starwacki.components.grades.dto.GradeResponeDTO;
+import com.github.starwacki.components.grades.dto.SubjectResponseDTO;
+import com.github.starwacki.components.grades.exceptions.GradeStudentNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,8 +53,8 @@ class GradeFacadeUnitTest {
                 .build();
     }
 
-    private static GradeDTO getGradeDto() {
-        return GradeDTO.builder()
+    private static GradeRequestDTO getGradeDto() {
+        return GradeRequestDTO.builder()
                 .subject(GradeSubject.PHYSICS.toString())
                 .degree(GradeSymbolValue.FIVE.getSymbol())
                 .description("Klasówka")
@@ -75,7 +75,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findAllByStudentIDAndGradeSubject(studentId,gradeSubject)).willReturn(Optional.empty());
 
         //then
-        assertThrows(StudentNotFoundException.class,() -> gradeFacade.getOneSubjectGrades(studentId,subjectId));
+        assertThrows(GradeStudentNotFoundException.class,() -> gradeFacade.getOneSubjectGrades(studentId,subjectId));
     }
 
     @Test
@@ -88,7 +88,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findAllByStudentIDAndGradeSubject(studentId,gradeSubject)).willReturn(Optional.empty());
 
         //when
-        Exception exception = assertThrows(StudentNotFoundException.class,() -> gradeFacade.getOneSubjectGrades(studentId,subjectId));
+        Exception exception = assertThrows(GradeStudentNotFoundException.class,() -> gradeFacade.getOneSubjectGrades(studentId,subjectId));
         String actualMessage = exception.getMessage();
 
         //then
@@ -106,7 +106,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findAllByStudentIDAndGradeSubject(studentId, GradeSubject.PHYSICS)).willReturn(Optional.of(List.of()));
 
         //when
-        SubjectDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
+        SubjectResponseDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
 
         //then
         int expectedSizeOfGrades = 0;
@@ -122,7 +122,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findAllByStudentIDAndGradeSubject(studentId, GradeSubject.PHYSICS)).willReturn(Optional.of(List.of()));
 
         //when
-        SubjectDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
+        SubjectResponseDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
 
         //then
         String expectedAverage = "0,00";
@@ -145,7 +145,7 @@ class GradeFacadeUnitTest {
                 )));
 
         //when
-        SubjectDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
+        SubjectResponseDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
 
         //then
         int expectedSizeOfGrades = 4;
@@ -165,7 +165,7 @@ class GradeFacadeUnitTest {
         ));
 
         //when
-        SubjectDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
+        SubjectResponseDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
 
         //then
         String expectedAverage = "2,64";
@@ -186,7 +186,7 @@ class GradeFacadeUnitTest {
                 )));
 
         //when
-        SubjectDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
+        SubjectResponseDTO studentGrades = gradeFacade.getOneSubjectGrades(studentId,subjectId);
 
         //then
         String expectedAverage = "2,64";
@@ -201,7 +201,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findAllByStudentID(studentId)).willReturn(Optional.empty());
 
         //then
-        assertThrows(StudentNotFoundException.class,() -> gradeFacade.getAllGradesByStudentID(studentId));
+        assertThrows(GradeStudentNotFoundException.class,() -> gradeFacade.getAllGradesByStudentID(studentId));
     }
 
     @Test
@@ -213,13 +213,13 @@ class GradeFacadeUnitTest {
 
 
         //when
-        List<SubjectDTO> studentGrades = gradeFacade.getAllGradesByStudentID(studentId);
+        List<SubjectResponseDTO> studentGrades = gradeFacade.getAllGradesByStudentID(studentId);
 
 
         //then
         int expectedSubjectsSize = 13;
         assertThat(studentGrades,hasSize(expectedSubjectsSize));
-        for (SubjectDTO grades : studentGrades) {
+        for (SubjectResponseDTO grades : studentGrades) {
             assertThat(grades.grades(),hasSize(0));
         }
     }
@@ -238,11 +238,11 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findAllByStudentID(studentId)).willReturn(Optional.of(grades));
 
         //when
-        List<SubjectDTO> studentGrades = gradeFacade.getAllGradesByStudentID(studentId);
+        List<SubjectResponseDTO> studentGrades = gradeFacade.getAllGradesByStudentID(studentId);
 
         //then
         int gradesSize = 3;
-        for(SubjectDTO subjectGrades : studentGrades) {
+        for(SubjectResponseDTO subjectGrades : studentGrades) {
             assertThat(subjectGrades.grades(),hasSize(gradesSize));
         }
     }
@@ -261,11 +261,11 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findAllByStudentID(studentId)).willReturn(Optional.of(grades));
 
         //when
-        List<SubjectDTO> studentGrades = gradeFacade.getAllGradesByStudentID(studentId);
+        List<SubjectResponseDTO> studentGrades = gradeFacade.getAllGradesByStudentID(studentId);
 
         //then
         String expectedAverage = "2,64";
-        for(SubjectDTO subjectGrades : studentGrades) {
+        for(SubjectResponseDTO subjectGrades : studentGrades) {
             assertThat(subjectGrades.gradeAverage(), is(equalTo(expectedAverage)));
         }
     }
@@ -280,7 +280,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findByStudentIDAndId(studentId,gradeId)).willReturn(Optional.empty());
 
         //then
-        assertThrows(StudentNotFoundException.class,() -> gradeFacade.getOneGrade(studentId,gradeId));
+        assertThrows(GradeStudentNotFoundException.class,() -> gradeFacade.getOneGrade(studentId,gradeId));
 
     }
 
@@ -293,7 +293,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findByStudentIDAndId(studentId,gradeId)).willReturn(Optional.empty());
 
         //when
-        Exception exception = assertThrows(StudentNotFoundException.class,() -> gradeFacade.getOneGrade(studentId,gradeId));
+        Exception exception = assertThrows(GradeStudentNotFoundException.class,() -> gradeFacade.getOneGrade(studentId,gradeId));
         String actualMessage = exception.getMessage();
 
         //then
@@ -311,7 +311,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findByStudentIDAndId(studentId,gradeId)).willReturn(Optional.of(grade));
 
         //when
-        GradeViewDTO actualGradeDto = gradeFacade.getOneGrade(studentId,gradeId);
+        GradeResponeDTO actualGradeDto = gradeFacade.getOneGrade(studentId,gradeId);
 
         //then
         assertEquals(grade.getWeight(),actualGradeDto.weight());
@@ -325,19 +325,19 @@ class GradeFacadeUnitTest {
     @DisplayName("Test add grade to student save grade to database")
     void  addGradeToStudent_givenGradeDTO_shouldSaveGradeToDatabase() {
         //given
-        GradeDTO gradeDTO = getGradeDto();
+        GradeRequestDTO gradeRequestDTO = getGradeDto();
 
         //when
-        gradeFacade.addGradeToStudent(gradeDTO);
+        gradeFacade.addGradeToStudent(gradeRequestDTO);
         Grade expectedGrade = Grade
                 .builder()
-                .addedBy(gradeDTO.addedBy())
+                .addedBy(gradeRequestDTO.addedBy())
                 .gradeSymbolValue(GradeSymbolValue.FIVE)
                 .weight(4)
                 .description("Klasówka")
                 .addedDate(LocalDate.now())
                 .gradeSubject(GradeSubject.PHYSICS)
-                .studentID(gradeDTO.studentID())
+                .studentID(gradeRequestDTO.studentID())
                 .build();
 
         verify(gradeRepository).save(expectedGrade);
@@ -349,11 +349,11 @@ class GradeFacadeUnitTest {
         //given
         int studentId = 0;
         int gradeId = 0;
-        GradeDTO gradeDTO = getGradeDto();
+        GradeRequestDTO gradeRequestDTO = getGradeDto();
         given(gradeRepository.findByStudentIDAndId(studentId,gradeId)).willReturn(Optional.empty());
 
         //then
-        assertThrows(StudentNotFoundException.class,() -> gradeFacade.updateGrade(studentId,gradeId,gradeDTO));
+        assertThrows(GradeStudentNotFoundException.class,() -> gradeFacade.updateGrade(studentId,gradeId, gradeRequestDTO));
     }
 
     @Test
@@ -364,13 +364,13 @@ class GradeFacadeUnitTest {
         int addingTeacherId = 0;
         int gradeId = 0;
 
-        GradeDTO gradeDTO = getGradeDto();
+        GradeRequestDTO gradeRequestDTO = getGradeDto();
         Grade expectedGrade = getGradeTestWeightSymbol(2,GradeSymbolValue.FIVE);
         given(gradeRepository.findByStudentIDAndId(studentId,gradeId)).willReturn(Optional.of(expectedGrade));
         given(gradeRepository.save(expectedGrade)).willReturn(expectedGrade);
 
         //when
-        gradeFacade.updateGrade(studentId,gradeId,gradeDTO);
+        gradeFacade.updateGrade(studentId,gradeId, gradeRequestDTO);
 
         //then
         verify(gradeRepository).save(expectedGrade);
@@ -387,7 +387,7 @@ class GradeFacadeUnitTest {
         int newWeight = 10;
         String newDescription = "new description";
         String newDegree = "6";
-        GradeDTO expectedUpdateGrade = GradeDTO.builder()
+        GradeRequestDTO expectedUpdateGrade = GradeRequestDTO.builder()
                 .weight(10)
                 .description(newDescription)
                 .addedBy("Szymon Kawka")
@@ -401,7 +401,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.save(expectedGrade)).willReturn(expectedGrade);
 
         //when
-        GradeDTO actualGrade = gradeFacade.updateGrade(studentId,gradeId,expectedUpdateGrade);
+        GradeRequestDTO actualGrade = gradeFacade.updateGrade(studentId,gradeId,expectedUpdateGrade);
 
         //then
         assertEquals(expectedUpdateGrade,actualGrade);
@@ -418,7 +418,7 @@ class GradeFacadeUnitTest {
         int newWeight = 10;
         String newDescription = "new description";
         String newDegree = "6";
-        GradeDTO expectedUpdateGrade = GradeDTO.builder()
+        GradeRequestDTO expectedUpdateGrade = GradeRequestDTO.builder()
                 .weight(10)
                 .description(newDescription)
                 .addedBy("Szymon Sssss")
@@ -432,7 +432,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.save(expectedGrade)).willReturn(expectedGrade);
 
         //when
-        GradeDTO actualGrade = gradeFacade.updateGrade(studentId,gradeId,expectedUpdateGrade);
+        GradeRequestDTO actualGrade = gradeFacade.updateGrade(studentId,gradeId,expectedUpdateGrade);
 
         System.out.println(actualGrade);
 
@@ -451,7 +451,7 @@ class GradeFacadeUnitTest {
         given(gradeRepository.findByStudentIDAndId(studentId,gradeId)).willReturn(Optional.empty());
 
         //then
-        assertThrows(StudentNotFoundException.class,() -> gradeFacade.deleteStudentGrade(studentId,gradeId));
+        assertThrows(GradeStudentNotFoundException.class,() -> gradeFacade.deleteStudentGrade(studentId,gradeId));
     }
 
     @Test

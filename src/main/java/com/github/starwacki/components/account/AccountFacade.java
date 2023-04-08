@@ -1,11 +1,11 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.components.account.dto.AccountTeacherDTO;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
+import com.github.starwacki.components.account.dto.AccountTeacherRequestDTO;
 import com.github.starwacki.components.account.exceptions.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.WrongPasswordException;
-import com.github.starwacki.components.account.dto.AccountViewDTO;
+import com.github.starwacki.components.account.dto.AccountResponseDTO;
 import com.github.starwacki.components.account.exceptions.AccountNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,65 +23,66 @@ public class AccountFacade {
     private final AccountParentRepository accountParentRepository;
     private final EgradePasswordEncoder egradePasswordEncoder;
 
-    public List<AccountViewDTO> saveStudentsAndParentsFromFile(String path) {
+    public List<AccountResponseDTO> saveStudentsAndParentsFromFile(String path) {
       return   accountFactory.createStudents(path)
               .stream()
               .map(accountStudentDTO -> saveStudentAndParentAccount(accountStudentDTO))
               .toList();
     }
-    public AccountViewDTO saveStudentAndParentAccount(AccountStudentDTO studentDTO) {
+    public AccountResponseDTO saveStudentAndParentAccount(AccountStudentRequestDTO studentDTO) {
         AccountStudent accountStudent = accountFactory.createStudent(studentDTO);
         AccountParent accountParent = accountFactory.createParent(studentDTO);
         accountStudent.setAccountParent(accountParent);
+        accountStudent.setParentPhoneNumber(accountParent.getPhoneNumber());
         accountStudentRepository.save(accountStudent);
         return AccountMapper.mapAccountToAccountViewDTO(egradePasswordEncoder,accountStudent);
     }
 
-    public AccountViewDTO changeAccountPassword(AccountRole accountRole, int id, String oldPassword, String newPassword) {
-        AccountViewDTO accountViewDTO;
+    public AccountResponseDTO changeAccountPassword(AccountRole accountRole, int id, String oldPassword, String newPassword) {
+        AccountResponseDTO accountResponseDTO;
         switch (accountRole) {
-            case STUDENT -> accountViewDTO = changePassword(accountStudentRepository,id,oldPassword,newPassword);
-            case TEACHER -> accountViewDTO = changePassword(accountTeacherRepository,id,oldPassword,newPassword);
-            case PARENT -> accountViewDTO = changePassword(accountParentRepository,id,oldPassword,newPassword);
+            case STUDENT -> accountResponseDTO = changePassword(accountStudentRepository,id,oldPassword,newPassword);
+            case TEACHER -> accountResponseDTO = changePassword(accountTeacherRepository,id,oldPassword,newPassword);
+            case PARENT -> accountResponseDTO = changePassword(accountParentRepository,id,oldPassword,newPassword);
             default -> throw new IllegalOperationException(HttpMethod.PUT, accountRole.toString());
         }
-        return accountViewDTO;
+        return accountResponseDTO;
     }
 
-    public AccountViewDTO getAccountById(AccountRole accountRole, int id) {
-        AccountViewDTO accountViewDTO;
+    public AccountResponseDTO getAccountById(AccountRole accountRole, int id) {
+        AccountResponseDTO accountResponseDTO;
         switch (accountRole) {
-            case STUDENT -> accountViewDTO = getAccount(accountStudentRepository,id);
-            case TEACHER -> accountViewDTO = getAccount(accountTeacherRepository,id);
-            case PARENT -> accountViewDTO = getAccount(accountParentRepository,id);
+            case STUDENT -> accountResponseDTO = getAccount(accountStudentRepository,id);
+            case TEACHER -> accountResponseDTO = getAccount(accountTeacherRepository,id);
+            case PARENT -> accountResponseDTO = getAccount(accountParentRepository,id);
             default -> throw new IllegalOperationException(HttpMethod.GET, accountRole.toString());
         }
-        return accountViewDTO;
+        return accountResponseDTO;
     }
 
-    public AccountViewDTO deleteAccountById(AccountRole accountRole, int id) {
-        AccountViewDTO accountViewDTO;
+    public AccountResponseDTO deleteAccountById(AccountRole accountRole, int id) {
+        AccountResponseDTO accountResponseDTO;
         switch (accountRole) {
-            case STUDENT -> accountViewDTO = deleteAccount(accountStudentRepository,id);
-            case TEACHER -> accountViewDTO = deleteAccount(accountTeacherRepository,id);
+            case STUDENT -> accountResponseDTO = deleteAccount(accountStudentRepository,id);
+            case TEACHER -> accountResponseDTO = deleteAccount(accountTeacherRepository,id);
             default -> throw new IllegalOperationException(HttpMethod.DELETE, accountRole.toString());
         }
-        return accountViewDTO;
+        return accountResponseDTO;
     }
 
-    public AccountViewDTO saveTeacherAccount(AccountTeacherDTO accountTeacherDTO) {
-        AccountTeacher accountTeacher = accountTeacherRepository.save(accountFactory.createTeacher(accountTeacherDTO));
+    public AccountResponseDTO saveTeacherAccount(AccountTeacherRequestDTO accountTeacherRequestDTO) {
+        AccountTeacher accountTeacher = accountTeacherRepository.save(accountFactory.createTeacher(accountTeacherRequestDTO));
         return AccountMapper.mapAccountToAccountViewDTO(egradePasswordEncoder,accountTeacher);
     }
 
-    private <T extends Account> AccountViewDTO getAccount(JpaRepository<T,Integer> jpaRepository, int id) {
+    private <T extends Account> AccountResponseDTO getAccount(JpaRepository<T,Integer> jpaRepository, int id) {
         return jpaRepository
                 .findById(id)
                 .map(account -> AccountMapper.mapAccountToAccountViewDTO(egradePasswordEncoder,account))
                 .orElseThrow(() -> new AccountNotFoundException(id));
     }
 
-    private  <T extends Account> AccountViewDTO changePassword(JpaRepository<T,Integer> jpaRepository, int id, String oldPassword, String newPassword) {
+    private  <T extends Account> AccountResponseDTO changePassword(JpaRepository<T,Integer> jpaRepository, int id, String oldPassword, String newPassword) {
         return jpaRepository
                 .findById(id)
                 .map(account -> setNewPassword(jpaRepository,account,oldPassword,newPassword))
@@ -105,7 +106,7 @@ public class AccountFacade {
         return egradePasswordEncoder.encode(oldPassword).equals(account.getAccountDetails().getPassword());
     }
 
-    private <T extends Account> AccountViewDTO deleteAccount(JpaRepository<T,Integer> repository,int id) {
+    private <T extends Account> AccountResponseDTO deleteAccount(JpaRepository<T,Integer> repository, int id) {
             T account = repository
                     .findById(id).
                     orElseThrow(() -> new AccountNotFoundException(id));

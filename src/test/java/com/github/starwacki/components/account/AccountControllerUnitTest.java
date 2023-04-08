@@ -2,9 +2,9 @@ package com.github.starwacki.components.account;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.components.account.dto.AccountViewDTO;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
+import com.github.starwacki.components.account.dto.AccountTeacherRequestDTO;
+import com.github.starwacki.components.account.dto.AccountResponseDTO;
 import com.github.starwacki.components.account.exceptions.AccountNotFoundException;
 import com.github.starwacki.components.account.exceptions.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.WrongFileException;
@@ -57,7 +57,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test add student return 202 HTTP status and created AccountViewDTO in responseBody")
     void addStudent_givenAccountStudentDTO_shouldReturn_202_HTTPStatus_andResponseBodyWithAccountViewDTO() throws Exception {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
@@ -65,7 +65,7 @@ class AccountControllerUnitTest {
                 .year(2023)
                 .parentPhoneNumber("111222333")
                 .build();
-        AccountViewDTO accountViewDTO = AccountViewDTO
+        AccountResponseDTO accountResponseDTO = AccountResponseDTO
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
@@ -74,15 +74,15 @@ class AccountControllerUnitTest {
                 .password("password")
                 .username("Firstname.Lastname1STU")
                 .build();
-        given(accountFacade.saveStudentAndParentAccount(accountStudentDTO)).willReturn(accountViewDTO);
+        given(accountFacade.saveStudentAndParentAccount(accountStudentRequestDTO)).willReturn(accountResponseDTO);
 
         //when
         ResultActions response= mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = objectMapper.writeValueAsString(accountViewDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(accountResponseDTO);
         response
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
@@ -100,7 +100,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountStudentDTO incorrect firstname return 400 HTTP status and error message in responseBody")
     void addStudent_givenIncorrectFirstname_shouldReturn_400_HTTPStatus_andResponseBodyErrorMessage(String firstname) throws Exception {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname(firstname)
                 .lastname("Lastname")
@@ -111,7 +111,7 @@ class AccountControllerUnitTest {
 
         //when
         ResultActions response= mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -133,7 +133,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountStudentDTO incorrect lastname return 400 HTTP status and error message in responseBody")
     void addStudent_givenIncorrectLastname_shouldReturn_400_HTTPStatus_andResponseBodyErrorMessage(String lastname) throws Exception {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("firstname")
                 .lastname(lastname)
@@ -144,7 +144,7 @@ class AccountControllerUnitTest {
 
         //when
         ResultActions response= mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -162,7 +162,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountStudentDTO incorrect year return 400 HTTP status and error message in responseBody")
     void addStudent_givenIncorrectYear_shouldReturn_400_HTTPStatus_andResponseBodyErrorMessage(int year) throws Exception {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -173,7 +173,7 @@ class AccountControllerUnitTest {
 
         //when
         ResultActions response= mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -192,7 +192,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountStudentDTO incorrect class name return 400 HTTP status ")
     void addStudent_givenIncorrectClassName_shouldReturn_400_HTTPStatus(String className) throws Exception {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -203,7 +203,7 @@ class AccountControllerUnitTest {
 
         //when
         ResultActions response= mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -219,7 +219,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountStudentDTO incorrect parent phone number return 400 HTTP status")
     void addStudent_givenIncorrectParentPhoneNumber_shouldReturn_400_HTTPStatus(String phone) throws Exception {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -230,7 +230,7 @@ class AccountControllerUnitTest {
 
         //when
         ResultActions response= mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -242,13 +242,13 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountStudentDTO without fields return 400 HTTP status")
     void addStudent_givenAccountStudentDtoWithoutFields_shouldReturn_400_HTTPStatus() throws Exception {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .build();
 
         //when
         ResultActions response= mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -348,7 +348,7 @@ class AccountControllerUnitTest {
     void addStudentsFromCSVFile_givenCorrectFile_shouldReturn_200_HTTPStatus_andResponseBodyWithListOfAccountViewDTOS() throws Exception {
         //given
         String filePath = "correct";
-        AccountViewDTO accountStudentDTO = AccountViewDTO
+        AccountResponseDTO accountStudentDTO = AccountResponseDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -356,7 +356,7 @@ class AccountControllerUnitTest {
                 .accountType(AccountRole.STUDENT.toString())
                 .password("password")
                 .build();
-        List<AccountViewDTO> listOfCreatedAccounts = List.of( accountStudentDTO,accountStudentDTO,accountStudentDTO);
+        List<AccountResponseDTO> listOfCreatedAccounts = List.of( accountStudentDTO,accountStudentDTO,accountStudentDTO);
         given(accountFacade.saveStudentsAndParentsFromFile(filePath)).willReturn(listOfCreatedAccounts);
 
 
@@ -377,7 +377,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test add teacher return 201 HTTP status and created AccountViewDto in responseBody")
     void addTeacher_givenAccountTeacherDTO_shouldReturn_200_HTTPStatus_andResponseBodyWithCreatedDTO() throws Exception {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -385,7 +385,7 @@ class AccountControllerUnitTest {
                 .email("email@wp.pl")
                 .subject("PHYSICS")
                 .build();
-        AccountViewDTO accountViewDTO = AccountViewDTO
+        AccountResponseDTO accountResponseDTO = AccountResponseDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -394,15 +394,15 @@ class AccountControllerUnitTest {
                 .password("password")
                 .username("firstname.lastname1NAU")
                 .build();
-        given(accountFacade.saveTeacherAccount(accountTeacherDTO)).willReturn(accountViewDTO);
+        given(accountFacade.saveTeacherAccount(accountTeacherRequestDTO)).willReturn(accountResponseDTO);
 
         //when
         ResultActions response= mockMvc.perform(post("/account/teacher")
-                .content(objectMapper.writeValueAsString(accountTeacherDTO))
+                .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedErrorMessage = objectMapper.writeValueAsString(accountViewDTO);
+        String expectedErrorMessage = objectMapper.writeValueAsString(accountResponseDTO);
         response
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
@@ -420,7 +420,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountTeacherDTO incorrect firstname return 400 HTTP status and error message in responseBody")
     void addTeacher_givenWrongFirstname_shouldReturn_400_HTTPStatus_andResponseBodyErrorMessage(String firstname) throws Exception {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .firstname(firstname)
                 .lastname("lastname")
@@ -431,7 +431,7 @@ class AccountControllerUnitTest {
 
         //when
         ResultActions response= mockMvc.perform(post("/account/teacher")
-                .content(objectMapper.writeValueAsString(accountTeacherDTO))
+                .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -453,7 +453,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountTeacherDTO incorrect lastname return 400 HTTP status and error message in responseBody")
     void addTeacher_givenIncorrectLastname_shouldReturn_400_HTTPStatus_andResponseBodyErrorMessage(String lastname) throws Exception {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .firstname("firstname")
                 .lastname(lastname)
@@ -464,7 +464,7 @@ class AccountControllerUnitTest {
 
         //when
         ResultActions response= mockMvc.perform(post("/account/teacher")
-                .content(objectMapper.writeValueAsString(accountTeacherDTO))
+                .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -483,7 +483,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountStudentDTO incorrect parent phone number return 400 HTTP status")
     void addTeacher_givenIncorrectWorkPhoneNumber_shouldReturn_400_HTTPStatus(String phone) throws Exception {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -494,7 +494,7 @@ class AccountControllerUnitTest {
 
         //when
         ResultActions response= mockMvc.perform(post("/account/teacher")
-                .content(objectMapper.writeValueAsString(accountTeacherDTO))
+                .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -510,7 +510,7 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountTeacherDTO incorrect email return 400 HTTP status")
     void addTeacher_givenIncorrectEmail_shouldReturn_400_HTTPStatus(String email) throws Exception {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -521,7 +521,7 @@ class AccountControllerUnitTest {
 
         //when
         ResultActions response= mockMvc.perform(post("/account/teacher")
-                .content(objectMapper.writeValueAsString(accountTeacherDTO))
+                .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -533,13 +533,13 @@ class AccountControllerUnitTest {
     @DisplayName("Test validation AccountTeacherDTO without fields return 400 HTTP status")
     void addTeacher_givenAccountTeacherDTOWithoutFields_shouldReturn_400_HTTPStatus() throws Exception {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .build();
 
         //when
         ResultActions response= mockMvc.perform(post("/account/teacher")
-                .content(objectMapper.writeValueAsString(accountTeacherDTO))
+                .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -553,21 +553,21 @@ class AccountControllerUnitTest {
     void  getAccountById_givenCorrectRole_shouldReturn_200_HTTPStatus_andResponseBodyWithAccountViewDto(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
-        AccountViewDTO accountViewDTO = AccountViewDTO.builder()
+        AccountResponseDTO accountResponseDTO = AccountResponseDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .id(accountId)
                 .accountType(accountRole.toString())
                 .password("password")
                 .build();
-        given(accountFacade.getAccountById(accountRole,accountId)).willReturn(accountViewDTO);
+        given(accountFacade.getAccountById(accountRole,accountId)).willReturn(accountResponseDTO);
 
         //when
         ResultActions response= mockMvc.perform(get("/account/"+ accountRole +"="+accountId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = objectMapper.writeValueAsString(accountViewDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(accountResponseDTO);
         response
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
@@ -619,21 +619,21 @@ class AccountControllerUnitTest {
     void  deleteAccountById_givenCorrectRole_shouldReturn_200_HTTPStatus_andResponseBodyWithAccountViewDto(AccountRole accountRole) throws Exception {
         //given
         int accountId = 1;
-        AccountViewDTO accountViewDTO = AccountViewDTO.builder()
+        AccountResponseDTO accountResponseDTO = AccountResponseDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .id(accountId)
                 .accountType(accountRole.toString())
                 .password("password")
                 .build();
-        given(accountFacade.deleteAccountById(accountRole,accountId)).willReturn(accountViewDTO);
+        given(accountFacade.deleteAccountById(accountRole,accountId)).willReturn(accountResponseDTO);
 
         //when
         ResultActions response= mockMvc.perform(delete("/account/"+ accountRole +"="+accountId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = objectMapper.writeValueAsString(accountViewDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(accountResponseDTO);
         response
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
@@ -715,14 +715,14 @@ class AccountControllerUnitTest {
         int accountId = 1;
         String oldPassword = "oldpassword";
         String newPassword = "Password1.";
-        AccountViewDTO accountViewDTO = AccountViewDTO.builder()
+        AccountResponseDTO accountResponseDTO = AccountResponseDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .id(accountId)
                 .accountType(accountRole.toString())
                 .password(newPassword)
                 .build();
-        given(accountFacade.changeAccountPassword(accountRole,accountId,oldPassword,newPassword)).willReturn(accountViewDTO);
+        given(accountFacade.changeAccountPassword(accountRole,accountId,oldPassword,newPassword)).willReturn(accountResponseDTO);
 
         //when
         ResultActions response= mockMvc.perform(put("/account/password/"+ accountRole +"="+accountId)
@@ -731,7 +731,7 @@ class AccountControllerUnitTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = objectMapper.writeValueAsString(accountViewDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(accountResponseDTO);
         response
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),

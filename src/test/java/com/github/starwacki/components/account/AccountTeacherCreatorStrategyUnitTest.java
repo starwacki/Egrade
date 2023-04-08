@@ -1,7 +1,7 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
-import com.github.starwacki.components.account.dto.AccountTeacherDTO;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
+import com.github.starwacki.components.account.dto.AccountTeacherRequestDTO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
@@ -35,7 +35,7 @@ class AccountTeacherCreatorStrategyUnitTest {
     @DisplayName("Test generating teacher with same fields like given DTO")
     void generateTeacherAccount_givenAccountTeacherDTO_shouldReturnTeacherAccount() {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO.builder()
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO.builder()
                 .firstname("teacher")
                 .lastname("lastname")
                 .workPhone("111222333")
@@ -44,30 +44,30 @@ class AccountTeacherCreatorStrategyUnitTest {
                 .build();
 
         //when
-        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
+        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherRequestDTO);
 
         //then
-        assertThat(expected.getFirstname(),is(equalTo(accountTeacherDTO.firstname())));
-        assertThat(expected.getLastname(),is(equalTo(accountTeacherDTO.lastname())));
-        assertThat(expected.getWorkPhone(),is(equalTo(accountTeacherDTO.workPhone())));
-        assertThat(expected.getSubject(),is(equalTo(accountTeacherDTO.subject())));
-        assertThat(expected.getEmail(),is(equalTo(accountTeacherDTO.email())));
+        assertThat(expected.getFirstname(),is(equalTo(accountTeacherRequestDTO.firstname())));
+        assertThat(expected.getLastname(),is(equalTo(accountTeacherRequestDTO.lastname())));
+        assertThat(expected.getWorkPhone(),is(equalTo(accountTeacherRequestDTO.workPhone())));
+        assertThat(expected.getSubject(),is(equalTo(accountTeacherRequestDTO.subject())));
+        assertThat(expected.getEmail(),is(equalTo(accountTeacherRequestDTO.email())));
     }
 
     @Test
     @DisplayName("Test generating teacher username pattern")
     void generateTeacherAccount_givenAccountTeacherDTO_shouldReturnTeacherWithTeacherUsernamePattern() {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO.builder()
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO.builder()
                 .firstname("teacher")
                 .lastname("lastname")
                 .build();
         given(accountTeacherRepository.count()).willReturn(0l);
 
         //when
-        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
+        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherRequestDTO);
         long thisTeacherId = accountTeacherRepository.count()+1;
-        String teacherUsernamePattern = accountTeacherDTO.firstname()+ "."+ accountTeacherDTO.lastname() + "NAU"+thisTeacherId;
+        String teacherUsernamePattern = accountTeacherRequestDTO.firstname()+ "."+ accountTeacherRequestDTO.lastname() + "NAU"+thisTeacherId;
 
         //then
         assertThat(expected.getAccountDetails().getUsername(),is(equalTo(teacherUsernamePattern)));
@@ -77,11 +77,11 @@ class AccountTeacherCreatorStrategyUnitTest {
     @DisplayName("Test generating teacher first password length is 10")
     void generateTeacherAccount_givenAccountTeacherDTO_shouldReturnTeacherWithTenLetterPassword() {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO.builder()
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO.builder()
                 .build();
 
         //when
-        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
+        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherRequestDTO);
         int passwordLength = 10;
 
         //then
@@ -93,11 +93,11 @@ class AccountTeacherCreatorStrategyUnitTest {
     @RepeatedTest(10)
     void generateTeacherAccount_givenAccountTeacherDTO_shouldReturnTeacherWithNoneSpecialCharactersPassword() {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO.builder()
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO.builder()
                 .build();
 
         //when
-        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
+        AccountTeacher expected = accountTeacherCreatorStrategy.createAccount(accountTeacherRequestDTO);
 
         //then
         String decryptedPassword = egradePasswordEncoder.decode(expected.getAccountDetails().getPassword());

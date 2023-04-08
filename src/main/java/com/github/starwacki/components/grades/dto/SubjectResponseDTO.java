@@ -4,9 +4,9 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record SubjectDTO(
+public record SubjectResponseDTO(
         String subject,
-        List<GradeViewDTO> grades,
+        List<GradeResponeDTO> grades,
         String gradeAverage
 ) {
 }

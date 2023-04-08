@@ -1,6 +1,6 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
 import com.github.starwacki.components.account.exceptions.WrongFileException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -126,11 +126,11 @@ class AccountStudentCsvCreatorUnitTest {
                 );
 
         //when
-        List<AccountStudentDTO> accountStudentDTOList = accountStudentCsvCreatorStrategy.generateStudents(filePath);
+        List<AccountStudentRequestDTO> accountStudentRequestDTOList = accountStudentCsvCreatorStrategy.generateStudents(filePath);
 
 
         //then
-        assertThat(accountStudentDTOList,hasSize(4));
+        assertThat(accountStudentRequestDTOList,hasSize(4));
     }
 
     @Test
@@ -146,8 +146,8 @@ class AccountStudentCsvCreatorUnitTest {
         );
 
         //when
-        List<AccountStudentDTO> accountStudentDTOList = accountStudentCsvCreatorStrategy.generateStudents(filePath);
-        AccountStudentDTO expectedAccountDtoWithLastIndex = AccountStudentDTO.builder()
+        List<AccountStudentRequestDTO> accountStudentRequestDTOList = accountStudentCsvCreatorStrategy.generateStudents(filePath);
+        AccountStudentRequestDTO expectedAccountDtoWithLastIndex = AccountStudentRequestDTO.builder()
                 .firstname("Dave")
                 .lastname("Szuwarek")
                 .year(2022)
@@ -156,7 +156,7 @@ class AccountStudentCsvCreatorUnitTest {
                 .build();
 
         //then
-        assertThat(accountStudentDTOList.get(3),equalTo(expectedAccountDtoWithLastIndex));
+        assertThat(accountStudentRequestDTOList.get(3),equalTo(expectedAccountDtoWithLastIndex));
     }
 
     @Test

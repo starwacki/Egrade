@@ -14,32 +14,30 @@ import java.util.List;
 @Validated
 @Controller
 @RequestMapping("/student")
-public class StudentController// implements StudentControllerOperations
+class StudentController implements StudentControllerOperations
 {
 
-    private final StudentService studentService;
-    private final GradeFacade gradeFacade;
+    private final StudentFacade studentFacade;
+
+    @Secured(value = {"ADMIN","TEACHER"})
+    @GetMapping("/class={className}&year={classYear}")
+    public ResponseEntity<List<StudentDTO>> getAllStudentsFromClass(
+            @PathVariable  String className,
+            @PathVariable int classYear) {
+        List<StudentDTO> accounts = studentFacade.getAllStudentsFromClass(className,classYear);
+        return ResponseEntity.ok(accounts);
+    }
 
 
-//    @Secured(value = {"ADMIN","TEACHER"})
-//    @GetMapping("/class={className}&year={classYear}")
-//    public ResponseEntity<List<StudentDTO>> getAllStudentsFromClass(
-//            @PathVariable  String className,
-//            @PathVariable int classYear) {
-//        List<StudentDTO> accounts = studentService.getAllStudentsFromClass(className,classYear);
-//        return ResponseEntity.ok(accounts);
-//    }
-//
-//
-//    @Secured(value = {"ADMIN","TEACHER"})
-//    @PutMapping("/id={id}/class")
-//    public ResponseEntity<?> changeStudentClass(
-//            @PathVariable int id,
-//            @RequestParam String className,
-//            @RequestParam int classYear) {
-//        studentService.changeStudentClass(id,className,classYear);
-//        return ResponseEntity.noContent().build();
-//    }
+    @Secured(value = {"ADMIN","TEACHER"})
+    @PutMapping("/id={id}/class")
+    public ResponseEntity<?> changeStudentClass(
+            @PathVariable int id,
+            @RequestParam String className,
+            @RequestParam int classYear) {
+        studentFacade.changeStudentClass(id,className,classYear);
+        return ResponseEntity.noContent().build();
+    }
 
 
 

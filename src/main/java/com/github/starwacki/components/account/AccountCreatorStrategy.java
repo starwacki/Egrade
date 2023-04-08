@@ -1,6 +1,6 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

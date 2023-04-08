@@ -3,7 +3,7 @@ package com.github.starwacki.components.teacher;
 import com.github.starwacki.components.teacher.exceptions.SchoolClassNotFoundException;
 import com.github.starwacki.components.teacher.exceptions.TeacherNotFoundException;
 import com.github.starwacki.common.model.school_class.SchoolClass;
-import com.github.starwacki.common.repositories.SchoolClassRepository;
+import com.github.starwacki.common.SchoolClassRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

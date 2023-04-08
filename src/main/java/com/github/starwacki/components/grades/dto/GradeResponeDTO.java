@@ -4,7 +4,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record GradeViewDTO(
+public record GradeResponeDTO(
         String description,
         int weight,
         String degree,

@@ -1,6 +1,6 @@
 package com.github.starwacki.components.auth;
 
-import com.github.starwacki.common.security.exception.AESException;
+import com.github.starwacki.components.auth.exceptions.AESException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;

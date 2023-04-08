@@ -1,4 +1,4 @@
-package com.github.starwacki.common.password_encoder;
+package com.github.starwacki.components.auth;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 

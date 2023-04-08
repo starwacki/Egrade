@@ -1,7 +1,7 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
@@ -33,7 +33,7 @@ class AccountStudentCreatorStrategyUnitTest {
     @DisplayName("Test generating student with same fields like given DTO")
     void generateStudentAccount_givenAccountStudentDTO_shouldReturnStudentAccount() {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .year(2022)
@@ -42,20 +42,20 @@ class AccountStudentCreatorStrategyUnitTest {
                 .build();
 
         //when
-        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentDTO);
+        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentRequestDTO);
 
         //then
-        assertThat(expected.getFirstname(),is(equalTo(accountStudentDTO.firstname())));
-        assertThat(expected.getLastname(),is(equalTo(accountStudentDTO.lastname())));
-        assertThat(expected.getSchoolClassYear(),is(equalTo(accountStudentDTO.year())));
-        assertThat(expected.getSchoolClassName(),is(equalTo(accountStudentDTO.className())));
+        assertThat(expected.getFirstname(),is(equalTo(accountStudentRequestDTO.firstname())));
+        assertThat(expected.getLastname(),is(equalTo(accountStudentRequestDTO.lastname())));
+        assertThat(expected.getSchoolClassYear(),is(equalTo(accountStudentRequestDTO.year())));
+        assertThat(expected.getSchoolClassName(),is(equalTo(accountStudentRequestDTO.className())));
     }
 
     @Test
     @DisplayName("Test generating student username pattern")
     void generateStudentAccount_givenAccountStudentDTO_shouldReturnStudentWithStudentUsernamePattern() {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .year(2022)
@@ -65,9 +65,9 @@ class AccountStudentCreatorStrategyUnitTest {
         given(accountStudentRepository.count()).willReturn(0l);
 
         //when
-        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentDTO);
+        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentRequestDTO);
         long thisStudentId = accountStudentRepository.count()+1;
-        String studentUsernamePattern = accountStudentDTO.firstname()+ "."+ accountStudentDTO.lastname() + "STU"+thisStudentId;
+        String studentUsernamePattern = accountStudentRequestDTO.firstname()+ "."+ accountStudentRequestDTO.lastname() + "STU"+thisStudentId;
 
         //then
         assertThat(expected.getAccountDetails().getUsername(),is(equalTo(studentUsernamePattern)));
@@ -77,7 +77,7 @@ class AccountStudentCreatorStrategyUnitTest {
     @DisplayName("Test generating student first password length is 10")
     void generateStudentAccount_givenAccountStudentDTO_shouldReturnStudentWithTenLetterPassword() {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .year(2022)
@@ -86,7 +86,7 @@ class AccountStudentCreatorStrategyUnitTest {
                 .build();
 
         //when
-        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentDTO);
+        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentRequestDTO);
         int passwordLength = 10;
 
         //then
@@ -98,7 +98,7 @@ class AccountStudentCreatorStrategyUnitTest {
     @RepeatedTest(10)
     void generateStudentAccount_givenAccountStudentDTO_shouldReturnStudentWithNoneSpecialCharactersPassword() {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .year(2022)
@@ -108,7 +108,7 @@ class AccountStudentCreatorStrategyUnitTest {
 
 
         //when
-        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentDTO);
+        AccountStudent expected = accountStudentCreatorStrategy.createAccount(accountStudentRequestDTO);
 
         //then
         String decryptedPassword = expected.getAccountDetails().getPassword();

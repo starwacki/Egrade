@@ -1,10 +1,10 @@
 package com.github.starwacki.components.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.components.account.dto.AccountViewDTO;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
+import com.github.starwacki.components.account.dto.AccountTeacherRequestDTO;
+import com.github.starwacki.components.account.dto.AccountResponseDTO;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -51,7 +51,7 @@ class AccountControllerIntegrationTest {
     void addStudent_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
@@ -62,7 +62,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -76,7 +76,7 @@ class AccountControllerIntegrationTest {
     void addStudent_givenAdminRole_shouldReturn_201_HTTPStatus_andCreateStudentAccountWithProperFields() throws Exception {
 
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
@@ -87,7 +87,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -97,8 +97,8 @@ class AccountControllerIntegrationTest {
         List<AccountStudent> studentsInDataBase = accountStudentRepository.findAll();
         AccountStudent student = studentsInDataBase.get(0);
         assertThat(studentsInDataBase, hasSize(1));
-        assertThat(student.getFirstname(),is(equalTo(accountStudentDTO.firstname())));
-        assertThat(student.getLastname(),is(equalTo(accountStudentDTO.lastname())));
+        assertThat(student.getFirstname(),is(equalTo(accountStudentRequestDTO.firstname())));
+        assertThat(student.getLastname(),is(equalTo(accountStudentRequestDTO.lastname())));
         assertThat(student.getAccountDetails().getUsername(),is(equalTo("Firstname.LastnameSTU1")));
     }
 
@@ -108,7 +108,7 @@ class AccountControllerIntegrationTest {
     void addStudent_givenAdminRole_shouldReturn_201_HTTPStatus_andCreateParentAccountWithProperFields() throws Exception {
 
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
@@ -119,7 +119,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/account/student")
-                .content(objectMapper.writeValueAsString(accountStudentDTO))
+                .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -210,7 +210,7 @@ class AccountControllerIntegrationTest {
     void addTeacher_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
 
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
@@ -221,7 +221,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/account/teacher")
-                .content(objectMapper.writeValueAsString(accountTeacherDTO))
+                .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -235,7 +235,7 @@ class AccountControllerIntegrationTest {
     void addTeacher_givenAdminRole_shouldReturn_201_HTTPStatus_andCreateTeacherAccountWithProperFields() throws Exception {
 
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
@@ -246,7 +246,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/account/teacher")
-                .content(objectMapper.writeValueAsString(accountTeacherDTO))
+                .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -256,12 +256,12 @@ class AccountControllerIntegrationTest {
         List<AccountTeacher> teachersInDatabase = accountTeacherRepository.findAll();
         AccountTeacher accountTeacher = teachersInDatabase.get(0);
         assertThat(teachersInDatabase, hasSize(1));
-        assertThat(accountTeacher.getFirstname(),is(equalTo(accountTeacherDTO.firstname())));
-        assertThat(accountTeacher.getLastname(),is(equalTo(accountTeacherDTO.lastname())));
+        assertThat(accountTeacher.getFirstname(),is(equalTo(accountTeacherRequestDTO.firstname())));
+        assertThat(accountTeacher.getLastname(),is(equalTo(accountTeacherRequestDTO.lastname())));
         assertThat(accountTeacher.getAccountDetails().getUsername(),is(equalTo("Firstname.LastnameNAU1")));
-        assertThat(accountTeacher.getWorkPhone(),is(equalTo(accountTeacherDTO.workPhone())));
-        assertThat(accountTeacher.getEmail(),is(equalTo(accountTeacherDTO.email())));
-        assertThat(accountTeacher.getSubject(),is(equalTo(accountTeacherDTO.subject())));
+        assertThat(accountTeacher.getWorkPhone(),is(equalTo(accountTeacherRequestDTO.workPhone())));
+        assertThat(accountTeacher.getEmail(),is(equalTo(accountTeacherRequestDTO.email())));
+        assertThat(accountTeacher.getSubject(),is(equalTo(accountTeacherRequestDTO.subject())));
     }
 
     @Test
@@ -324,7 +324,7 @@ class AccountControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        AccountViewDTO expectedAccountViewDTO = AccountViewDTO
+        AccountResponseDTO expectedAccountResponseDTO = AccountResponseDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -336,7 +336,7 @@ class AccountControllerIntegrationTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
-                        is(equalTo(objectMapper.writeValueAsString(expectedAccountViewDTO)))));
+                        is(equalTo(objectMapper.writeValueAsString(expectedAccountResponseDTO)))));
     }
 
     @Test
@@ -399,7 +399,7 @@ class AccountControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        AccountViewDTO expectedAccountViewDTO = AccountViewDTO
+        AccountResponseDTO expectedAccountResponseDTO = AccountResponseDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -411,7 +411,7 @@ class AccountControllerIntegrationTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
-                        is(equalTo(objectMapper.writeValueAsString(expectedAccountViewDTO)))));
+                        is(equalTo(objectMapper.writeValueAsString(expectedAccountResponseDTO)))));
         assertThat(accountStudentRepository.findById(id),is(Optional.empty()));
     }
 
@@ -447,7 +447,7 @@ class AccountControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        AccountViewDTO expectedAccountViewDTO = AccountViewDTO
+        AccountResponseDTO expectedAccountResponseDTO = AccountResponseDTO
                 .builder()
                 .firstname("firstname")
                 .lastname("lastname")
@@ -459,7 +459,7 @@ class AccountControllerIntegrationTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result -> assertThat(result.getResponse().getContentAsString(),
-                        is(equalTo(objectMapper.writeValueAsString(expectedAccountViewDTO)))));
+                        is(equalTo(objectMapper.writeValueAsString(expectedAccountResponseDTO)))));
     }
 
 

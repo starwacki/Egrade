@@ -7,7 +7,7 @@ import lombok.Builder;
 import org.hibernate.validator.constraints.Range;
 
 @Builder
-public record GradeDTO(
+public record GradeRequestDTO(
 
         @NotNull @Size(min = 1,max = 50) String description,
         @Range(min = 1, max = 100) int weight,

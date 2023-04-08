@@ -1,7 +1,7 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
-import com.github.starwacki.components.account.dto.AccountTeacherDTO;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
+import com.github.starwacki.components.account.dto.AccountTeacherRequestDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ class AccountTeacherCreatorStrategy extends AccountCreatorStrategy {
 
     @Override
     public AccountTeacher createAccount(Record dto) {
-        AccountTeacherDTO teacherDTO = (AccountTeacherDTO) dto;
+        AccountTeacherRequestDTO teacherDTO = (AccountTeacherRequestDTO) dto;
         return AccountTeacher.builder()
                 .firstname(teacherDTO.firstname())
                 .lastname(teacherDTO.lastname())
@@ -29,10 +29,10 @@ class AccountTeacherCreatorStrategy extends AccountCreatorStrategy {
                 .build();
     }
 
-    private AccountDetails getAccountDetails(AccountTeacherDTO accountTeacherDTO) {
+    private AccountDetails getAccountDetails(AccountTeacherRequestDTO accountTeacherRequestDTO) {
         return AccountDetails
                 .builder()
-                .username(generateAccountUsername(accountTeacherDTO.firstname(),accountTeacherDTO.lastname(),getLastTeacherId()))
+                .username(generateAccountUsername(accountTeacherRequestDTO.firstname(), accountTeacherRequestDTO.lastname(),getLastTeacherId()))
                 .password(egradePasswordEncoder.encode(generateFirstPassword()))
                 .createdDate(LocalDate.now().toString())
                 .accountRole(AccountRole.STUDENT)

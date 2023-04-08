@@ -1,4 +1,4 @@
-package com.github.starwacki.common.config;
+package com.github.starwacki.common.open_api;
 
 
 import com.github.starwacki.common.open_api.OpenApiService;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-public class SpringdocConfig {
+class SpringdocConfig {
 
     private final OpenApiService openApiService;
 

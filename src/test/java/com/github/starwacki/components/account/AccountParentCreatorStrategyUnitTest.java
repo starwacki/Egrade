@@ -1,7 +1,7 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
@@ -34,7 +34,7 @@ class AccountParentCreatorStrategyUnitTest {
     @DisplayName("Test generating parent with same fields like given student DTO")
     void generateParentAccount_givenAccountStudentDTO_shouldReturnParentAccount() {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .year(2022)
@@ -44,19 +44,19 @@ class AccountParentCreatorStrategyUnitTest {
         given(accountStudentRepository.count()).willReturn(0l);
 
         //when
-        AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentDTO);
+        AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentRequestDTO);
 
         //then
-        assertThat(expected.getFirstname(),is(equalTo(accountStudentDTO.firstname())));
-        assertThat(expected.getLastname(),is(equalTo(accountStudentDTO.lastname())));
-        assertThat(expected.getPhoneNumber(),is(equalTo(accountStudentDTO.parentPhoneNumber())));
+        assertThat(expected.getFirstname(),is(equalTo(accountStudentRequestDTO.firstname())));
+        assertThat(expected.getLastname(),is(equalTo(accountStudentRequestDTO.lastname())));
+        assertThat(expected.getPhoneNumber(),is(equalTo(accountStudentRequestDTO.parentPhoneNumber())));
     }
 
     @Test
     @DisplayName("Test generating parent username pattern")
     void generateParentAccount_givenAccountStudentDTO_shouldReturnParentWithParentUsernamePattern() {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .year(2022)
@@ -66,9 +66,9 @@ class AccountParentCreatorStrategyUnitTest {
         given(accountStudentRepository.count()).willReturn(0l);
 
         //when
-        AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentDTO);
+        AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentRequestDTO);
         long thisParentId = accountStudentRepository.count()+1;
-        String parentUsernamePattern = accountStudentDTO.firstname()+ "."+ accountStudentDTO.lastname() + "RO"+thisParentId;
+        String parentUsernamePattern = accountStudentRequestDTO.firstname()+ "."+ accountStudentRequestDTO.lastname() + "RO"+thisParentId;
 
         //then
         assertThat(expected.getAccountDetails().getUsername(),is(equalTo(parentUsernamePattern)));
@@ -78,7 +78,7 @@ class AccountParentCreatorStrategyUnitTest {
     @DisplayName("Test generating parent first password length is 10")
     void generateParentAccount_givenAccountStudentDTO_shouldReturnParentWithTenLetterPassword() {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .year(2022)
@@ -87,7 +87,7 @@ class AccountParentCreatorStrategyUnitTest {
                 .build();
 
         //when
-        AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentDTO);
+        AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentRequestDTO);
         int passwordLength = 10;
 
         //then
@@ -99,7 +99,7 @@ class AccountParentCreatorStrategyUnitTest {
     @RepeatedTest(10)
     void generateParentAccount_givenAccountParentDTO_shouldReturnParentWithNoneSpecialCharactersPassword() {
         //given
-        AccountStudentDTO accountStudentDTO = AccountStudentDTO.builder()
+        AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .year(2022)
@@ -108,7 +108,7 @@ class AccountParentCreatorStrategyUnitTest {
                 .build();
 
         //when
-        AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentDTO);
+        AccountParent expected = accountParentCreatorStrategy.createAccount(accountStudentRequestDTO);
 
         //then
         String decryptedPassword = expected.getAccountDetails().getPassword();

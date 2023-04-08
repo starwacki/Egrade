@@ -1,8 +1,8 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
-import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.components.account.dto.AccountViewDTO;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
+import com.github.starwacki.components.account.dto.AccountTeacherRequestDTO;
+import com.github.starwacki.components.account.dto.AccountResponseDTO;
 import com.github.starwacki.components.account.exceptions.AccountNotFoundException;
 import com.github.starwacki.components.account.exceptions.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.WrongPasswordException;
@@ -161,7 +161,7 @@ class AccountFacadeUnitTest {
 
         //when
         System.out.println(accountStudent.getAccountDetails().getPassword());
-        AccountViewDTO accountViewDT = accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword);
+        AccountResponseDTO accountViewDT = accountFacade.changeAccountPassword(accountRole,id,oldPassword,newPassword);
 
         //then
         assertEquals(accountViewDT.password(),newPassword);
@@ -277,7 +277,7 @@ class AccountFacadeUnitTest {
         given(accountParentRepository.findById(id)).willReturn(Optional.of(accountParent));
 
         //when
-        AccountViewDTO expected =  accountFacade.getAccountById(accountRole,id);
+        AccountResponseDTO expected =  accountFacade.getAccountById(accountRole,id);
 
         //then
         assertEquals(expected.username(), accountParent.getAccountDetails().getUsername());
@@ -314,7 +314,7 @@ class AccountFacadeUnitTest {
         given(accountStudentRepository.findById(id)).willReturn(Optional.of(accountStudent));
 
         //when
-       AccountViewDTO expected =  accountFacade.getAccountById(accountRole,id);
+       AccountResponseDTO expected =  accountFacade.getAccountById(accountRole,id);
 
         //then
         assertEquals(expected.username(), accountStudent.getAccountDetails().getUsername());
@@ -427,7 +427,7 @@ class AccountFacadeUnitTest {
     @DisplayName("Test saving teacher")
     void saveTeacherAccount_givenTeacherAccountDTO_shouldSaveTeacher() {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO.builder()
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO.builder()
                 .firstname("Krzysztof")
                 .lastname("Szuprych")
                 .email("krzysztof@wp.pl")
@@ -446,11 +446,11 @@ class AccountFacadeUnitTest {
                 .workPhone("111222333")
                 .subject("PHYSICS")
                 .build();
-        given(accountFactory.createTeacher(accountTeacherDTO)).willReturn(accountTeacher);
+        given(accountFactory.createTeacher(accountTeacherRequestDTO)).willReturn(accountTeacher);
         given(accountTeacherRepository.save(accountTeacher)).willReturn(accountTeacher);
 
         //when
-        accountFacade.saveTeacherAccount(accountTeacherDTO);
+        accountFacade.saveTeacherAccount(accountTeacherRequestDTO);
 
         //then
         verify(accountTeacherRepository).save(accountTeacher);
@@ -460,7 +460,7 @@ class AccountFacadeUnitTest {
     @DisplayName("Test saving teacher account dto return accountViewDto with same fields")
     void saveTeacherAccount_givenTeacherAccountDTO_shouldReturnAccountViewDTOWithSameFieldsLikeGivingDTO() {
         //given
-        AccountTeacherDTO accountTeacherDTO = AccountTeacherDTO.builder()
+        AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO.builder()
                 .firstname("Krzysztof")
                 .lastname("Szuprych")
                 .email("krzysztof@wp.pl")
@@ -479,11 +479,11 @@ class AccountFacadeUnitTest {
                 .workPhone("111222333")
                 .subject("PHYSICS")
                 .build();
-        given(accountFactory.createTeacher(accountTeacherDTO)).willReturn(accountTeacher);
-        given(accountTeacherRepository.save(accountFactory.createTeacher(accountTeacherDTO))).willReturn(accountTeacher);
+        given(accountFactory.createTeacher(accountTeacherRequestDTO)).willReturn(accountTeacher);
+        given(accountTeacherRepository.save(accountFactory.createTeacher(accountTeacherRequestDTO))).willReturn(accountTeacher);
 
         //when
-        AccountViewDTO expected = accountFacade.saveTeacherAccount(accountTeacherDTO);
+        AccountResponseDTO expected = accountFacade.saveTeacherAccount(accountTeacherRequestDTO);
 
         //then
         assertThat(expected.firstname(), equalTo(accountTeacher.getFirstname()));

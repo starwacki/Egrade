@@ -1,7 +1,7 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.components.account.dto.AccountTeacherDTO;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
+import com.github.starwacki.components.account.dto.AccountTeacherRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,19 +16,19 @@ class AccountFactory {
     private final AccountParentCreatorStrategy accountParentCreatorStrategy;
     private final AccountStudentCsvCreatorStrategy accountStudentCsvCreatorStrategy;
 
-    public AccountStudent createStudent(AccountStudentDTO accountStudentDTO) {
-        return accountStudentCreatorStrategy.createAccount(accountStudentDTO);
+    public AccountStudent createStudent(AccountStudentRequestDTO accountStudentRequestDTO) {
+        return accountStudentCreatorStrategy.createAccount(accountStudentRequestDTO);
     }
 
-    public AccountParent createParent(AccountStudentDTO accountStudentDTO) {
-        return accountParentCreatorStrategy.createAccount(accountStudentDTO);
+    public AccountParent createParent(AccountStudentRequestDTO accountStudentRequestDTO) {
+        return accountParentCreatorStrategy.createAccount(accountStudentRequestDTO);
     }
 
-    public AccountTeacher createTeacher(AccountTeacherDTO accountTeacherDTO) {
-        return  accountTeacherCreatorStrategy.createAccount(accountTeacherDTO);
+    public AccountTeacher createTeacher(AccountTeacherRequestDTO accountTeacherRequestDTO) {
+        return  accountTeacherCreatorStrategy.createAccount(accountTeacherRequestDTO);
     }
 
-    public List<AccountStudentDTO> createStudents(String path) {
+    public List<AccountStudentRequestDTO> createStudents(String path) {
         return accountStudentCsvCreatorStrategy.generateStudents(path);
     }
 }

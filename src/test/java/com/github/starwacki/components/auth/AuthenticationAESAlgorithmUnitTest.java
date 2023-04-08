@@ -1,6 +1,6 @@
 package com.github.starwacki.components.auth;
 
-import com.github.starwacki.common.security.exception.AESException;
+import com.github.starwacki.components.auth.exceptions.AESException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

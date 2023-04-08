@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class OpenApiService {
+class OpenApiService {
 
-    public Map<String, ApiResponse> getAllApiResponses() {
+    Map<String, ApiResponse> getAllApiResponses() {
         Map<String,ApiResponse> responsesMap = new HashMap<>();
         addAllAccountControllerResponses(responsesMap);
         addAllStudentControllerResponses(responsesMap);
@@ -19,7 +19,7 @@ public class OpenApiService {
         return responsesMap;
     }
 
-    public Map<String, RequestBody> getAllApiRequestBodies() {
+    Map<String, RequestBody> getAllApiRequestBodies() {
         Map<String, RequestBody> requestsMap = new HashMap<>();
         addAllAccountControllerRequestBodies(requestsMap);
         addAllStudentControllerRequestBodies(requestsMap);

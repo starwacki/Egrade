@@ -1,4 +1,4 @@
-package com.github.starwacki.common.repositories;
+package com.github.starwacki.common;
 
 import com.github.starwacki.common.model.school_class.SchoolClass;
 import org.springframework.data.jpa.repository.JpaRepository;

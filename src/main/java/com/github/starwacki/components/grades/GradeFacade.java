@@ -1,8 +1,8 @@
 package com.github.starwacki.components.grades;
-import com.github.starwacki.components.grades.dto.GradeDTO;
-import com.github.starwacki.components.grades.dto.GradeViewDTO;
-import com.github.starwacki.components.grades.dto.SubjectDTO;
-import com.github.starwacki.components.grades.exceptions.StudentNotFoundException;
+import com.github.starwacki.components.grades.dto.GradeRequestDTO;
+import com.github.starwacki.components.grades.dto.GradeResponeDTO;
+import com.github.starwacki.components.grades.dto.SubjectResponseDTO;
+import com.github.starwacki.components.grades.exceptions.GradeStudentNotFoundException;
 import com.github.starwacki.components.grades.exceptions.SubjectNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,54 +18,54 @@ public class GradeFacade {
     private final GradeRepository gradeRepository;
 
 
-    public SubjectDTO getOneSubjectGrades(int studentId, int subjectId) {
+    SubjectResponseDTO getOneSubjectGrades(int studentId, int subjectId) {
         return gradeRepository
                 .findAllByStudentIDAndGradeSubject(studentId,getGradeSubjectByOrdinal(subjectId))
                 .map(grades -> mapListGradeToSubjectDTO(getGradeSubjectByOrdinal(subjectId).toString(),grades))
-                .orElseThrow(() -> new StudentNotFoundException(studentId));
+                .orElseThrow(() -> new GradeStudentNotFoundException(studentId));
     }
 
-    public List<SubjectDTO> getAllGradesByStudentID(int studentId) {
+    List<SubjectResponseDTO> getAllGradesByStudentID(int studentId) {
         return   gradeRepository.findAllByStudentID(studentId)
                 .map(grades -> getAllStudentGradesInList(grades))
-                .orElseThrow(() -> new StudentNotFoundException(studentId));
+                .orElseThrow(() -> new GradeStudentNotFoundException(studentId));
     }
 
-    public GradeViewDTO getOneGrade(int studentId, int gradeID) {
+     GradeResponeDTO getOneGrade(int studentId, int gradeID) {
         return gradeRepository
                 .findByStudentIDAndId(studentId,gradeID)
                 .map(grade -> GradeMapper.mapGradeToGradeViewDTO(grade))
-                .orElseThrow(() -> new StudentNotFoundException(studentId));
+                .orElseThrow(() -> new GradeStudentNotFoundException(studentId));
     }
 
-    public GradeDTO addGradeToStudent(GradeDTO gradeDTO) {
+    GradeRequestDTO addGradeToStudent(GradeRequestDTO gradeRequestDTO) {
          gradeRepository.save(GradeMapper
                    .mapGradeDTOToGrade(
-                      gradeDTO,
-                      getDegreeBySymbol(gradeDTO.degree())));
-         return gradeDTO;
+                           gradeRequestDTO,
+                      getDegreeBySymbol(gradeRequestDTO.degree())));
+         return gradeRequestDTO;
     }
 
-    public GradeDTO updateGrade(int studentID, int gradeID, GradeDTO gradeDTO) {
+     GradeRequestDTO updateGrade(int studentID, int gradeID, GradeRequestDTO gradeRequestDTO) {
         return gradeRepository.findByStudentIDAndId(studentID,gradeID)
-                .map(grade -> GradeMapper.mapGradeToGradeDTO(changeGradeInformationAndSave(grade,gradeDTO)))
-                .orElseThrow(() -> new StudentNotFoundException(studentID));
+                .map(grade -> GradeMapper.mapGradeToGradeDTO(changeGradeInformationAndSave(grade, gradeRequestDTO)))
+                .orElseThrow(() -> new GradeStudentNotFoundException(studentID));
     }
 
-    public GradeDTO deleteStudentGrade(int studentId, int gradeID) {
+    GradeRequestDTO deleteStudentGrade(int studentId, int gradeID) {
         return gradeRepository
                 .findByStudentIDAndId(studentId,gradeID)
                 .map(grade -> GradeMapper.mapGradeToGradeDTO(deleteGrade(grade)))
-                .orElseThrow(() -> new StudentNotFoundException(studentId));
+                .orElseThrow(() -> new GradeStudentNotFoundException(studentId));
     }
 
-    private List<SubjectDTO> getAllStudentGradesInList(List<Grade> grades) {
-        List<SubjectDTO> listOfSubjectDTO = new ArrayList<>();
+    private List<SubjectResponseDTO> getAllStudentGradesInList(List<Grade> grades) {
+        List<SubjectResponseDTO> listOfSubjectResponseDTO = new ArrayList<>();
         for (GradeSubject subject : GradeSubject.values()) {
             List<Grade> subjectGrade =  grades.stream().filter(grade -> grade.getGradeSubject().equals(subject)).toList();
-            listOfSubjectDTO.add(mapListGradeToSubjectDTO(subject.toString(),subjectGrade));
+            listOfSubjectResponseDTO.add(mapListGradeToSubjectDTO(subject.toString(),subjectGrade));
         }
-        return listOfSubjectDTO;
+        return listOfSubjectResponseDTO;
     }
 
 
@@ -77,8 +77,8 @@ public class GradeFacade {
             throw new SubjectNotFoundException(subjectID);
     }
 
-    private SubjectDTO mapListGradeToSubjectDTO(String subject,List<Grade> grades) {
-        return SubjectDTO
+    private SubjectResponseDTO mapListGradeToSubjectDTO(String subject, List<Grade> grades) {
+        return SubjectResponseDTO
                 .builder()
                 .subject(subject)
                 .gradeAverage(String.format("%.2f",getSubjectGradesAverage(grades)))
@@ -87,7 +87,7 @@ public class GradeFacade {
 
     }
 
-    private List<GradeViewDTO> getGradeViewDtoList(List<Grade> grades) {
+    private List<GradeResponeDTO> getGradeViewDtoList(List<Grade> grades) {
         return grades
                 .stream()
                 .map(grade -> GradeMapper.mapGradeToGradeViewDTO(grade))
@@ -128,10 +128,10 @@ public class GradeFacade {
         return grade.getGradeSymbolValue().getValue()*grade.getWeight();
     }
 
-    private Grade changeGradeInformationAndSave(Grade grade, GradeDTO gradeDTO) {
-            grade.setGradeSymbolValue(getDegreeBySymbol(gradeDTO.degree()));
-            grade.setDescription(gradeDTO.description());
-            grade.setWeight(gradeDTO.weight());
+    private Grade changeGradeInformationAndSave(Grade grade, GradeRequestDTO gradeRequestDTO) {
+            grade.setGradeSymbolValue(getDegreeBySymbol(gradeRequestDTO.degree()));
+            grade.setDescription(gradeRequestDTO.description());
+            grade.setWeight(gradeRequestDTO.weight());
             return gradeRepository.save(grade);
     }
 

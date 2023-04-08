@@ -1,8 +1,7 @@
 package com.github.starwacki.components.account;
 
-import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
-import com.github.starwacki.common.repositories.SchoolClassRepository;
+import com.github.starwacki.components.auth.EgradePasswordEncoder;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
 import com.github.starwacki.components.account.exceptions.WrongFileException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -26,7 +25,7 @@ class AccountStudentCsvCreatorStrategy extends AccountStudentCreatorStrategy {
         super(accountStudentRepository, accountTeacherRepository, egradePasswordEncoder);
     }
 
-    public List<AccountStudentDTO> generateStudents(String path)  {
+    public List<AccountStudentRequestDTO> generateStudents(String path)  {
         File file  = new File(path);
         if (isCsvFile(file) && !isFileEmpty(file))
             return generateStudentFormFile(file);
@@ -34,7 +33,7 @@ class AccountStudentCsvCreatorStrategy extends AccountStudentCreatorStrategy {
             throw new WrongFileException(WrongFileException.Code.FILE);
     }
 
-    private List<AccountStudentDTO> generateStudentFormFile(File file) {
+    private List<AccountStudentRequestDTO> generateStudentFormFile(File file) {
         try {
             return getStudentFromFileTest(file);
         } catch (IOException e) {
@@ -52,7 +51,7 @@ class AccountStudentCsvCreatorStrategy extends AccountStudentCreatorStrategy {
 
     }
 
-    private List<AccountStudentDTO> getStudentFromFileTest(File file) throws IOException {
+    private List<AccountStudentRequestDTO> getStudentFromFileTest(File file) throws IOException {
         AtomicInteger atomicInteger = new AtomicInteger();
         return Files.readAllLines(Path.of(file.getPath()))
                 .stream()
@@ -62,7 +61,7 @@ class AccountStudentCsvCreatorStrategy extends AccountStudentCreatorStrategy {
 
     }
 
-    private AccountStudentDTO getAccountStudentDTOFromLine(String[] line, int lineIndex) {
+    private AccountStudentRequestDTO getAccountStudentDTOFromLine(String[] line, int lineIndex) {
         if (isLineProperty(line))
             return getValidatedAccountStudentDTO(line,lineIndex);
         else
@@ -73,9 +72,9 @@ class AccountStudentCsvCreatorStrategy extends AccountStudentCreatorStrategy {
         return lineIndex+1;
     }
 
-    private AccountStudentDTO getValidatedAccountStudentDTO(String[] line, int lineIndex) {
+    private AccountStudentRequestDTO getValidatedAccountStudentDTO(String[] line, int lineIndex) {
         try {
-            AccountStudentDTO student = map(line);
+            AccountStudentRequestDTO student = map(line);
             validateLine(student,lineIndex);
             return student;
         } catch (NumberFormatException e) {
@@ -83,7 +82,7 @@ class AccountStudentCsvCreatorStrategy extends AccountStudentCreatorStrategy {
         }
     }
 
-    private void validateLine(AccountStudentDTO student, int lineIndex) {
+    private void validateLine(AccountStudentRequestDTO student, int lineIndex) {
         if (!validator.validate(student).isEmpty()) {
             throw new WrongFileException(WrongFileException.Code.VALIDATION,getLineIndexInFile(lineIndex));
         }
@@ -94,8 +93,8 @@ class AccountStudentCsvCreatorStrategy extends AccountStudentCreatorStrategy {
                 .noneMatch(field -> field == null);
     }
 
-    private AccountStudentDTO map(String[] line) {
-        return  AccountStudentDTO.builder()
+    private AccountStudentRequestDTO map(String[] line) {
+        return  AccountStudentRequestDTO.builder()
                 .firstname(line[0])
                 .lastname(line[1])
                 .year(Integer.parseInt(line[2]))

@@ -1,6 +1,6 @@
 package com.github.starwacki.common.open_api;
 
-import com.github.starwacki.components.account.dto.AccountStudentDTO;
+import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
 import io.swagger.v3.oas.models.examples.Example;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.Schema;
@@ -119,7 +119,7 @@ class AccountControllerComponents {
                         " \"className\" - class name, numbered as follows: NUMBER(0-9) + BIG LETTER (A-Z)")
                 .content(new Content().addMediaType(MediaType.APPLICATION_JSON_VALUE,
                         new io.swagger.v3.oas.models.media.MediaType()
-                                .schema(new Schema<>().jsonSchemaImpl(AccountStudentDTO.class))
+                                .schema(new Schema<>().jsonSchemaImpl(AccountStudentRequestDTO.class))
                                 .addExamples("default",new Example()
                                         .value("{\"firstname\":\"Firstname\",\"lastname\":\"Lastname\",\"year\":\"2023\",\"className\":\"2A\",\"parentPhoneNumber\":\"111222333\"}"))));
     }

@@ -1,8 +1,8 @@
 package com.github.starwacki.components.grades;
 
-import com.github.starwacki.components.grades.dto.GradeDTO;
-import com.github.starwacki.components.grades.dto.GradeViewDTO;
-import com.github.starwacki.components.grades.dto.SubjectDTO;
+import com.github.starwacki.components.grades.dto.GradeRequestDTO;
+import com.github.starwacki.components.grades.dto.GradeResponeDTO;
+import com.github.starwacki.components.grades.dto.SubjectResponseDTO;
 import jakarta.annotation.security.PermitAll;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,50 +23,50 @@ class GradesController implements GradesControllerOperations {
 
     @Secured(value = {"ADMIN","TEACHER"})
     @PostMapping("/grade")
-    public ResponseEntity<GradeDTO> addGradeToStudent(
-            @RequestBody GradeDTO gradeDTO) {
-        GradeDTO grade = gradeFacade.addGradeToStudent(gradeDTO);
+    public ResponseEntity<GradeRequestDTO> addGradeToStudent(
+            @RequestBody GradeRequestDTO gradeRequestDTO) {
+        GradeRequestDTO grade = gradeFacade.addGradeToStudent(gradeRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(grade);
     }
 
     @PermitAll
     @GetMapping("/student={studentID}/{gradeID}")
-    public ResponseEntity<GradeViewDTO> getStudentGrade(
+    public ResponseEntity<GradeResponeDTO> getStudentGrade(
             @PathVariable int studentID,
             @PathVariable int gradeID) {
-        GradeViewDTO gradeViewDTO = gradeFacade.getOneGrade(studentID,gradeID);
-        return ResponseEntity.ok(gradeViewDTO);
+        GradeResponeDTO gradeResponeDTO = gradeFacade.getOneGrade(studentID,gradeID);
+        return ResponseEntity.ok(gradeResponeDTO);
     }
 
     @Secured(value = {"ADMIN","TEACHER"})
     @PutMapping("/student={studentID}/{gradeID}")
-    public ResponseEntity<GradeDTO> updateStudentGrade(
+    public ResponseEntity<GradeRequestDTO> updateStudentGrade(
             @PathVariable int studentID,
             @PathVariable int gradeID,
-            @RequestBody  GradeDTO gradeDTO) {
-        GradeDTO grade = gradeFacade.updateGrade(studentID,gradeID, gradeDTO);
+            @RequestBody GradeRequestDTO gradeRequestDTO) {
+        GradeRequestDTO grade = gradeFacade.updateGrade(studentID,gradeID, gradeRequestDTO);
         return ResponseEntity.ok(grade);
     }
 
     @Secured(value = {"ADMIN","TEACHER"})
     @DeleteMapping("/student={studentID}/{gradeID}")
-    public ResponseEntity<GradeDTO> deleteStudentGrade(
+    public ResponseEntity<GradeRequestDTO> deleteStudentGrade(
             @PathVariable int studentID,
             @PathVariable int gradeID) {
-        GradeDTO grade = gradeFacade.deleteStudentGrade(studentID,gradeID);
+        GradeRequestDTO grade = gradeFacade.deleteStudentGrade(studentID,gradeID);
         return ResponseEntity.ok(grade);
     }
 
     @PermitAll
     @GetMapping("/student={studentID}")
-    public ResponseEntity<List<SubjectDTO>> getStudentGrades(@PathVariable int studentID) {
-        List<SubjectDTO> grades = gradeFacade.getAllGradesByStudentID(studentID);
+    public ResponseEntity<List<SubjectResponseDTO>> getStudentGrades(@PathVariable int studentID) {
+        List<SubjectResponseDTO> grades = gradeFacade.getAllGradesByStudentID(studentID);
         return ResponseEntity.ok(grades);
     }
 
     @PermitAll
     @GetMapping("/student={studentID}/subject={subjectID}")
-    public ResponseEntity<SubjectDTO> getStudentSubjectGrades(
+    public ResponseEntity<SubjectResponseDTO> getStudentSubjectGrades(
             @PathVariable int studentID,
             @PathVariable int subjectID) {
         return ResponseEntity.ok(gradeFacade.getOneSubjectGrades(studentID,subjectID));

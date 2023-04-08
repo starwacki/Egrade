@@ -1,8 +1,8 @@
 package com.github.starwacki.components.grades;
 
-import com.github.starwacki.components.grades.dto.GradeDTO;
-import com.github.starwacki.components.grades.dto.GradeViewDTO;
-import com.github.starwacki.components.grades.dto.SubjectDTO;
+import com.github.starwacki.components.grades.dto.GradeRequestDTO;
+import com.github.starwacki.components.grades.dto.GradeResponeDTO;
+import com.github.starwacki.components.grades.dto.SubjectResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,8 +33,8 @@ interface GradesControllerOperations {
             }
     )
     @PostMapping("/grade")
-    ResponseEntity<GradeDTO> addGradeToStudent(
-            @RequestBody @Valid GradeDTO gradeDTO);
+    ResponseEntity<GradeRequestDTO> addGradeToStudent(
+            @RequestBody @Valid GradeRequestDTO gradeRequestDTO);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -54,7 +54,7 @@ interface GradesControllerOperations {
             }
     )
     @GetMapping("/student={studentID}/{gradeID}")
-    ResponseEntity<GradeViewDTO> getStudentGrade(
+    ResponseEntity<GradeResponeDTO> getStudentGrade(
             @PathVariable int studentID,
             @PathVariable int gradeID);
 
@@ -79,10 +79,10 @@ interface GradesControllerOperations {
             }
     )
     @PutMapping("/student={studentID}/{gradeID}")
-    ResponseEntity<GradeDTO> updateStudentGrade(
+    ResponseEntity<GradeRequestDTO> updateStudentGrade(
             @PathVariable int studentID,
             @PathVariable int gradeID,
-            @RequestBody @Valid GradeDTO gradeDTO);
+            @RequestBody @Valid GradeRequestDTO gradeRequestDTO);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -101,7 +101,7 @@ interface GradesControllerOperations {
             }
     )
     @DeleteMapping("/student={studentID}/{gradeID}")
-    ResponseEntity<GradeDTO> deleteStudentGrade(
+    ResponseEntity<GradeRequestDTO> deleteStudentGrade(
             @PathVariable int studentID,
             @PathVariable int gradeID);
 
@@ -122,7 +122,7 @@ interface GradesControllerOperations {
             }
     )
     @GetMapping("/student={studentID}")
-    ResponseEntity<List<SubjectDTO>> getStudentGrades(@PathVariable int studentID);
+    ResponseEntity<List<SubjectResponseDTO>> getStudentGrades(@PathVariable int studentID);
 
 
     @Operation(
@@ -142,7 +142,7 @@ interface GradesControllerOperations {
             }
     )
     @GetMapping("/student={studentID}/subject={subjectID}")
-    ResponseEntity<SubjectDTO> getStudentSubjectGrades(
+    ResponseEntity<SubjectResponseDTO> getStudentSubjectGrades(
             @PathVariable int studentID,
             @PathVariable int subjectID);
 

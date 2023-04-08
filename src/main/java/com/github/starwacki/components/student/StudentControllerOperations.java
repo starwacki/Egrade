@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping("/student")
-public interface StudentControllerOperations {
+interface StudentControllerOperations {
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),

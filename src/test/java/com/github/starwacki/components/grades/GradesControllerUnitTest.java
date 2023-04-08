@@ -1,10 +1,10 @@
 package com.github.starwacki.components.grades;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.starwacki.components.grades.dto.GradeDTO;
-import com.github.starwacki.components.grades.dto.GradeViewDTO;
-import com.github.starwacki.components.grades.dto.SubjectDTO;
-import com.github.starwacki.components.grades.exceptions.StudentNotFoundException;
+import com.github.starwacki.components.grades.dto.GradeRequestDTO;
+import com.github.starwacki.components.grades.dto.GradeResponeDTO;
+import com.github.starwacki.components.grades.dto.SubjectResponseDTO;
+import com.github.starwacki.components.grades.exceptions.GradeStudentNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +54,7 @@ class GradesControllerUnitTest {
     void addGradeToStudent_giveNoExistStudentId_shouldReturn_404_HTTPStatus_andResponseBodyWithErrorMessage() throws Exception {
         //given
         int studentID = 1;
-        GradeDTO gradeDTO =  GradeDTO.builder()
+        GradeRequestDTO gradeRequestDTO =  GradeRequestDTO.builder()
                 .weight(1)
                 .studentID(studentID)
                 .degree("5")
@@ -62,12 +62,12 @@ class GradesControllerUnitTest {
                 .subject(GradeSubject.PHYSICS.toString())
                 .addedBy("Szymon Kawka")
                 .build();
-        given(gradeFacade.addGradeToStudent(gradeDTO)).willThrow(new StudentNotFoundException(studentID));
+        given(gradeFacade.addGradeToStudent(gradeRequestDTO)).willThrow(new GradeStudentNotFoundException(studentID));
 
 
         //when
         ResultActions result = mockMvc.perform(post("/grades/grade")
-                .content(objectMapper.writeValueAsString(gradeDTO))
+                .content(objectMapper.writeValueAsString(gradeRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -83,7 +83,7 @@ class GradesControllerUnitTest {
     void addGradeToStudent_givenGradeDTO_shouldReturn_202_HTTPStatus_andResponseBodyWithGradeDTOSameLikeGivenDTO() throws Exception {
         //given
         int studentID = 1;
-        GradeDTO gradeDTO =  GradeDTO.builder()
+        GradeRequestDTO gradeRequestDTO =  GradeRequestDTO.builder()
                 .weight(1)
                 .studentID(studentID)
                 .degree("5")
@@ -91,15 +91,15 @@ class GradesControllerUnitTest {
                 .subject(GradeSubject.PHYSICS.toString())
                 .addedBy("Szymon Kawka")
                 .build();
-        given(gradeFacade.addGradeToStudent(gradeDTO)).willReturn(gradeDTO);
+        given(gradeFacade.addGradeToStudent(gradeRequestDTO)).willReturn(gradeRequestDTO);
 
         //when
         ResultActions result = mockMvc.perform(post("/grades/grade")
-                .content(objectMapper.writeValueAsString(gradeDTO))
+                .content(objectMapper.writeValueAsString(gradeRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = objectMapper.writeValueAsString(gradeDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(gradeRequestDTO);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()))
                 .andExpect(result1 -> assertThat(
@@ -113,7 +113,7 @@ class GradesControllerUnitTest {
     void addGradeToStudent_givenInvalidGradeWeight_shouldReturn_404_HTTPStatus_andResponseBodyWithErrorMessage(int weight) throws Exception {
         //given
         int studentID = 1;
-        GradeDTO gradeDTO =  GradeDTO.builder()
+        GradeRequestDTO gradeRequestDTO =  GradeRequestDTO.builder()
                 .weight(weight)
                 .studentID(studentID)
                 .degree("5")
@@ -121,11 +121,11 @@ class GradesControllerUnitTest {
                 .subject(GradeSubject.PHYSICS.toString())
                 .addedBy("Szymon Kawka")
                 .build();
-        given(gradeFacade.addGradeToStudent(gradeDTO)).willReturn(gradeDTO);
+        given(gradeFacade.addGradeToStudent(gradeRequestDTO)).willReturn(gradeRequestDTO);
 
         //when
         ResultActions result = mockMvc.perform(post("/grades/grade")
-                .content(objectMapper.writeValueAsString(gradeDTO))
+                .content(objectMapper.writeValueAsString(gradeRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
         System.out.println(result.andReturn().getResponse().getContentAsString());
 
@@ -143,7 +143,7 @@ class GradesControllerUnitTest {
     void addGradeToStudent_givenInvalidDegree_shouldReturn_404_HTTPStatus_andResponseBodyWithErrorMessage(String degree) throws Exception {
         //given
         int studentID = 1;
-        GradeDTO gradeDTO =  GradeDTO.builder()
+        GradeRequestDTO gradeRequestDTO =  GradeRequestDTO.builder()
                 .weight(1)
                 .studentID(studentID)
                 .degree(degree)
@@ -154,7 +154,7 @@ class GradesControllerUnitTest {
 
         //when
         ResultActions result = mockMvc.perform(post("/grades/grade")
-                .content(objectMapper.writeValueAsString(gradeDTO))
+                .content(objectMapper.writeValueAsString(gradeRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -170,12 +170,12 @@ class GradesControllerUnitTest {
     void addGradeToStudent_givenInvalidGradeDtoFields_shouldReturn_400_HTTPStatus() throws Exception {
         //given
         int studentID = 1;
-        GradeDTO gradeDTO =  GradeDTO.builder()
+        GradeRequestDTO gradeRequestDTO =  GradeRequestDTO.builder()
                 .build();
 
         //when
         ResultActions result = mockMvc.perform(post("/grades/grade")
-                .content(objectMapper.writeValueAsString(gradeDTO))
+                .content(objectMapper.writeValueAsString(gradeRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -189,7 +189,7 @@ class GradesControllerUnitTest {
         //given
         int studentID = 1;
         int gradeID = 2;
-        given(gradeFacade.getOneGrade(studentID,gradeID)).willThrow(new StudentNotFoundException(studentID));
+        given(gradeFacade.getOneGrade(studentID,gradeID)).willThrow(new GradeStudentNotFoundException(studentID));
 
         //when
         ResultActions result = mockMvc.perform(get("/grades/student="+studentID+"/"+gradeID)
@@ -210,7 +210,7 @@ class GradesControllerUnitTest {
         //given
         int studentID = 1;
         int gradeID = 2;
-        GradeViewDTO gradeViewDTO = GradeViewDTO
+        GradeResponeDTO gradeResponeDTO = GradeResponeDTO
                 .builder()
                 .degree("5")
                 .weight(10)
@@ -218,14 +218,14 @@ class GradesControllerUnitTest {
                 .addedBy("Jan Kowalski")
                 .description("Ocena z klasowki")
                 .build();
-        given(gradeFacade.getOneGrade(studentID,gradeID)).willReturn(gradeViewDTO);
+        given(gradeFacade.getOneGrade(studentID,gradeID)).willReturn(gradeResponeDTO);
 
         //when
         ResultActions result = mockMvc.perform(get("/grades/student="+studentID+"/"+gradeID)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = objectMapper.writeValueAsString(gradeViewDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(gradeResponeDTO);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result1 -> assertThat(
@@ -239,7 +239,7 @@ class GradesControllerUnitTest {
         //given
         int studentID = 1;
         int gradeID = 2;
-        GradeDTO gradeDTO =  GradeDTO.builder()
+        GradeRequestDTO gradeRequestDTO =  GradeRequestDTO.builder()
                 .weight(1)
                 .studentID(studentID)
                 .degree("5")
@@ -247,11 +247,11 @@ class GradesControllerUnitTest {
                 .subject(GradeSubject.PHYSICS.toString())
                 .addedBy("Szymon Kawka")
                 .build();
-        given(gradeFacade.updateGrade(studentID,gradeID,gradeDTO)).willThrow(new StudentNotFoundException(studentID));
+        given(gradeFacade.updateGrade(studentID,gradeID, gradeRequestDTO)).willThrow(new GradeStudentNotFoundException(studentID));
 
         //when
         ResultActions result = mockMvc.perform(put("/grades/student="+studentID+"/"+gradeID)
-                .content(objectMapper.writeValueAsString(gradeDTO))
+                .content(objectMapper.writeValueAsString(gradeRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -269,7 +269,7 @@ class GradesControllerUnitTest {
         //given
         int studentID = 1;
         int gradeID = 2;
-        GradeDTO gradeDTO =  GradeDTO.builder()
+        GradeRequestDTO gradeRequestDTO =  GradeRequestDTO.builder()
                 .weight(1)
                 .studentID(studentID)
                 .degree("5")
@@ -277,15 +277,15 @@ class GradesControllerUnitTest {
                 .subject(GradeSubject.PHYSICS.toString())
                 .addedBy("Szymon Kawka")
                 .build();
-        given(gradeFacade.updateGrade(studentID, gradeID, gradeDTO)).willReturn(gradeDTO);
+        given(gradeFacade.updateGrade(studentID, gradeID, gradeRequestDTO)).willReturn(gradeRequestDTO);
 
         //when
         ResultActions result = mockMvc.perform(put("/grades/student="+studentID+"/"+gradeID)
-                .content(objectMapper.writeValueAsString(gradeDTO))
+                .content(objectMapper.writeValueAsString(gradeRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = objectMapper.writeValueAsString(gradeDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(gradeRequestDTO);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result1 -> assertThat(
@@ -299,7 +299,7 @@ class GradesControllerUnitTest {
         //given
         int studentID = 1;
         int gradeID = 2;
-        given(gradeFacade.deleteStudentGrade(studentID,gradeID)).willThrow(new StudentNotFoundException(studentID));
+        given(gradeFacade.deleteStudentGrade(studentID,gradeID)).willThrow(new GradeStudentNotFoundException(studentID));
 
         //when
         ResultActions result = mockMvc.perform(delete("/grades/student="+studentID+"/"+gradeID)
@@ -320,7 +320,7 @@ class GradesControllerUnitTest {
         //given
         int studentID = 1;
         int gradeID = 2;
-        GradeDTO gradeDTO =  GradeDTO.builder()
+        GradeRequestDTO gradeRequestDTO =  GradeRequestDTO.builder()
                 .weight(1)
                 .studentID(studentID)
                 .degree("5")
@@ -328,7 +328,7 @@ class GradesControllerUnitTest {
                 .subject(GradeSubject.PHYSICS.toString())
                 .addedBy("Szymon Kawka")
                 .build();
-        given(gradeFacade.deleteStudentGrade(studentID, gradeID)).willReturn(gradeDTO);
+        given(gradeFacade.deleteStudentGrade(studentID, gradeID)).willReturn(gradeRequestDTO);
 
 
         //when
@@ -336,7 +336,7 @@ class GradesControllerUnitTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody = objectMapper.writeValueAsString(gradeDTO);
+        String expectedResponseBody = objectMapper.writeValueAsString(gradeRequestDTO);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result1 -> assertThat(
@@ -351,7 +351,7 @@ class GradesControllerUnitTest {
     void getStudentGrades_givenNoExistStudentId_shouldReturn_404_HTTPStatus_andResponseBodyWithErrorMessage() throws Exception {
         //given
         int studentID = 1;
-        given(gradeFacade.getAllGradesByStudentID(studentID)).willThrow(new StudentNotFoundException(studentID));
+        given(gradeFacade.getAllGradesByStudentID(studentID)).willThrow(new GradeStudentNotFoundException(studentID));
 
         //when
         ResultActions result = mockMvc.perform(get("/grades/student="+studentID)
@@ -371,19 +371,19 @@ class GradesControllerUnitTest {
     void getStudentGrades_givenStudentId_shouldReturn_200_HTTPStatus_andResponseBodyWithStudentGradesDTO() throws Exception {
         //given
         int studentID = 1;
-        List<SubjectDTO> subjectDTOList = List.of(
-                SubjectDTO.builder()
+        List<SubjectResponseDTO> subjectResponseDTOList = List.of(
+                SubjectResponseDTO.builder()
                         .subject("MATH")
                         .gradeAverage("2,0")
-                        .grades(List.of(GradeViewDTO.builder().build(), GradeViewDTO.builder().build())).build());
-        given(gradeFacade.getAllGradesByStudentID(studentID)).willReturn(subjectDTOList);
+                        .grades(List.of(GradeResponeDTO.builder().build(), GradeResponeDTO.builder().build())).build());
+        given(gradeFacade.getAllGradesByStudentID(studentID)).willReturn(subjectResponseDTOList);
 
         //when
         ResultActions result = mockMvc.perform(get("/grades/student="+studentID)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        String expectedResponseBody =objectMapper.writeValueAsString(subjectDTOList);
+        String expectedResponseBody =objectMapper.writeValueAsString(subjectResponseDTOList);
         result
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(result1 -> assertThat(
@@ -399,7 +399,7 @@ class GradesControllerUnitTest {
         //given
         int studentID = 1;
         int subjectID = GradeSubject.PHYSICS.ordinal();
-        given(gradeFacade.getOneSubjectGrades(studentID,subjectID)).willThrow(new StudentNotFoundException(studentID));
+        given(gradeFacade.getOneSubjectGrades(studentID,subjectID)).willThrow(new GradeStudentNotFoundException(studentID));
 
         //when
         ResultActions result = mockMvc.perform(get("/grades/student="+studentID+"/subject="+subjectID)
@@ -420,11 +420,11 @@ class GradesControllerUnitTest {
         //given
         int studentID = 1;
         int subjectID = GradeSubject.PHYSICS.ordinal();
-        SubjectDTO studentGradesDTO = SubjectDTO
+        SubjectResponseDTO studentGradesDTO = SubjectResponseDTO
                 .builder()
                 .gradeAverage("1,0")
                 .subject(GradeSubject.PHYSICS.toString())
-                .grades(List.of(GradeViewDTO
+                .grades(List.of(GradeResponeDTO
                         .builder()
                                 .addedBy("Szymon Kawka")
                                 .weight(5)

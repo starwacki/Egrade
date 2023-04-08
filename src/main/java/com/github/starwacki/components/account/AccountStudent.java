@@ -4,7 +4,8 @@ package com.github.starwacki.components.account;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+@Getter
+@EqualsAndHashCode
 @Entity
 @Table(name = "students")
 class AccountStudent extends Account {
@@ -12,6 +13,10 @@ class AccountStudent extends Account {
     private String schoolClassName;
     private int schoolClassYear;
 
+    @Setter
+    private String parentPhoneNumber;
+
+    @Setter
     @OneToOne
             (cascade ={CascadeType.ALL})
     private AccountParent accountParent;
@@ -24,9 +29,8 @@ class AccountStudent extends Account {
     protected AccountStudent() {
     }
 
-    private AccountStudent(AccountDetails accountDetails, String firstname, String lastname, String schoolClassName, int schoolClassYear, AccountParent accountParent) {
+    private AccountStudent(AccountDetails accountDetails, String firstname, String lastname, String schoolClassName, int schoolClassYear) {
         super(accountDetails, firstname, lastname);
-        this.accountParent = accountParent;
         this.schoolClassYear = schoolClassYear;
         this.schoolClassName = schoolClassName;
     }
@@ -69,14 +73,9 @@ class AccountStudent extends Account {
             return this;
         }
 
-        public Builder parent(AccountParent accountParent) {
-            this.accountParent = accountParent;
-            return this;
-        }
-
         @Override
         public AccountStudent build() {
-            return new AccountStudent(accountDetails,firstname,lastname,schoolClassName,schoolClassYear, accountParent);
+            return new AccountStudent(accountDetails,firstname,lastname,schoolClassName,schoolClassYear);
         }
 
     }

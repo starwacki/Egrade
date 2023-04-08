@@ -1,4 +1,4 @@
-package com.github.starwacki.common.security.exception;
+package com.github.starwacki.components.auth.exceptions;
 
 public class AESException extends RuntimeException{
 
