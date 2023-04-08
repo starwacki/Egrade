@@ -9,7 +9,6 @@ import com.github.starwacki.components.account.exceptions.AccountNotFoundExcepti
 import com.github.starwacki.components.account.exceptions.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.WrongFileException;
 import com.github.starwacki.components.account.exceptions.WrongPasswordException;
-import com.github.starwacki.common.model.grades.Subject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -384,7 +383,7 @@ class AccountControllerUnitTest {
                 .lastname("lastname")
                 .workPhone("111222333")
                 .email("email@wp.pl")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .build();
         AccountViewDTO accountViewDTO = AccountViewDTO
                 .builder()
@@ -427,7 +426,7 @@ class AccountControllerUnitTest {
                 .lastname("lastname")
                 .workPhone("111222333")
                 .email("email@wp.pl")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .build();
 
         //when
@@ -460,7 +459,7 @@ class AccountControllerUnitTest {
                 .lastname(lastname)
                 .workPhone("111222333")
                 .email("email@wp.pl")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .build();
 
         //when
@@ -490,7 +489,7 @@ class AccountControllerUnitTest {
                 .lastname("lastname")
                 .workPhone(phone)
                 .email("email@wp.pl")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .build();
 
         //when
@@ -517,7 +516,7 @@ class AccountControllerUnitTest {
                 .lastname("lastname")
                 .workPhone("111222333")
                 .email(email)
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .build();
 
         //when

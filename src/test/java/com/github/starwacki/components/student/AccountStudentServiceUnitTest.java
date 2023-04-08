@@ -1,24 +1,10 @@
 package com.github.starwacki.components.student;
 
 
-import com.github.starwacki.common.repositories.SchoolClassRepository;
-import com.github.starwacki.components.student.StudentRepository;
-import com.github.starwacki.components.student.StudentService;
-import com.github.starwacki.components.student.dto.StudentDTO;
-import com.github.starwacki.components.student.exceptions.StudentNotFoundException;
-import com.github.starwacki.common.model.school_class.SchoolClass;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.List;
-import java.util.Optional;
-import static org.hamcrest.Matchers.*;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class AccountStudentServiceUnitTest {

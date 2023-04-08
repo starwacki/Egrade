@@ -6,7 +6,6 @@ import com.github.starwacki.components.account.dto.AccountViewDTO;
 import com.github.starwacki.components.account.exceptions.AccountNotFoundException;
 import com.github.starwacki.components.account.exceptions.IllegalOperationException;
 import com.github.starwacki.components.account.exceptions.WrongPasswordException;
-import com.github.starwacki.common.model.grades.Subject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -433,7 +432,7 @@ class AccountFacadeUnitTest {
                 .lastname("Szuprych")
                 .email("krzysztof@wp.pl")
                 .workPhone("111222333")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .build();
         AccountTeacher accountTeacher = AccountTeacher.builder()
                 .firstname("Krzysztof")
@@ -445,7 +444,7 @@ class AccountFacadeUnitTest {
                         .accountRole(AccountRole.TEACHER)
                         .build())
                 .workPhone("111222333")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .build();
         given(accountFactory.createTeacher(accountTeacherDTO)).willReturn(accountTeacher);
         given(accountTeacherRepository.save(accountTeacher)).willReturn(accountTeacher);
@@ -466,7 +465,7 @@ class AccountFacadeUnitTest {
                 .lastname("Szuprych")
                 .email("krzysztof@wp.pl")
                 .workPhone("111222333")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .build();
         AccountTeacher accountTeacher = AccountTeacher.builder()
                 .firstname("Krzysztof")
@@ -478,7 +477,7 @@ class AccountFacadeUnitTest {
                         .accountRole(AccountRole.TEACHER)
                         .build())
                 .workPhone("111222333")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .build();
         given(accountFactory.createTeacher(accountTeacherDTO)).willReturn(accountTeacher);
         given(accountTeacherRepository.save(accountFactory.createTeacher(accountTeacherDTO))).willReturn(accountTeacher);

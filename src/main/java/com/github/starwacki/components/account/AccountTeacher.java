@@ -1,11 +1,7 @@
 package com.github.starwacki.components.account;
 
-
-import com.github.starwacki.common.model.grades.Subject;
-import com.github.starwacki.common.model.school_class.SchoolClass;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Set;
 
 @Data
 @Entity
@@ -14,27 +10,18 @@ class AccountTeacher extends Account {
 
     private String workPhone;
     private String email;
-    @Enumerated(value = EnumType.STRING)
-    private Subject subject;
+    private String subject;
 
     protected AccountTeacher() {
 
     }
 
-    private AccountTeacher(AccountDetails accountDetails, String firstname, String lastname, String workPhone, String email, Subject subject) {
+    private AccountTeacher(AccountDetails accountDetails, String firstname, String lastname, String workPhone, String email, String subject) {
         super(accountDetails,firstname, lastname);
         this.workPhone = workPhone;
         this.email = email;
         this.subject = subject;
     }
-
-    @ManyToMany
-    @JoinTable(
-            name = "teachers_classes",
-            joinColumns = @JoinColumn(name = "teachers_id"),
-            inverseJoinColumns = @JoinColumn(name = "classes_id")
-    )
-    private Set<SchoolClass> classes;
 
     public static Builder builder() {
         return new Builder();
@@ -46,7 +33,7 @@ class AccountTeacher extends Account {
 
         private String email;
 
-        private Subject subject;
+        private String subject;
 
 
         @Override
@@ -77,7 +64,7 @@ class AccountTeacher extends Account {
             return this;
         }
 
-        public Builder subject(Subject subject) {
+        public Builder subject(String subject) {
             this.subject = subject;
             return this;
         }

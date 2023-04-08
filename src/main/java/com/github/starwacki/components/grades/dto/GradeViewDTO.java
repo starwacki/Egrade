@@ -1,4 +1,4 @@
-package com.github.starwacki.components.student.dto;
+package com.github.starwacki.components.grades.dto;
 
 import lombok.Builder;
 import java.time.LocalDate;

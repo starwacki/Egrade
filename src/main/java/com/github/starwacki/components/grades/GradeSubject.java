@@ -1,7 +1,6 @@
-package com.github.starwacki.common.model.grades;
+package com.github.starwacki.components.grades;
 
-public enum Subject {
-
+enum GradeSubject {
     MATHS,
     ENGLISH,
     GERMAN,

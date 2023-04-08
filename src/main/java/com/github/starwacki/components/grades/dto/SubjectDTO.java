@@ -1,12 +1,11 @@
-package com.github.starwacki.components.student.dto;
+package com.github.starwacki.components.grades.dto;
 
-import com.github.starwacki.common.model.grades.Subject;
 import lombok.Builder;
 import java.util.List;
 
 @Builder
 public record SubjectDTO(
-        Subject subject,
+        String subject,
         List<GradeViewDTO> grades,
         String gradeAverage
 ) {

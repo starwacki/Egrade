@@ -1,8 +1,8 @@
 package com.github.starwacki.common.handlers;
 
 import com.github.starwacki.components.account.exceptions.AccountNotFoundException;
-import com.github.starwacki.components.student.exceptions.StudentNotFoundException;
-import com.github.starwacki.components.student.exceptions.SubjectNotFoundException;
+import com.github.starwacki.components.grades.exceptions.StudentNotFoundException;
+import com.github.starwacki.components.grades.exceptions.SubjectNotFoundException;
 import com.github.starwacki.components.student.exceptions.TeacherAccountNotFoundException;
 import com.github.starwacki.components.teacher.exceptions.SchoolClassNotFoundException;
 import com.github.starwacki.components.teacher.exceptions.TeacherNotFoundException;

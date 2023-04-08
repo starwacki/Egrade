@@ -1,29 +1,11 @@
 package com.github.starwacki.components.teacher;
 
 
-import com.github.starwacki.components.teacher.TeacherDTO;
-import com.github.starwacki.components.teacher.SchoolClassDTO;
-import com.github.starwacki.components.teacher.TeacherRepository;
-import com.github.starwacki.components.teacher.TeacherService;
-import com.github.starwacki.components.teacher.exceptions.SchoolClassNotFoundException;
-import com.github.starwacki.components.teacher.exceptions.TeacherNotFoundException;
-import com.github.starwacki.common.model.grades.Subject;
-import com.github.starwacki.common.model.school_class.SchoolClass;
-import com.github.starwacki.common.repositories.SchoolClassRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)

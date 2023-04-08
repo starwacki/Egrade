@@ -1,13 +1,8 @@
 package com.github.starwacki.components.student;
 
 
-import com.github.starwacki.components.student.exceptions.StudentNotFoundException;
-import com.github.starwacki.common.repositories.SchoolClassRepository;
-import com.github.starwacki.components.student.dto.StudentDTO;
-import com.github.starwacki.common.model.school_class.SchoolClass;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @AllArgsConstructor

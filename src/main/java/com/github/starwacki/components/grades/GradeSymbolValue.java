@@ -1,6 +1,6 @@
-package com.github.starwacki.common.model.grades;
+package com.github.starwacki.components.grades;
 
-public enum Degree {
+enum GradeSymbolValue {
     ONE("1",1),
     ONE_PLUS("1+",1.5),
     TWO_MINUS("2-",1.75),
@@ -24,7 +24,7 @@ public enum Degree {
     private String symbol;
     private double value;
 
-    Degree(String symbol, double value) {
+    GradeSymbolValue(String symbol, double value) {
         this.symbol =symbol;
         this.value = value;
     }

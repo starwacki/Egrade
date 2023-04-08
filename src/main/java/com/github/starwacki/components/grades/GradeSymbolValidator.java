@@ -1,15 +1,14 @@
-package com.github.starwacki.components.student;
+package com.github.starwacki.components.grades;
 
-import com.github.starwacki.common.model.grades.Degree;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DegreeValidator implements ConstraintValidator<ValidDegree,String> {
+class GradeSymbolValidator implements ConstraintValidator<GradeSymbolValid,String> {
 
-    private static final List<String> ALLOWED_GRADES = Arrays.stream(Degree.values()).map(degree -> degree.getSymbol())
+    private static final List<String> ALLOWED_GRADES = Arrays.stream(GradeSymbolValue.values()).map(gradeSymbolValue -> gradeSymbolValue.getSymbol())
             .collect(Collectors
                     .toList());
 

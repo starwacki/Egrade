@@ -5,7 +5,6 @@ import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountStudentDTO;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
 import com.github.starwacki.components.account.dto.AccountViewDTO;
-import com.github.starwacki.common.model.grades.Subject;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -215,7 +214,7 @@ class AccountControllerIntegrationTest {
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .email("email@wp.pl")
                 .workPhone("111222333")
                 .build();
@@ -240,7 +239,7 @@ class AccountControllerIntegrationTest {
                 .builder()
                 .firstname("Firstname")
                 .lastname("Lastname")
-                .subject(Subject.PHYSICS)
+                .subject("PHYSICS")
                 .email("email@wp.pl")
                 .workPhone("111222333")
                 .build();

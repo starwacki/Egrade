@@ -2,7 +2,6 @@ package com.github.starwacki.components.account;
 
 import com.github.starwacki.common.password_encoder.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountTeacherDTO;
-import com.github.starwacki.common.model.grades.Subject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
@@ -40,7 +39,7 @@ class AccountTeacherCreatorStrategyUnitTest {
                 .firstname("teacher")
                 .lastname("lastname")
                 .workPhone("111222333")
-                .subject(Subject.BIOLOGY)
+                .subject("BIOLOGY")
                 .email("email@wp.pl")
                 .build();
 

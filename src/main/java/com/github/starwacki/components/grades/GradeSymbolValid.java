@@ -1,4 +1,4 @@
-package com.github.starwacki.components.student;
+package com.github.starwacki.components.grades;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DegreeValidator.class)
-public @interface ValidDegree {
+@Constraint(validatedBy = GradeSymbolValidator.class)
+public @interface GradeSymbolValid {
     String message() default "Invalid grade value";
 
     Class<?>[] groups() default {};

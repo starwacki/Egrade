@@ -1,33 +1,12 @@
 package com.github.starwacki.components.teacher;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.starwacki.components.teacher.SchoolClassDTO;
-import com.github.starwacki.components.teacher.TeacherController;
-import com.github.starwacki.components.teacher.TeacherDTO;
-import com.github.starwacki.components.teacher.exceptions.SchoolClassNotFoundException;
-import com.github.starwacki.components.teacher.exceptions.TeacherNotFoundException;
-import com.github.starwacki.components.teacher.TeacherService;
-import com.github.starwacki.common.model.grades.Subject;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import static org.hamcrest.Matchers.*;
-import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

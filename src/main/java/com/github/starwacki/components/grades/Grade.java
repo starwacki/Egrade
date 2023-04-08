@@ -1,4 +1,4 @@
-package com.github.starwacki.common.model.grades;
+package com.github.starwacki.components.grades;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,19 +13,22 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "grades")
-public class Grade {
+class Grade {
 
     @Id
-    private String studentUsername;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    private int studentID;
 
     private String description;
 
     @Enumerated(EnumType.ORDINAL)
-    private Subject subject;
+    private GradeSubject gradeSubject;
 
     private int weight;
 
-    private Degree degree;
+    private GradeSymbolValue gradeSymbolValue;
 
     private boolean haveValue;
 
