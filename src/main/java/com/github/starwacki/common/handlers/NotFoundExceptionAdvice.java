@@ -4,8 +4,7 @@ import com.github.starwacki.components.account.exceptions.AccountNotFoundExcepti
 import com.github.starwacki.components.grades.exceptions.GradeStudentNotFoundException;
 import com.github.starwacki.components.grades.exceptions.SubjectNotFoundException;
 import com.github.starwacki.components.student.exceptions.StudentNotFoundException;
-import com.github.starwacki.components.teacher.TeacherAccountNotFoundException;
-import com.github.starwacki.components.teacher.exceptions.SchoolClassNotFoundException;
+import com.github.starwacki.components.teacher.exceptions.TeacherAccountNotFoundException;
 import com.github.starwacki.components.teacher.exceptions.TeacherNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class NotFoundExceptionAdvice extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(NotFoundExceptionAdvice.class);
 
     @ExceptionHandler(value = {
-            SchoolClassNotFoundException.class, TeacherNotFoundException.class, GradeStudentNotFoundException.class,
+             TeacherNotFoundException.class, GradeStudentNotFoundException.class,
             SubjectNotFoundException.class, TeacherAccountNotFoundException.class, AccountNotFoundException.class,
             StudentNotFoundException.class})
     public ResponseEntity<Object> handleWebException(RuntimeException e, WebRequest webRequest) {

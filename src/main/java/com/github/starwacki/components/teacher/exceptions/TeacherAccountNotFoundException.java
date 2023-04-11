@@ -1,4 +1,4 @@
-package com.github.starwacki.components.teacher;
+package com.github.starwacki.components.teacher.exceptions;
 
 public class TeacherAccountNotFoundException extends RuntimeException{
 

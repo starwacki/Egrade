@@ -1,15 +1,13 @@
-package com.github.starwacki.common.model.school_class;
+package com.github.starwacki.components.schoolclass;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Set;
-
 
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
 @Table(name = "classes")
-public class SchoolClass {
+class SchoolClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

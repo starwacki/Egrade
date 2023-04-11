@@ -1,5 +1,7 @@
 package com.github.starwacki.components.teacher;
 
+import com.github.starwacki.components.teacher.dto.TeacherResponseDTO;
+import com.github.starwacki.components.teacher.dto.TeacherSchoolClassDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,7 +31,7 @@ interface TeacherOperations {
             }
     )
     @GetMapping("/id={id}/classes")
-    ResponseEntity<List<SchoolClassDTO>> getTeacherClasses(@PathVariable int id);
+    ResponseEntity<List<TeacherSchoolClassDTO>> getTeacherClasses(@PathVariable int id);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -51,7 +53,7 @@ interface TeacherOperations {
     @PutMapping("/id={id}/classes")
     ResponseEntity<?> addSchoolClassToTeacher(
             @PathVariable int id,
-            @RequestBody @Valid SchoolClassDTO schoolClassDTO);
+            @RequestBody @Valid TeacherSchoolClassDTO schoolClassDTO);
 
     @Operation(
             security = @SecurityRequirement(name = "BearerJWT"),
@@ -64,5 +66,5 @@ interface TeacherOperations {
             }
     )
     @GetMapping("/teachers")
-   ResponseEntity<List<TeacherDTO>> getAllTeachersInformation();
+   ResponseEntity<List<TeacherResponseDTO>> getAllTeachersInformation();
 }

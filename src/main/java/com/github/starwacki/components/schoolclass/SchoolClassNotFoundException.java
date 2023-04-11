@@ -1,8 +1,8 @@
-package com.github.starwacki.components.teacher.exceptions;
+package com.github.starwacki.components.schoolclass;
 
 import org.hibernate.validator.constraints.Range;
 
-public class SchoolClassNotFoundException extends RuntimeException {
+class SchoolClassNotFoundException extends RuntimeException {
 
     private static final String SCHOOL_CLASS_NOT_FOUND_EXCEPTION_MESSAGE = "Not found class with declared name and year: ";
 
