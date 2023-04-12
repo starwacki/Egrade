@@ -27,7 +27,8 @@ class EgradePasswordEncoderImpl implements EgradePasswordEncoder {
 
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return rawPassword.toString().equals(encodedPassword);
+        System.out.println(AuthenticationAESAlgorithm.encrypt(rawPassword.toString()).equals(encodedPassword));
+        return AuthenticationAESAlgorithm.encrypt(rawPassword.toString()).equals(encodedPassword);
     }
 
 

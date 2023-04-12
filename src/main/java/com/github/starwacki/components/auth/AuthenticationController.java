@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 class AuthenticationController implements AuthenticationControllerOperations {
 
-    private final AuthenticationService authenticationService;
+    private final AuthenticationFacade authenticationFacade;
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request,
             HttpServletResponse response
     ) {
-        AuthenticationResponse authResponse = authenticationService.authenticate(request);
-        Cookie cookie = authenticationService.generateJWTCookie(authResponse.token());
+        AuthenticationResponse authResponse = authenticationFacade.authenticate(request);
+        Cookie cookie = authenticationFacade.generateJWTCookie(authResponse.token());
         response.addCookie(cookie);
         return ResponseEntity.ok(authResponse);
     }

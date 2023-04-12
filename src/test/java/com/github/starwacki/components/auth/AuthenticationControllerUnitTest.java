@@ -38,7 +38,7 @@ class AuthenticationControllerUnitTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private AuthenticationService authenticationService;
+    private AuthenticationFacade authenticationFacade;
 
 
     @Autowired
@@ -117,7 +117,7 @@ class AuthenticationControllerUnitTest {
                 .username(username)
                 .password(password)
                 .build();
-        given(authenticationService.authenticate(authenticationRequest)).willThrow(new WrongAuthenticationException());
+        given(authenticationFacade.authenticate(authenticationRequest)).willThrow(new WrongAuthenticationException());
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/auth/authenticate")
@@ -144,8 +144,8 @@ class AuthenticationControllerUnitTest {
         String token = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic3ViIjoiU3R1ZGVudFRlc3RTVFUxIiwiaWF0IjoxNjc5MTQ4NjAwLCJleHAiOjE2NzkyMzUwMDB9.mxQlCANbW-cGuFfLtz59BDD0AewrUKWiNcp1jPTKFNU";
         AuthenticationResponse response = new AuthenticationResponse(token);
         Cookie cookie = new Cookie("jwt",response.token());
-        given(authenticationService.authenticate(authenticationRequest)).willReturn(response);
-        given(authenticationService.generateJWTCookie(response.token())).willReturn(cookie);
+        given(authenticationFacade.authenticate(authenticationRequest)).willReturn(response);
+        given(authenticationFacade.generateJWTCookie(response.token())).willReturn(cookie);
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/auth/authenticate")
@@ -179,8 +179,8 @@ class AuthenticationControllerUnitTest {
         cookie.setMaxAge(60*60*24*1000*7);
         cookie.setPath("/");
         cookie.setSecure(true);
-        given(authenticationService.authenticate(authenticationRequest)).willReturn(response);
-        given(authenticationService.generateJWTCookie(response.token())).willReturn(cookie);
+        given(authenticationFacade.authenticate(authenticationRequest)).willReturn(response);
+        given(authenticationFacade.generateJWTCookie(response.token())).willReturn(cookie);
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/auth/authenticate")

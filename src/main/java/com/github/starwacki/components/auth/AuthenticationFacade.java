@@ -10,14 +10,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @AllArgsConstructor
-class AuthenticationService {
+public class AuthenticationFacade {
 
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
