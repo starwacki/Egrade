@@ -27,14 +27,14 @@ public class AuthenticationFacade {
             authenticateByUsernameAndPassword(request);
             AuthAccountDetails user = getUserAccountAuthDetails(request);
             String jwt  = jwtService.generateToken(generateExtraClaims(user),user);
-            return createAuthenticationResponse(jwt);
+            return createAuthenticationResponse(jwt,user.getAccountRole());
         } catch (AuthenticationException e) {
             throw new WrongAuthenticationException();
         }
     }
 
     public Cookie generateJWTCookie(String jwt) {
-        Cookie cookie = new Cookie("jwt", jwt);
+        Cookie cookie = new Cookie("egrade-jwt", jwt);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setMaxAge(60*60*24*1000*7);
@@ -58,10 +58,11 @@ public class AuthenticationFacade {
                 .orElseThrow(() -> new UsernameNotFoundException(request.username()));
     }
 
-    private AuthenticationResponse createAuthenticationResponse(String jwt) {
+    private AuthenticationResponse createAuthenticationResponse(String jwt,String accountRole) {
         return AuthenticationResponse
                 .builder()
                 .token(jwt)
+                .accountRole(accountRole)
                 .build();
     }
 

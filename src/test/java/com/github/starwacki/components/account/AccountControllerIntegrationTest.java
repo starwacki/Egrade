@@ -32,6 +32,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Transactional
 class AccountControllerIntegrationTest {
 
+    private static final String STUDENT_JWT_TOKEN = "";
+    private static final String TEACHER_JWT_TOKEN = "";
+    private static final String PARENT_JWT_TOKEN = "";
+    private static final String ADMIN_JWT_TOKEN = "";
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -44,6 +48,7 @@ class AccountControllerIntegrationTest {
     private AccountTeacherRepository accountTeacherRepository;
     @Autowired
     private EgradePasswordEncoder egradePasswordEncoder;
+
 
     @Test
     @DisplayName("Test add student with roles without permissions return 403 HTTP status")

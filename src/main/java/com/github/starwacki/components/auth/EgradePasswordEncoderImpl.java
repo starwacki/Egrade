@@ -25,10 +25,11 @@ class EgradePasswordEncoderImpl implements EgradePasswordEncoder {
         return AuthenticationAESAlgorithm.encrypt(rawPassword.toString());
     }
 
+
+    //Todo: encode if not use authenticateController
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        System.out.println(AuthenticationAESAlgorithm.encrypt(rawPassword.toString()).equals(encodedPassword));
-        return AuthenticationAESAlgorithm.encrypt(rawPassword.toString()).equals(encodedPassword);
+        return rawPassword.toString().equals(encodedPassword);
     }
 
 
