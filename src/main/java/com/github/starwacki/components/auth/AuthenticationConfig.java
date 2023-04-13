@@ -38,7 +38,8 @@ class AuthenticationConfig {
                                 AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
                                 AntPathRequestMatcher.antMatcher("/api-docs/**"),
                                 AntPathRequestMatcher.antMatcher("/auth/authenticate"),
-                                AntPathRequestMatcher.antMatcher("/egrade/**"),
+                                AntPathRequestMatcher.antMatcher("/login"),
+                                AntPathRequestMatcher.antMatcher("/templates/**"),
                                 AntPathRequestMatcher.antMatcher("/images/**"))
                         .permitAll()
                         .anyRequest()
@@ -49,11 +50,11 @@ class AuthenticationConfig {
                 .csrf(csrf -> csrf
                         .disable())
                 .formLogin()
-                .loginPage("/login/p")
-                .defaultSuccessUrl("/mainpage")
+                .loginPage("/login")
+                .defaultSuccessUrl("/mainpage",true)
                 .and()
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
-                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class);
         return http.build();

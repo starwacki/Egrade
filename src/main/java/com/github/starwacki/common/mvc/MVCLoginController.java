@@ -7,6 +7,8 @@ import jakarta.annotation.security.PermitAll;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,20 +23,15 @@ class MVCLoginController {
 
     private AuthenticationFacade authenticationFacade;
 
-    @GetMapping("/login/p")
+    @GetMapping("/login")
     String loginPage(@ModelAttribute AuthenticationRequest request, Model model) {
         model.addAttribute("request",request);
         return "login";
     }
 
-    @PostMapping("/login")
-    String postPage(@ModelAttribute AuthenticationRequest request, Model model) {
-        model.addAttribute("request",request);
-        return "login";
-    }
-
     @GetMapping("/mainpage")
-    String mainPage() {
+    String mainPage(@AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println(userDetails);
         return "mainview";
     }
 
