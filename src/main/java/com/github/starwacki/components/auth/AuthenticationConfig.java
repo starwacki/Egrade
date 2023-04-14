@@ -28,7 +28,7 @@ class AuthenticationConfig  {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailServiceImpl userDetailsService;
 
-    private final JwtCookieFilter jwtCookieFilter;
+    private final AuthenticationCookieJwtFilter authenticationCookieJwtFilter;
 
 
     @Bean
@@ -57,7 +57,7 @@ class AuthenticationConfig  {
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtCookieFilter,UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationCookieJwtFilter,UsernamePasswordAuthenticationFilter.class);
                // .addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
