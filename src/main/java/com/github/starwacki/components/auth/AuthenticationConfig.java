@@ -23,10 +23,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
         securedEnabled = true,
         jsr250Enabled = true
 )
-class AuthenticationConfig {
+class AuthenticationConfig  {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailServiceImpl userDetailsService;
+
+    private final AuthenticationCookieJwtFilter authenticationCookieJwtFilter;
 
 
     @Bean
@@ -38,8 +40,8 @@ class AuthenticationConfig {
                                 AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
                                 AntPathRequestMatcher.antMatcher("/api-docs/**"),
                                 AntPathRequestMatcher.antMatcher("/auth/authenticate"),
-                                AntPathRequestMatcher.antMatcher("/login"),
-                                AntPathRequestMatcher.antMatcher("/templates/**"),
+                                AntPathRequestMatcher.antMatcher("/egrade/login"),
+                                AntPathRequestMatcher.antMatcher("/logout"),
                                 AntPathRequestMatcher.antMatcher("/images/**"))
                         .permitAll()
                         .anyRequest()
@@ -49,14 +51,14 @@ class AuthenticationConfig {
                         .frameOptions().disable())
                 .csrf(csrf -> csrf
                         .disable())
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/mainpage",true)
+                .logout()
+                .deleteCookies("egrade-jwt")
                 .and()
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationCookieJwtFilter,UsernamePasswordAuthenticationFilter.class);
+        // .addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

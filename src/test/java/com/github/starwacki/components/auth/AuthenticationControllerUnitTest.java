@@ -142,7 +142,7 @@ class AuthenticationControllerUnitTest {
                 .password(password)
                 .build();
         String token = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic3ViIjoiU3R1ZGVudFRlc3RTVFUxIiwiaWF0IjoxNjc5MTQ4NjAwLCJleHAiOjE2NzkyMzUwMDB9.mxQlCANbW-cGuFfLtz59BDD0AewrUKWiNcp1jPTKFNU";
-        AuthenticationResponse response = new AuthenticationResponse(token);
+        AuthenticationResponse response = AuthenticationResponse.builder().token(token).build();
         Cookie cookie = new Cookie("jwt",response.token());
         given(authenticationFacade.authenticate(authenticationRequest)).willReturn(response);
         given(authenticationFacade.generateJWTCookie(response.token())).willReturn(cookie);
@@ -173,7 +173,7 @@ class AuthenticationControllerUnitTest {
                 .password(password)
                 .build();
         String token = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic3ViIjoiU3R1ZGVudFRlc3RTVFUxIiwiaWF0IjoxNjc5MTQ4NjAwLCJleHAiOjE2NzkyMzUwMDB9.mxQlCANbW-cGuFfLtz59BDD0AewrUKWiNcp1jPTKFNU";
-        AuthenticationResponse response = new AuthenticationResponse(token);
+        AuthenticationResponse response = AuthenticationResponse.builder().token(token).build();
         Cookie cookie = new Cookie("jwt",response.token());
         cookie.setHttpOnly(true);
         cookie.setMaxAge(60*60*24*1000*7);

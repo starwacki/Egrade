@@ -4,6 +4,7 @@ package com.github.starwacki.components.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.starwacki.components.auth.dto.AuthenticationRequest;
 import com.github.starwacki.components.auth.dto.AuthenticationResponse;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,6 +42,10 @@ class AuthenticationControllerIntegrationTest {
     @Autowired
     private JwtService jwtService;
 
+    // The MockMvc in Spring MVC does not automatically add any default cookies to requests.
+    // So CookieJwtFilter may throw a NullPointerException
+    private final Cookie cookie = new Cookie("randomCookie","randomCookie");
+
     @Test
     @DisplayName("Test authenticate exist student return 200 HTTP status, add cookie with jwt and return jwt with correct claims")
     void authenticate_givenExistStudentAuthAccountDetails_shouldReturn_200_HTTPStatus_andReturnJWTCookieInHTTPResponse_andReturnJWTWithCorrectClaims() throws Exception {
@@ -63,6 +68,7 @@ class AuthenticationControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/auth/authenticate")
+                .cookie(cookie)
                 .content(objectMapper.writeValueAsString(authenticationRequest))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -71,7 +77,7 @@ class AuthenticationControllerIntegrationTest {
         String actualJWT= objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class).token();
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
-                .andExpect(result -> assertThat(result.getResponse().getCookie("jwt").getValue(), is(equalTo(actualJWT))
+                .andExpect(result -> assertThat(result.getResponse().getCookie("egrade-jwt").getValue(), is(equalTo(actualJWT))
                 ));
        assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.getSubject()),
                is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.getSubject()))));
@@ -101,6 +107,7 @@ class AuthenticationControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/auth/authenticate")
+                .cookie(cookie)
                 .content(objectMapper.writeValueAsString(authenticationRequest))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -109,7 +116,7 @@ class AuthenticationControllerIntegrationTest {
         String actualJWT= objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class).token();
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
-                .andExpect(result -> assertThat(result.getResponse().getCookie("jwt").getValue(), is(equalTo(actualJWT))
+                .andExpect(result -> assertThat(result.getResponse().getCookie("egrade-jwt").getValue(), is(equalTo(actualJWT))
                 ));
         assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.getSubject()),
                 is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.getSubject()))));
@@ -139,6 +146,7 @@ class AuthenticationControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/auth/authenticate")
+                .cookie(cookie)
                 .content(objectMapper.writeValueAsString(authenticationRequest))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -147,7 +155,7 @@ class AuthenticationControllerIntegrationTest {
         String actualJWT= objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class).token();
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
-                .andExpect(result -> assertThat(result.getResponse().getCookie("jwt").getValue(), is(equalTo(actualJWT))
+                .andExpect(result -> assertThat(result.getResponse().getCookie("egrade-jwt").getValue(), is(equalTo(actualJWT))
                 ));
         assertThat(jwtService.extractClaim(expectedJWT,claims -> claims.getSubject()),
                 is(equalTo(jwtService.extractClaim(actualJWT,claims -> claims.getSubject()))));
@@ -171,6 +179,7 @@ class AuthenticationControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/auth/authenticate")
+                .cookie(cookie)
                 .content(objectMapper.writeValueAsString(authenticationRequest))
                 .contentType(MediaType.APPLICATION_JSON));
 

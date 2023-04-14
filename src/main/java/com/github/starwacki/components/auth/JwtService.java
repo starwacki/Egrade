@@ -52,7 +52,7 @@ class JwtService {
     }
 
     private long getOneDayInMilliSeconds() {
-        return 1000*60*60*24;
+        return 10000000L *60*60*24;
     }
 
     private Claims extractAllClaims(String jwt) {

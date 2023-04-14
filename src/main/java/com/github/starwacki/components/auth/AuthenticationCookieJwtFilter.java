@@ -2,10 +2,11 @@ package com.github.starwacki.components.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,28 +17,33 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-
 @Component
-@RequiredArgsConstructor
-class JwtAuthenticationFilter extends OncePerRequestFilter {
+@AllArgsConstructor
+class AuthenticationCookieJwtFilter extends OncePerRequestFilter {
 
-    //Remove this filter from CookieJwtFilter
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+
     @Override
-    protected void doFilterInternal(
-           @NonNull HttpServletRequest request,
-           @NonNull HttpServletResponse response,
-           @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String username;
-        if (authHeader==null || !authHeader.startsWith("Bearer" )) {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        Cookie[] cookies = request.getCookies();
+        Cookie jwtCookie = null;
+        String jwt;
+        String username;
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("egrade-jwt")) {
+                jwtCookie = cookie;
+            }
+        }
+        if (jwtCookie == null) {
             filterChain.doFilter(request,response);
             return;
         }
-        jwt = authHeader.substring(7);
+        jwt = jwtCookie.getValue();
         username = jwtService.extractUsername(jwt);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);

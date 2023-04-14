@@ -5,13 +5,16 @@ import com.github.starwacki.components.auth.EgradePasswordEncoder;
 import com.github.starwacki.components.account.dto.AccountStudentRequestDTO;
 import com.github.starwacki.components.account.dto.AccountTeacherRequestDTO;
 import com.github.starwacki.components.account.dto.AccountResponseDTO;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -32,6 +35,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Transactional
 class AccountControllerIntegrationTest {
 
+    private static final String AUTH_COOKIE_NAME = "egrade-jwt";
+    private static final String STUDENT_JWT_TOKEN = " eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTVFVERU5UIiwiaWF0IjoxNjgxNDA2OTMyLCJleHAiOjI1NDU0MDY5MzJ9.tSP-VwINn-uWEjoX_nCrLLzJeGPzexCnSZu2Ss3RC5k";
+    private static final String TEACHER_JWT_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJURUFDSEVSIiwiaWF0IjoxNjgxNDA2OTMyLCJleHAiOjI1NDU0MDY5MzJ9.W6-Do2H5XNq8lBU_8y47hIUA4-BcypemWBS5HYb90Hg";
+    private static final String PARENT_JWT_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQQVJFTlQiLCJpYXQiOjE2ODE0MDY5MzIsImV4cCI6MjU0NTQwNjkzMn0.ZHDI0HKH2anwf9VTwawu6EygcqvQI90Y4qQpXGb3CwE";
+    private static final String ADMIN_JWT_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBRE1JTiIsImlhdCI6MTY4MTQwNjkzMiwiZXhwIjoyNTQ1NDA2OTMyfQ.IgsgZz42Ba8SxlIav5eBFbdqGnym8GswFPwOHp6QrsQ";
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -44,13 +52,29 @@ class AccountControllerIntegrationTest {
     private AccountTeacherRepository accountTeacherRepository;
     @Autowired
     private EgradePasswordEncoder egradePasswordEncoder;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    @Test
+    @BeforeEach
+    void prepareDatabase() {
+        String studentAuthDetails = "INSERT INTO DETAILS VALUES ('STUDENT','STUDENT', '-', 'v+Tt7O3O3S8S2zQuS7lF0w==')";
+        String teacherAuthDetails = "INSERT INTO DETAILS VALUES ('TEACHER','TEACHER', '-', 'v+Tt7O3O3S8S2zQuS7lF0w==')";
+        String parentAuthDetails =  "INSERT INTO DETAILS VALUES ('PARENT','PARENT', '-', 'v+Tt7O3O3S8S2zQuS7lF0w==')";
+        String adminAuthDetails =   "INSERT INTO DETAILS VALUES ('ADMIN','ADMIN', '-', 'v+Tt7O3O3S8S2zQuS7lF0w==')";
+        jdbcTemplate.execute(studentAuthDetails);
+        jdbcTemplate.execute(teacherAuthDetails);
+        jdbcTemplate.execute(parentAuthDetails);
+        jdbcTemplate.execute(adminAuthDetails);
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(strings = {STUDENT_JWT_TOKEN,TEACHER_JWT_TOKEN,PARENT_JWT_TOKEN})
     @DisplayName("Test add student with roles without permissions return 403 HTTP status")
-    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER",})
-    void addStudent_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
+    void addStudent_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus(String jwt) throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,jwt);
         AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("Firstname")
@@ -62,6 +86,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/account/student")
+                .cookie(egradeJWTCookie)
                 .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -72,10 +97,10 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add student with ADMIN role return 201 HTTP status and should save student to database")
-    @WithMockUser(authorities = "ADMIN")
     void addStudent_givenAdminRole_shouldReturn_201_HTTPStatus_andCreateStudentAccountWithProperFields() throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,ADMIN_JWT_TOKEN);
         AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("Firstname")
@@ -87,13 +112,13 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/account/student")
+                .cookie(egradeJWTCookie)
                 .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
         resultActions
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));
-
         List<AccountStudent> studentsInDataBase = accountStudentRepository.findAll();
         AccountStudent student = studentsInDataBase.get(0);
         assertThat(studentsInDataBase, hasSize(1));
@@ -104,10 +129,10 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add student with ADMIN role return 201 HTTP status and should save parent to database")
-    @WithMockUser(authorities = "ADMIN")
     void addStudent_givenAdminRole_shouldReturn_201_HTTPStatus_andCreateParentAccountWithProperFields() throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,ADMIN_JWT_TOKEN);
         AccountStudentRequestDTO accountStudentRequestDTO = AccountStudentRequestDTO
                 .builder()
                 .firstname("Firstname")
@@ -119,6 +144,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/account/student")
+                .cookie(egradeJWTCookie)
                 .content(objectMapper.writeValueAsString(accountStudentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -135,12 +161,13 @@ class AccountControllerIntegrationTest {
         assertThat(accountParent.getPhoneNumber(),equalTo("111222333"));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {STUDENT_JWT_TOKEN,TEACHER_JWT_TOKEN,PARENT_JWT_TOKEN})
     @DisplayName("Test add student from csv file with roles without permissions return 403 HTTP status")
-    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER",})
-    void addStudentFromCSVFile_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
+    void addStudentFromCSVFile_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus(String jwt) throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,jwt);
         String filePath =  "src/test/resources/csv_generator_test/test_adding_student.csv";
         String[] data = {
                 "Lukasz,Szwacz,2021,1A,123456790",
@@ -159,6 +186,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/account/students")
+                .cookie(egradeJWTCookie)
                 .param("pathname",filePath)
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -170,10 +198,10 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add student from csv file with ADMIN role return 201 HTTP status and add students and parents to database")
-    @WithMockUser(authorities = "ADMIN")
     void addStudentFromCSVFile_givenAdminRole_shouldReturn_201_HTTPStatus_andAddStudentsAndParentsToDatabase() throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,ADMIN_JWT_TOKEN);
         String filePath =  "src/test/resources/csv_generator_test/test_adding_student.csv";
         String[] data = {
                 "Lukasz,Szwacz,2021,1A,123456790",
@@ -193,6 +221,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/account/students")
+                .cookie(egradeJWTCookie)
                 .param("pathname",filePath)
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -204,12 +233,13 @@ class AccountControllerIntegrationTest {
         new File(filePath).delete();
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {STUDENT_JWT_TOKEN,TEACHER_JWT_TOKEN,PARENT_JWT_TOKEN})
     @DisplayName("Test add teacher with roles without permissions return 403 HTTP status")
-    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER",})
-    void addTeacher_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
+    void addTeacher_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus(String jwt) throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,jwt);
         AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .firstname("Firstname")
@@ -221,6 +251,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(post("/account/teacher")
+                .cookie(egradeJWTCookie)
                 .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -231,10 +262,10 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test add teacher with ADMIN role return 201 HTTP status and should save student to database")
-    @WithMockUser(authorities = "ADMIN")
     void addTeacher_givenAdminRole_shouldReturn_201_HTTPStatus_andCreateTeacherAccountWithProperFields() throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,ADMIN_JWT_TOKEN);
         AccountTeacherRequestDTO accountTeacherRequestDTO = AccountTeacherRequestDTO
                 .builder()
                 .firstname("Firstname")
@@ -246,6 +277,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/account/teacher")
+                .cookie(egradeJWTCookie)
                 .content(objectMapper.writeValueAsString(accountTeacherRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -264,12 +296,13 @@ class AccountControllerIntegrationTest {
         assertThat(accountTeacher.getSubject(),is(equalTo(accountTeacherRequestDTO.subject())));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {STUDENT_JWT_TOKEN,TEACHER_JWT_TOKEN,PARENT_JWT_TOKEN})
     @DisplayName("Test get account by id with roles without permissions return 403 HTTP status")
-    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER"})
-    void getAccountById_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
+    void getAccountById_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus(String jwt) throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,jwt);
         AccountStudent accountStudent = AccountStudent
                 .builder()
                 .accountDetails(AccountDetails
@@ -289,6 +322,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(get("/account/"+ accountRole +"="+id)
+                .cookie(egradeJWTCookie)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -298,10 +332,10 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test get account by id with ADMIN role return 201 HTTP status and should save student to database")
-    @WithMockUser(authorities = "ADMIN")
     void getAccountById_givenAdminRole_shouldReturn_201_HTTPStatus_andReturnStudentWithCorrectFields() throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,ADMIN_JWT_TOKEN);
         AccountStudent accountStudent = AccountStudent
                 .builder()
                 .accountDetails(AccountDetails
@@ -321,6 +355,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(get("/account/"+ accountRole +"="+id)
+                .cookie(egradeJWTCookie)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -339,12 +374,13 @@ class AccountControllerIntegrationTest {
                         is(equalTo(objectMapper.writeValueAsString(expectedAccountResponseDTO)))));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {STUDENT_JWT_TOKEN,TEACHER_JWT_TOKEN,PARENT_JWT_TOKEN})
     @DisplayName("Test delete account by id with roles without permissions return 403 HTTP status")
-    @WithMockUser(authorities = {"STUDENT","PARENT","TEACHER"})
-    void deleteAccountById_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus() throws Exception {
+    void deleteAccountById_givenRolesWithoutPermissions_shouldReturn_403_HTTPStatus(String jwt) throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,jwt);
         AccountStudent accountStudent = AccountStudent
                 .builder()
                 .accountDetails(AccountDetails
@@ -364,6 +400,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(delete("/account/"+ accountRole +"="+id)
+                .cookie(egradeJWTCookie)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -373,10 +410,10 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test delete account by id with ADMIN role return 201 HTTP status and should save student to database")
-    @WithMockUser(authorities = "ADMIN")
     void deleteAccountById_givenAdminRole_shouldReturn_201_HTTPStatus_andDeleteAccountFromDatabase() throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,ADMIN_JWT_TOKEN);
         AccountStudent accountStudent = AccountStudent
                 .builder()
                 .accountDetails(AccountDetails
@@ -396,6 +433,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(delete("/account/"+ accountRole +"="+id)
+                .cookie(egradeJWTCookie)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -417,10 +455,10 @@ class AccountControllerIntegrationTest {
 
     @Test
     @DisplayName("Test change account password with any role return 200 HTTP status and should change password")
-    @WithMockUser(authorities = "ADMIN")
     void changeAccountPassword_givenAdminRole_shouldReturn_200_HTTPStatus_andDeleteAccountFromDatabase() throws Exception {
 
         //given
+        Cookie egradeJWTCookie = new Cookie(AUTH_COOKIE_NAME,ADMIN_JWT_TOKEN);
         String passwordInDatabase = "password";
         String newPassword = "Password1.";
         AccountStudent accountStudent = AccountStudent
@@ -442,6 +480,7 @@ class AccountControllerIntegrationTest {
 
         //when
         ResultActions resultActions  = mockMvc.perform(put("/account/password/"+ accountRole +"="+id)
+                .cookie(egradeJWTCookie)
                 .param("oldPassword",passwordInDatabase)
                 .param("newPassword",newPassword)
                 .contentType(MediaType.APPLICATION_JSON));
