@@ -18,7 +18,7 @@ import java.util.List;
 @Validated
 @Controller
 @RequestMapping("/account")
-class AccountController implements AccountControllerOperations {
+public class AccountController implements AccountControllerOperations {
 
     private final AccountFacade accountFacade;
 
