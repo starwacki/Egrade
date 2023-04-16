@@ -86,7 +86,7 @@ $("#show-sidebar").click(function () {
   }
   body {
     font-size: 0.9rem;
-    background-color: #00173a;
+    background-color: rgb(224, 224, 224);
   }
   .page-wrapper .sidebar-wrapper,
   .sidebar-wrapper .sidebar-brand > a,
@@ -121,7 +121,7 @@ $("#show-sidebar").click(function () {
   }
   
   .page-wrapper .theme.chiller-theme {
-    background: #1e2229;
+    background: #3e4756;
   }
   
   /*----------------toggeled sidebar----------------*/
@@ -223,6 +223,8 @@ $("#show-sidebar").click(function () {
   }
   
   .sidebar-wrapper .sidebar-header .user-info {
+    font-size: 18px;
+    font-weight: 600;
     float: left;
   }
   
@@ -231,11 +233,11 @@ $("#show-sidebar").click(function () {
   }
   
   .sidebar-wrapper .sidebar-header .user-info .user-role {
-    font-size: 12px;
+    font-size: 18px;
   }
   
   .sidebar-wrapper .sidebar-header .user-info .user-status {
-    font-size: 11px;
+    font-size: 18px;
     margin-top: 4px;
   }
   
@@ -254,12 +256,14 @@ $("#show-sidebar").click(function () {
   /*----------------------sidebar-menu-------------------------*/
   
   .sidebar-wrapper .sidebar-menu {
+    font-size: 16;
+    font-weight: 400s;
     padding-bottom: 10px;
   }
   
   .sidebar-wrapper .sidebar-menu .header-menu span {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 24px;
     padding: 15px 20px 5px 20px;
     display: inline-block;
   }
@@ -273,11 +277,11 @@ $("#show-sidebar").click(function () {
   }
   
   .sidebar-wrapper .sidebar-menu ul li a i {
-    margin-right: 10px;
-    font-size: 12px;
+    margin-right: 13px;
+    font-size: 25px;
     width: 30px;
     height: 30px;
-    line-height: 30px;
+    line-height: 40px;
     text-align: center;
     border-radius: 4px;
   }
@@ -289,7 +293,7 @@ $("#show-sidebar").click(function () {
   
   .sidebar-wrapper .sidebar-menu .sidebar-dropdown > a:after {
     font-family: "Font Awesome 5 Free";
-    font-weight: 900;
+    font-weight: 600;
     content: "\f105";
     font-style: normal;
     display: inline-block;
@@ -325,7 +329,7 @@ $("#show-sidebar").click(function () {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin-right: 10px;
-    font-size: 8px;
+    font-size: 10px;
   }
   
   .sidebar-wrapper .sidebar-menu ul li a span.label,
@@ -452,13 +456,13 @@ $("#show-sidebar").click(function () {
   /*-----------------------------chiller-theme-------------------------------------------------*/
   
   .chiller-theme .sidebar-wrapper {
-      background: #000D20;
+      background: #439bf3;
   }
   
   .chiller-theme .sidebar-wrapper .sidebar-header,
   .chiller-theme .sidebar-wrapper .sidebar-search,
   .chiller-theme .sidebar-wrapper .sidebar-menu {
-      border-top: 1px solid #3a3f48;
+      border-top: 1px solid #1c4288;
   }
   
   .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
@@ -474,7 +478,7 @@ $("#show-sidebar").click(function () {
   .chiller-theme .sidebar-wrapper .sidebar-brand>a,
   .chiller-theme .sidebar-wrapper .sidebar-menu ul li a,
   .chiller-theme .sidebar-footer>a {
-      color: white;
+      color: black;
   }
   
   .chiller-theme .sidebar-wrapper .sidebar-menu ul li:hover>a,
@@ -482,11 +486,11 @@ $("#show-sidebar").click(function () {
   .chiller-theme .sidebar-wrapper .sidebar-header .user-info,
   .chiller-theme .sidebar-wrapper .sidebar-brand>a:hover,
   .chiller-theme .sidebar-footer>a:hover i {
-      color: #b8bfce;
+      color: rgb(0, 0, 0);
   }
   
   .page-wrapper.chiller-theme.toggled #close-sidebar {
-      color: #bdbdbd;
+      color: #000000;
   }
   
   .page-wrapper.chiller-theme.toggled #close-sidebar:hover {
@@ -505,30 +509,19 @@ $("#show-sidebar").click(function () {
   .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown div,
   .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
   .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text {
-      background: #060a23;
+      background: #439bf3;
   }
   
   .chiller-theme .sidebar-wrapper .sidebar-menu .header-menu span {
-      color: #6c7b88;
+      color: rgb(0, 0, 0);
   }
-  
-  .chiller-theme .sidebar-footer {
-      background: #3a3f48;
-      box-shadow: 0px -1px 5px #282c33;
-      border-top: 1px solid #464a52;
-  }
-  
-  .chiller-theme .sidebar-footer>a:first-child {
-      border-left: none;
-  }
-  
-  .chiller-theme .sidebar-footer>a:last-child {
-      border-right: none;
-  }
+
+
 
   /*-----------------------------Table-------------------------------------------------*/
 
 #customers {
+  color: black;
   font-family: "Font Awesome 5 Free";
   border-collapse: collapse;
   width: 77%;
@@ -538,25 +531,25 @@ $("#show-sidebar").click(function () {
 }
 
 #customers td, #customers th {
-  border: 1px solid #01132e;
+  border: 1px solid #f7f7f7;
   padding: 8px;
 }
 
 #customers tr:nth-child(even){
-  background-color: #d2e2f7}
+  background-color: #f7f7f7;
+}
 #customers tr:nth-child(odd) {
-  background-color: 	#bdd2f0;
+  background-color: 	#f7f7f784;
 }
 
 
-#customers tr:hover {background-color: #ddd;}
 
 #customers th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
-  background-color: #000D20;
-  color: white;
+  background-color: #439bf3;
+  color: black;
 }
 
 .square {
@@ -590,189 +583,647 @@ $("#show-sidebar").click(function () {
 <!--List of grades-->
 <table id="customers"  style="font-weight: 800;">
     <thead>
-    <tr>
-        <th colspan="1" style="height: 25px; background-color: #00173a;">
-            <span style="width: 50%; font-size: 18px;">Term: </span>
-            <a style="width: 50%; font-size: 18px; color: red; ">1</a>
-            <span style="font-size: 18px;"> / </span>
-            <a style="width: 50%; font-size: 18px;">2</a>
-        </th>
-        <th colspan="1" style="height: 25px; background-color: #00173a;">
-            <span style="width: 50%; font-size: 18px;">Student: <span th:text="${studentGrades.firstname() + ' ' + studentGrades.lastname()}"> </span></span>
-        </th>
+
+ <tr>
+    
+      <th colspan="14" style="height: 25px; background-color: rgb(224, 224, 224);">
+    </th>
     </tr>    
 </thead>
     <tr style="height: 50px;">
       <th style="width: 100px;">Subject</th>
-      <th >Grades</th>
+      <th style="width: 350px;">Grades Term I</th>
       <th style="width: 50px;">Grades average</th>
       <th style="width: 50px;">Term grade</th>
+      <th style="width: 50px;">Proposal grade</th>
+      <th style="width: 5px;"></th>
+      <th style="width: 350px;">Grades Term II</th>
+      <th style="width: 50px;">Grades average</th>
+      <th style="width: 50px;">Term grade</th>
+      <th style="width: 50px;">Proposal grade</th>
+      <th style="width: 5px;"></th>
+      <th style="width: 50px; padding-left: 20px;">Year average</th>
+      <th style="width: 50px; padding-left: 20px;">Year grade</th>
     </tr>
-    <div th:each = "subject : ${studentGrades.subjectGrades()}">
+
     <tr>
-        <td><span th:text = "${subject.subject}"></span></td>
-        <td><div style="display: inline-block;" th:each = "grades : ${subject.grades}">
-            <a href="" class="square" style="background-color: #5cb85c;"><span th:text = "${grades.degree}"></span></a>
-        </div>
-        </td>
-        <td style="text-align: center;"><div style="font-weight: 800;"><span th:text = "${subject.gradeAverage}"></span></div></td>
-        <td style="text-align: center;">brak</td>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
     </tr>
-      <tr>
-    </div>
-        <th colspan="2" style="height: 25px; color: black; background-color: #bdd2f0;">
-            <a>Term average:</a>
-        </th>
-        <th colspan="2" style="height: 25px;color: black;; background-color: #bdd2f0;">
-            <a>4,30</a>
-        </th>
-      </tr> 
-      <tr>
-        <th colspan="4" style="height: 20px; background-color: #00173a;">
-        </th>
-      </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+
+    
+    <tr>
+      <td style="background-color: #439bf3;;">Matematyka</td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;"></td>
+      <td>
+        <div style="display: inline-block;">
+          <a href="" class="square" style="background-color: #5cb85c;">5</a>
+          <a href="" class="square" style="background-color: red;">nb</a>
+          <a href="" class="square" style="background-color: #16c7ff;">bz</a>
+          <a href="" class="square" style="background-color: #5cb85c;" >1+</a>
+          <a href="" class="square" style="background-color: rebeccapurple;">3-</a>
+          <a href="" class="square" style="background-color: red;">-</a>
+          <a href="" class="square" style="background-color: khaki;">+</a>
+          <a href="" class="square" style="background-color: khaki;">6-</a>
+      </div>
+  </td>
+      <td style="text-align: center;"><div style="font-weight: 800;">4,17</div></td>
+      <td style="text-align: center;">brak</td>
+      <td style="text-align: center;">brak</td>
+      <td style="width: 5px;"></td>
+      <td style="text-align: center; ">1.0</td>
+      <td style="text-align: center;">brak</td>
+    </tr>
+    <th colspan="14" style="height: 25px; background-color: rgb(224, 224, 224);">
+    </th>
+
+     
   </table>
   <!---End grades-->
 
         <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
-            <i class="fas fa-bars"></i>
+        <i class="fas fa-bars"></i>
         </a>
         <nav id="sidebar" class="sidebar-wrapper">
-            <div class="sidebar-header" style="align-items:  center;">
-                <div class="user-info" style="text-align: center; width: 100%;">
+        <div class="sidebar-content">
+        <div class="sidebar-brand">
+           
+        </div>
+        <div class="sidebar-header" style="text-align: center;">
+           <div class="user-info" style="text-align: center; width: 100%;" >
               <span class="user-name">Jhon
               <strong>Smith</strong>
               </span>
-                    <span class="user-role">Administrator</span>
-                    <span class="user-status">
+              <span class="user-role">Administrator</span>
+              <span class="user-status">
               <i class="fa fa-circle"></i>
               <span>Online</span>
               </span>
-                </div>
-            </div>
+           </div>
+        </div>
+        <!-- sidebar-header  -->
+ 
+        
+        <!-- sidebar-search  -->
+        <div class="sidebar-menu">
+           <ul>
+              <li class="header-menu">
+                 <span>General</span>
+              </li>
+              <li class="sidebar-dropdown">
+                 <a href="#">
+                 <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                 <span>Grades</span>
+                 <span class="badge badge-pill badge-warning">New</span>
+                 </a>
+                 
+              </li>
+              <li class="sidebar-dropdown">
+                 <a href="#">
+                    <i class="fa fa-child" aria-hidden="true"></i>
+                    <span>Absences</span>
+                 <span class="badge badge-pill badge-danger">3</span>
+                 </a>
+                 <div class="sidebar-submenu">
+                    <ul>
+                       <li>
+                          <a href="#">Products
+                          </a>
+                       </li>
+                       <li>
+                          <a href="#">Orders</a>
+                       </li>
+                       <li>
+                          <a href="#">Credit cart</a>
+                       </li>
+                    </ul>
+                 </div>
+              </li>
+              <li class="sidebar-dropdown">
+                 <a href="#">
+                    <i class="far fa-list-alt"></i>
+                   <span>Lesson plane</span>
+                 </a>
+                 <div class="sidebar-submenu">
+                    <ul>
+                        <li>
+                           <a href="#">Products
+                           </a>
+                        </li>
+                        <li>
+                           <a href="#">Orders</a>
+                        </li>
+                        <li>
+                           <a href="#">Credit cart</a>
+                        </li>
+                 </div>
+              </li>
+              <li class="sidebar-dropdown">
+                 <a href="#">
+                    <i class="far fa-envelope"></i>
+                   <span>Messages</span>
+                 </a>
 
-
-            <!-- sidebar-search  -->
-            <div class="sidebar-menu">
-                <ul>
-                    <li class="header-menu">
-                        <span>General</span>
-                    </li>
-
-                    <!---Grades-->
-                    <li class="sidebar-dropdown">
-                        <a href="#">
-                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-                            <span>Grades</span>
-                            <span class="badge badge-pill badge-warning">New</span>
-                        </a>
-                        <div class="sidebar-submenu">
-                            <ul>
-                                <li>
-                                    <a href="#">All
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">New</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <!---Absences-->
-                    <li class="sidebar-dropdown">
-                        <a href="#">
-                            <i class="fa fa-child" aria-hidden="true"></i>
-                            <span>Absences</span>
-                            <span class="badge badge-pill badge-danger">3</span>
-                        </a>
-                        <div class="sidebar-submenu">
-                            <ul>
-                                <li>
-                                    <a href="#">All
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">New</a>
-                                </li>
-                                <li>
-                                    <a href="#">Justification</a>
-                                </li>
-                                <li>
-                                    <a href="#">Unjustification</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="sidebar-dropdown">
-                        <a href="#">
-                            <i class="far fa-list-alt"></i>
-                            <span>Lesson plane</span>
-                        </a>
-                        <div class="sidebar-submenu">
-                            <ul>
-                                <li>
-                                    <a href="#">1A
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">1B</a>
-                                </li>
-                                <li>
-                                    <a href="#">1C</a>
-                                </li>
-                                <li>
-                                    <a href="#">2A</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="sidebar-dropdown">
-                        <a href="#">
-                            <i class="far fa-envelope"></i>
-                            <span>Messages</span>
-                        </a>
-                        <div class="sidebar-submenu">
-                            <ul>
-                                <li>
-                                    <a href="#">New
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">All</a>
-                                </li>
-                                <li>
-                                    <a href="#">1C</a>
-                                </li>
-                                <li>
-                                    <a href="#">2A</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="sidebar-dropdown">
-                        <a href="#">
-                            <i class="far fa-frown"></i>
-                            <span>Reproofs</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-dropdown">
-                        <a href="#">
-                            <i class="fa fa-calendar"></i>
-                            <span>Calendar</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-dropdown">
-                        <a href="#">
-                            <i class="fas fa-bullhorn"></i>
-                            <span>Announcements</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-    </nav>
-    </div>
+              </li>
+              <li class="sidebar-dropdown">
+                 <a href="#">
+                    <i class="far fa-frown"></i>                 
+                    <span>Reproofs</span>
+                 </a>
+              </li>
+            
+              <li class="sidebar-dropdown">
+                <a href="#">
+                 <i class="fa fa-calendar"></i>
+                 <span>Calendar</span>
+                 </a>
+              </li>
+              <li class="sidebar-dropdown">
+                 <a href="#">
+                    <i class="fas fa-bullhorn"></i>
+                  <span>Announcements</span>
+                 </a>
+              </li>
+           </ul>
+        </div>
+        </div>
 
 </body>
 </html>
